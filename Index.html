@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dominic Davis — Character &amp; Creature Animator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- model-viewer: free, open-source (Google), no account/subscription needed. Powers the 3D Turnaround section below. -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<style>
+
+/* ============================================================
+   EDIT ME — quick color / accent tuning
+   Change these variables to retheme the whole site in one place.
+   ============================================================ */
+:root{
+  --bg: #0b0b0c;
+  --bg-soft: #101012;
+  --panel: #15151780;
+  --panel-solid: #17171a;
+  --line: rgba(236,231,223,0.09);
+  --line-strong: rgba(236,231,223,0.18);
+  --text: #ece7df;
+  --text-dim: #96918a;
+  --text-faint: #605c57;
+  --ember: #c9814a;
+  --ember-bright: #e6a26a;
+  --steel: #52707a;
+  --ok: #7fa87a;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
+::selection{background:var(--ember);color:#0b0b0c;}
+
+/* film grain overlay */
+.grain{
+  position:fixed;inset:0;pointer-events:none;z-index:200;
+  opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:199;
+  background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);
+}
+
+h1,h2,h3,.display{
+  font-family:'Big Shoulders Display',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.01em;
+  font-weight:800;
+  line-height:.92;
+}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ember);
+  display:flex;align-items:center;gap:.6em;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--ember);display:inline-block;}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+section{position:relative;padding:120px 0;border-top:1px solid var(--line);}
+
+/* ---------------- NAV / TIMECODE ---------------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 32px;
+  background:linear-gradient(to bottom, rgba(11,11,12,.9), transparent);
+  backdrop-filter:blur(2px);
+}
+.nav-mark{font-family:'Big Shoulders Display';font-weight:800;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
+.nav-mark span{color:var(--ember);}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{
+  color:var(--text-dim);text-decoration:none;font-size:.78rem;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;
+  transition:color .2s;
+}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--ember-bright);}
+.timecode{
+  font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--text-faint);
+  letter-spacing:.05em;
+}
+.nav-toggle{display:none;background:none;border:1px solid var(--line-strong);color:var(--text);width:38px;height:38px;border-radius:2px;font-size:1.1rem;cursor:pointer;}
+
+/* ---------------- HERO ---------------- */
+.hero{
+  min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:140px 0 80px;border-top:none;
+  background:
+    radial-gradient(circle at 78% 30%, rgba(201,129,74,.10), transparent 45%),
+    radial-gradient(circle at 15% 80%, rgba(82,112,122,.10), transparent 40%);
+}
+.slate{
+  display:flex;align-items:center;gap:14px;margin-bottom:34px;
+}
+.slate .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{
+  font-size:clamp(3.2rem, 9vw, 7.4rem);
+  color:var(--text);
+}
+.hero h1 em{font-style:normal;color:var(--ember);}
+.hero .role{
+  font-family:'IBM Plex Mono',monospace;font-size:clamp(.95rem,1.6vw,1.15rem);
+  color:var(--text-dim);margin-top:18px;max-width:640px;letter-spacing:.02em;line-height:1.6;
+}
+.hero-actions{display:flex;gap:16px;margin-top:44px;flex-wrap:wrap;}
+.btn{
+  font-family:'IBM Plex Mono',monospace;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:15px 28px;border-radius:2px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+  transition:transform .18s ease, background .2s, border-color .2s;
+  border:1px solid var(--line-strong);
+}
+.btn:hover{transform:translateY(-2px);}
+.btn-primary{background:var(--ember);color:#100b07;border-color:var(--ember);font-weight:600;}
+.btn-primary:hover{background:var(--ember-bright);}
+.btn-ghost{color:var(--text);}
+.btn-ghost:hover{border-color:var(--ember);color:var(--ember-bright);}
+
+.hero-meta{
+  margin-top:90px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border-top:1px solid var(--line);
+}
+.hero-meta div{padding:20px 0 0;border-right:1px solid var(--line);}
+.hero-meta div:last-child{border-right:none;}
+.hero-meta .num{font-family:'Big Shoulders Display';font-weight:800;font-size:1.9rem;color:var(--ember-bright);}
+.hero-meta .lbl{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
+
+/* ---------------- SECTION HEADERS ---------------- */
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
+.sec-head h2{font-size:clamp(2.2rem,4.2vw,3.4rem);}
+.sec-note{font-family:'IBM Plex Mono';font-size:.8rem;color:var(--text-faint);max-width:280px;line-height:1.6;}
+
+/* ---------------- REEL ---------------- */
+.reel-frame{
+  position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;
+  aspect-ratio:16/9;background:
+    linear-gradient(135deg, #1a1512 0%, #0e0d0c 55%, #131718 100%);
+}
+.reel-frame iframe{width:100%;height:100%;border:0;display:block;}
+.reel-placeholder{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  color:var(--text-faint);
+}
+.play-btn{
+  width:74px;height:74px;border-radius:50%;border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;color:var(--ember-bright);font-size:1.6rem;
+}
+.reel-tag{position:absolute;top:16px;left:16px;font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;border:1px solid var(--line-strong);padding:5px 10px;border-radius:2px;background:rgba(0,0,0,.4);}
+.reel-tag.rec{color:#e08a6a;}
+.reel-tag.rec::before{content:"● ";}
+
+/* ---------------- 3D TURNAROUND ---------------- */
+.turn-frame{
+  position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;
+  aspect-ratio:16/10;
+  background:radial-gradient(circle at 50% 40%, #1a1613 0%, #0b0b0c 70%);
+}
+.turn-frame model-viewer{
+  width:100%;height:100%;
+  --poster-color: transparent;
+  --progress-bar-color: var(--ember);
+}
+.turn-hint{
+  position:absolute;bottom:16px;right:16px;z-index:2;
+  font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-dim);
+  border:1px solid var(--line-strong);padding:5px 10px;border-radius:2px;background:rgba(0,0,0,.4);
+}
+.turn-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:2px;background:var(--line);margin-top:2px;}
+.turn-side{background:var(--bg);padding:30px 32px;display:flex;flex-direction:column;justify-content:center;}
+.turn-side h3{font-size:1.6rem;margin-bottom:12px;}
+.turn-side p{color:var(--text-dim);font-size:.92rem;line-height:1.7;}
+.turn-side .tag-row{margin-top:18px;}
+
+/* ---------------- WORK GRID ---------------- */
+.work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--line);}
+.work-card{
+  background:var(--bg);padding:0;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.work-thumb{
+  aspect-ratio:16/10;position:relative;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.work-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.55), transparent 55%);}
+.work-thumb .frame-tc{position:absolute;bottom:12px;left:14px;z-index:2;font-family:'IBM Plex Mono';font-size:.72rem;color:var(--text-dim);}
+.work-thumb .play{position:absolute;z-index:2;width:52px;height:52px;border-radius:50%;border:1px solid rgba(236,231,223,.35);display:flex;align-items:center;justify-content:center;color:#fff;opacity:0;transform:scale(.85);transition:.25s;}
+.work-card:hover .play{opacity:1;transform:scale(1);}
+.work-card:hover .work-thumb::after{background:linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,.15));}
+.work-body{padding:24px 26px 28px;}
+.work-body .sc{font-family:'IBM Plex Mono';font-size:.7rem;color:var(--ember);letter-spacing:.1em;}
+.work-body h3{font-size:1.5rem;margin-top:8px;}
+.work-body p{color:var(--text-dim);font-size:.9rem;margin-top:8px;line-height:1.55;max-width:44ch;}
+.tag-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.tag{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-dim);border:1px solid var(--line-strong);padding:4px 9px;border-radius:2px;letter-spacing:.04em;}
+
+/* ---------------- SKILLS ---------------- */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+.skill-col .eyebrow{margin-bottom:18px;}
+.skill-list{list-style:none;}
+.skill-list li{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--line);font-size:.95rem;
+}
+.skill-list li:last-child{border-bottom:none;}
+.skill-bar{width:90px;height:3px;background:var(--line-strong);position:relative;border-radius:2px;overflow:hidden;}
+.skill-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ember);border-radius:2px;}
+
+/* ---------------- EXPERIENCE ---------------- */
+.timeline{border-left:1px solid var(--line-strong);margin-left:6px;}
+.tl-item{position:relative;padding:0 0 52px 34px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{content:"";position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--ember);}
+.tl-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 20px;}
+.tl-top h3{font-size:1.5rem;text-transform:none;font-family:'Big Shoulders Display';font-weight:700;}
+.tl-date{font-family:'IBM Plex Mono';font-size:.75rem;color:var(--text-faint);}
+.tl-studio{color:var(--ember-bright);font-size:.85rem;font-family:'IBM Plex Mono';margin-top:4px;}
+.tl-item p{color:var(--text-dim);margin-top:12px;line-height:1.7;max-width:62ch;font-size:.95rem;}
+
+/* ---------------- ABOUT ---------------- */
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start;}
+.about-photo{
+  aspect-ratio:4/5;border-radius:3px;border:1px solid var(--line-strong);
+  background:linear-gradient(160deg,#1c1712,#0e0d0c 60%,#111417);
+  display:flex;align-items:center;justify-content:center;color:var(--text-faint);
+  font-family:'IBM Plex Mono';font-size:.78rem;text-align:center;padding:20px;
+}
+.about-body p{color:var(--text-dim);font-size:1.05rem;line-height:1.85;margin-bottom:18px;}
+.about-body strong{color:var(--text);font-weight:600;}
+.soft-list{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;}
+
+/* ---------------- CONTACT ---------------- */
+.contact-inner{display:grid;grid-template-columns:1.3fr .7fr;gap:60px;}
+.contact-left h2{font-size:clamp(2.4rem,5.5vw,4.2rem);}
+.contact-left p{color:var(--text-dim);max-width:46ch;margin-top:20px;line-height:1.7;}
+.contact-actions{margin-top:36px;display:flex;gap:16px;flex-wrap:wrap;}
+.contact-list{list-style:none;border-top:1px solid var(--line);}
+.contact-list li{border-bottom:1px solid var(--line);padding:18px 0;display:flex;justify-content:space-between;align-items:center;}
+.contact-list a{color:var(--text);text-decoration:none;font-family:'IBM Plex Mono';font-size:.9rem;}
+.contact-list a:hover{color:var(--ember-bright);}
+.contact-list span{font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;}
+
+footer{
+  border-top:1px solid var(--line);padding:34px 0;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+footer .mono{font-size:.72rem;color:var(--text-faint);}
+
+@media (max-width:860px){
+  .nav-links{display:none;}
+  .nav-toggle{display:block;}
+  .hero-meta{grid-template-columns:repeat(2,1fr);row-gap:26px;}
+  .work-grid{grid-template-columns:1fr;}
+  .skills-grid{grid-template-columns:1fr;gap:34px;}
+  .about-grid,.contact-inner{grid-template-columns:1fr;gap:40px;}
+  section{padding:80px 0;}
+}
+@media (prefers-reduced-motion: reduce){
+  .slate .dot{animation:none;}
+  html{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<nav>
+  <div class="nav-mark"><span id="cfg-navA">YOUR</span><span>/</span><span id="cfg-navB">NAME</span></div>
+  <ul class="nav-links">
+    <li><a href="#reel">Reel</a></li>
+    <li><a href="#turnaround">3D</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="slate">
+      <span class="dot"></span>
+      <span class="eyebrow" id="cfg-status">Status — Open</span>
+    </div>
+    <h1><span id="cfg-name">Dominic Davis</span><br><span id="cfg-h1">Character Animator</span> <em>→ <span id="cfg-h2">Creature Animator</span></em></h1>
+    <p class="role" id="cfg-tagline">3D animator moving into creature work — focused on movement with real weight, timing, and intention, not just technical polish.</p>
+    <div class="hero-actions">
+      <a href="#reel" class="btn btn-primary">▶ Watch Reel</a>
+      <a href="#" class="btn btn-ghost">↓ Download Resume</a>
+      <a href="#contact" class="btn btn-ghost">Contact</a>
+    </div>
+    <div class="hero-meta">
+      <div><div class="num">7+</div><div class="lbl">Years Experience</div></div>
+      <div><div class="num">10+</div><div class="lbl">Series &amp; Productions</div></div>
+      <div><div class="num">05</div><div class="lbl">Studios Credited</div></div>
+      <div><div class="num">Maya</div><div class="lbl">+ Blender + Unreal</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REEL ================= -->
+<section id="reel">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">SC010 — Demo Reel</span>
+        <h2>The Reel</h2>
+      </div>
+      <p class="sec-note">Replace the embed below with your Vimeo/YouTube link. Keep it under 90 seconds — strongest shot first.</p>
+    </div>
+    <div class="reel-frame">
+      <span class="reel-tag rec">LIVE</span>
+      <iframe src="https://player.vimeo.com/video/1145610763?h=887c2bae12&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3D TURNAROUND ================= -->
+<section id="turnaround">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">SC020 — 360° Turnaround</span>
+        <h2>3D Turnaround</h2>
+      </div>
+      <p class="sec-note">A real, orbiting 3D view — drag to spin it yourself, or let it auto-rotate. Export a .glb from Maya/Blender/ZBrush and swap the file below.</p>
+    </div>
+  </div>
+  <div class="turn-grid">
+    <div class="turn-frame">
+      <!-- EDIT ME: replace src below with your own model, e.g. src="models/your-character.glb"
+           Export tips: keep under ~15MB, bake textures, triangulate, embed textures in the .glb. -->
+      <model-viewer
+        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+        alt="3D turnaround of a character model — replace with your own .glb"
+        auto-rotate
+        auto-rotate-delay="0"
+        rotation-per-second="18deg"
+        camera-controls
+        disable-zoom
+        shadow-intensity="1"
+        exposure="0.9"
+        environment-image="neutral"
+        style="background-color:transparent;">
+      </model-viewer>
+      <span class="turn-hint">Drag to rotate · placeholder model</span>
+    </div>
+    <div class="turn-side">
+      <span class="sc mono">MODEL / TURNAROUND</span>
+      <h3>Character Name</h3>
+      <p>One line on what this piece demonstrates — silhouette, proportions, surfacing, or a specific technical challenge you solved.</p>
+      <div class="tag-row"><span class="tag">ZBrush</span><span class="tag">Substance</span><span class="tag">Turntable</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">SC030 — Selected Shots</span>
+        <h2>Selected Work</h2>
+      </div>
+      <p class="sec-note">Character animation credits across broadcast series, from full episodic pipelines to independent client work.</p>
+    </div>
+  </div>
+  <div class="work-grid">
+
+    <div class="work-card">
+      <div class="work-thumb" style="background:linear-gradient(150deg,#241b14,#0e0d0c 60%,#161a1c);">
+        <span class="frame-tc mono">2021–2025</span>
+        <div class="play">▶</div>
+      </div>
+      <div class="work-body">
+        <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
+        <h3>Kamp Koral</h3>
+        <p>Character performance animation for the Nickelodeon/Paramount+ series — full pipeline from blocking through spline to final polish, delivered within episodic broadcast deadlines.</p>
+        <div class="tag-row"><span class="tag">Maya</span><span class="tag">Episodic</span><span class="tag">Broadcast QC</span></div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-thumb" style="background:linear-gradient(150deg,#1a1f1c,#0e0d0c 60%,#171514);">
+        <span class="frame-tc mono">2021–2025</span>
+        <div class="play">▶</div>
+      </div>
+      <div class="work-body">
+        <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
+        <h3>ALVINNN!!! and the Chipmunks / Polar Rescue Team</h3>
+        <p>Character animation aligned to production style guides and director/supervisor creative direction, built on strong acting, weight, and follow-through fundamentals.</p>
+        <div class="tag-row"><span class="tag">Maya</span><span class="tag">Character Acting</span></div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-thumb" style="background:linear-gradient(150deg,#1c1a22,#0e0d0c 60%,#14181a);">
+        <span class="frame-tc mono">2017–2019</span>
+        <div class="play">▶</div>
+      </div>
+      <div class="work-body">
+        <span class="sc mono">TOONZ MEDIA GROUP · KERALA</span>
+        <h3>Kim and Jim, Sindbad and the 7 Galaxies &amp; more</h3>
+        <p>Character animation across multiple internationally distributed children's series — Mondo Yan, Gummy Bear and Friends, Bookworm Gogo, Gattu Battu, Emmie the Elephant — within a large-scale episodic pipeline.</p>
+        <div class="tag-row"><span class="tag">Maya</span><span class="tag">High-Volume Pipeline</span></div>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-thumb" style="background:linear-gradient(150deg,#22191a,#0e0d0c 60%,#171a19);">
+        <span class="frame-tc mono">2019–2021</span>
+        <div class="play">▶</div>
+      </div>
+      <div class="work-body">
+        <span class="sc mono">INDEPENDENT · REMOTE</span>
+        <h3>Freelance Character Animation</h3>
+        <p>Character animation for commercials, title sequences, web series, and YouTube original series — owning the full cycle from brief to final delivery for multiple clients.</p>
+        <div class="tag-row"><span class="tag">Maya</span><span class="tag">Body Mechanics</span><span class="tag">Client Work</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= SKILLS ================= -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">SC040 — Spec Sheet</span>
+        <h2>Skills &amp; Software</h2>
+      </div>
+      <p class="sec-note">Bars reflect real proficiency, not aspiration — Maya is the daily driver, Blender and Unreal are active learning.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-col">
+        <span class="eyebrow">Animation</span>
+        <ul class="skill-list">
+          <li>Blocking &amp; Final Polish <span class="skill-bar"><i style="width:92%"></i></span></li>
+          <li>Body Mechanics <span class="skill-bar"><i style="width:90%"></i></span></li>
+          <li>Lip Sync <span class="skill-bar"><i style="width:80%"></i></span></li>
+          <li>Creature Animation <span class="skill-bar"><i style="width:45%"></i></span></li>
+        </ul>
+      </div>
+      <div class="skill-col">
+        <span class="eyebrow">Software</span>
+        <ul class="skill-list">
+          <li>Autodesk Maya <span class="skill-bar"><i style="width:95%"></i></span></li>
+          <li>Blender <span class="skill-bar"><i style="width:50%"></i></span></li>
+          <li>Unreal Engine <span class="skill-bar"><i style="width:50%"></i></span></li>
+        </ul>
+        <div class="tag-row" style="margin-top:14px;"><span class="tag">After Effects</span><span class="tag">Premiere</span><span class="tag">Photoshop</span></div>
+      </div>
+      <div class="skill-col">
+        <span class="eyebrow">Production</span>
+        <ul class="skill-list">
+          <li>Episodic Pipeline <span class="skill-bar"><i style="width:90%"></i></span></li>
+          <li>Shot Management <span class="skill-bar"><i style="width:85%"></i></span></li>
+          <li>Director/Supervisor Collab <span class="skill-bar"><i style="width:85%"></i></span></li>
+          <li>Broadcast QC <span class="skill-bar"><i style="width:80%"></i></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">SC050 — Production History</span>
+        <h2>Experience</h2>
+      </div>
+      <p class="sec-note">Seven years across episodic studios and independent client work.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Apr 2021 — Jan 2025</span></div>
+        <div class="tl-studio">Mikros Animation — Bangalore, India</div>
+        <p>Animated character performances for internationally broadcast productions including Kamp Koral, ALVINNN!!! and the Chipmunks, and Polar Rescue Team — managing the full pipeline from blocking through spline to final polish within episodic deadlines.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Jul 2020 — Apr 2021</span></div>
+        <div class="tl-studio">Independent — Remote</div>
+        <p>Character animation for commercials, title sequences, and YouTube original series across multiple clients, owning the full cycle from brief to final delivery.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-top"><h3>Animator</h3><span class="tl-date mono">Mar 2020 — Jul 2020</span></div>
+        <div class="tl-studio">Windfall Productions Pvt Ltd — Kerala, India</div>
+        <p>Contributed to animation production and visual development for the launch of a children's content channel at one of India's leading television media companies.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Nov 2019 — Mar 2020</span></div>
+        <div class="tl-studio">Independent — Remote</div>
+        <p>Character animation for web series and animated fitness content, with emphasis on precise body mechanics, timing, and readable motion.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Jul 2017 — Oct 2019</span></div>
+        <div class="tl-studio">Toonz Media Group — Kerala, India</div>
+        <p>Animated characters across multiple internationally distributed children's series (Kim and Jim, Sindbad and the 7 Galaxies, Mondo Yan, and others) within a large-scale episodic production pipeline.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-top"><h3>3D Animator</h3><span class="tl-date mono">Apr 2017 — Jun 2017</span></div>
+        <div class="tl-studio">Goodness Television — Kerala, India</div>
+        <p>Created animated content for magazine segments and logo advertisements, applying character animation and motion design across broadcast formats.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-top"><h3>3D Modeller</h3><span class="tl-date mono">May 2015 — Jul 2015</span></div>
+        <div class="tl-studio">Beetles3.3 Architecture — Kerala, India</div>
+        <p>Produced detailed 3D architectural and interior models, building early proficiency in spatial reasoning and proportional accuracy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">SC060 — About</span>
+        <h2>About</h2>
+      </div>
+    </div>
+    <div class="about-grid">
+      <div class="about-photo mono">Headshot or on-set photo<br>1600×2000 recommended</div>
+      <div class="about-body">
+        <p><strong>Seven years in CG animation production does something to how you see motion.</strong> Working across multiple internationally broadcast series has built an eye for what makes a performance feel honest rather than mechanical.</p>
+        <p>Trained and working daily in Autodesk Maya — blocking, iteration, refinement, until the motion earns its place on screen. Currently deepening a study of creature anatomy, locomotion, and behaviour through a dedicated creature animation workshop and personal shot work, alongside a BA in Animation and Graphics Design.</p>
+        <p>Looking for a production environment where the standard is high and the work matters.</p>
+        <div class="soft-list">
+          <span class="tag">Based in Kerala, India</span>
+          <span class="tag">Open to relocation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap contact-inner">
+    <div class="contact-left">
+      <span class="eyebrow">SC070 — Get In Touch</span>
+      <h2>Let's talk<br>shots.</h2>
+      <p>Open to full-time, contract, and relocation for character/creature animation roles. Fastest way to reach me is email or WhatsApp.</p>
+      <div class="contact-actions">
+        <a href="mailto:domnickl45f3565@gmail.com" class="btn btn-primary">Email Me</a>
+        <!-- EDIT ME: point this at your hosted resume PDF once it's uploaded alongside index.html -->
+        <a href="#" class="btn btn-ghost">Download Resume</a>
+      </div>
+    </div>
+    <ul class="contact-list">
+      <li><span>Email</span><a href="mailto:domnickl45f3565@gmail.com">domnickl45f3565@gmail.com</a></li>
+      <li><span>WhatsApp</span><a href="https://wa.me/917907797991" target="_blank" rel="noopener">+91 7907797991</a></li>
+      <li><span>Vimeo</span><a href="https://vimeo.com/1145610763" target="_blank" rel="noopener">vimeo.com/1145610763</a></li>
+      <li><span>LinkedIn</span><a href="https://www.linkedin.com/in/dominic-davis-284b23103/" target="_blank" rel="noopener">linkedin.com/in/dominic-davis-284b23103</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:12px;">
+    <span class="mono">© 2026 Dominic Davis — Character &amp; Creature Animator</span>
+    <span class="mono">Built to be shared. Copy the link, send it to recruiters.</span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   EDIT ME — this is the only block you need to touch to update
+   your name, headline, tagline, status, and nav mark.
+   Change the text between the quotes, save the file, refresh.
+   Everything below (work, skills, experience, etc.) is edited
+   directly in the HTML further up — look for "EDIT ME" comments.
+   ============================================================ */
+const CONTENT = {
+  name:        "Dominic Davis",
+  headline1:   "Character Animator",
+  headline2:   "Creature Animator",
+  tagline:     "Seven years animating character performances for broadcast series in Autodesk Maya. Now training toward creature work — where timing, weight, and behaviour matter even more.",
+  status:      "Status — Open to Relocation",
+  navA:        "DOMINIC",
+  navB:        "DAVIS"
+};
+
+(function applyContent(){
+  document.getElementById('cfg-name').textContent = CONTENT.name;
+  document.getElementById('cfg-h1').textContent = CONTENT.headline1;
+  document.getElementById('cfg-h2').textContent = CONTENT.headline2;
+  document.getElementById('cfg-tagline').textContent = CONTENT.tagline;
+  document.getElementById('cfg-status').textContent = CONTENT.status;
+  document.getElementById('cfg-navA').textContent = CONTENT.navA;
+  document.getElementById('cfg-navB').textContent = CONTENT.navB;
+})();
+</script>
+
+</body>
+</html>
