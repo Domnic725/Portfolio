@@ -6,7 +6,7 @@
 <title>Dominic Davis — Character &amp; Creature Animator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -30,8 +30,10 @@ html{scroll-behavior:smooth;}
 body{
   background:var(--bg);
   color:var(--text);
-  font-family:'Inter',sans-serif;
+  font-family:'Montserrat',sans-serif;
   overflow-x:hidden;
+  text-align:left;
+  line-height:1.6;
 }
 ::selection{background:var(--ember);color:#0b0b0c;}
 
@@ -46,63 +48,96 @@ body{
 }
 
 h1,h2,h3,.display{
-  font-family:'Big Shoulders Display',sans-serif;
+  font-family:'Josefin Sans',sans-serif;
   text-transform:uppercase;
-  letter-spacing:.01em;
-  font-weight:800;
-  line-height:.92;
+  letter-spacing:.03em;
+  font-weight:600;
+  line-height:1.05;
+  text-align:left;
 }
 
-.fire-text{
-  color:var(--text);
-  cursor:default;
-}
-.fire-text.fire-active{
+.fire-text{ cursor:default; }
+.fire-text:hover, .tag:hover, .sec-note:hover, .contact-list a:hover, .skill-list li:hover, .work-body p:hover, .tl-item p:hover, .about-body p:hover, .hero .role:hover{
   color:transparent;
   background-image:
-    radial-gradient(circle 260px at var(--gx,50vw) var(--gy,50vh), #fff6cf 0%, #ffd76a 10%, #ff9d2e 26%, #ff5a1f 42%, #d21f0b 62%, #380400 82%, transparent 94%);
-  background-attachment:fixed;
-  background-size:100vw 100vh;
+    radial-gradient(circle 40px  at var(--e4,var(--gx,50vw)) var(--e4y,var(--gy,50vh)), rgba(255,190,90,.5) 0%, rgba(255,120,30,.3) 55%, transparent 80%),
+    radial-gradient(circle 30px  at var(--e3,var(--gx,50vw)) var(--e3y,var(--gy,50vh)), rgba(255,210,120,.6) 0%, rgba(255,110,20,.35) 55%, transparent 80%),
+    radial-gradient(circle 55px  at var(--e2,var(--gx,50vw)) var(--e2y,var(--gy,50vh)), rgba(255,225,150,.75) 0%, rgba(255,120,20,.4) 55%, transparent 82%),
+    radial-gradient(circle 90px  at var(--gx,50vw) var(--gy,50vh), #fffef2 0%, #fff2c2 8%, #ffd76a 20%, #ff9d2e 36%, #ff5a1f 52%, #d21f0b 70%, #4a0700 86%, transparent 96%),
+    linear-gradient(var(--text), var(--text));
+  background-attachment:fixed, fixed, fixed, fixed, local;
+  background-size:100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh, 100% 100%;
   background-clip:text;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  animation:fireFlicker .35s steps(3) infinite;
+  animation:fireFlicker .3s steps(3) infinite;
+}
+html.burst .fire-text:hover, html.burst .tag:hover, html.burst .sec-note:hover, html.burst .contact-list a:hover, html.burst .skill-list li:hover, html.burst .work-body p:hover, html.burst .tl-item p:hover, html.burst .about-body p:hover, html.burst .hero .role:hover{
+  animation:fireFlicker .15s steps(2) infinite, fireBurst .25s ease-out;
 }
 @keyframes fireFlicker{
   0%,100%{filter:brightness(1) saturate(1);}
-  33%{filter:brightness(1.12) saturate(1.08);}
-  66%{filter:brightness(.94) saturate(.96);}
+  33%{filter:brightness(1.15) saturate(1.1);}
+  66%{filter:brightness(.92) saturate(.95);}
+}
+@keyframes fireBurst{
+  0%{filter:brightness(1.7) saturate(1.3);}
+  100%{filter:brightness(1) saturate(1);}
 }
 @media (prefers-reduced-motion: reduce){
-  .fire-text.fire-active{animation:none;}
+  .fire-text:hover{animation:none;}
 }
 .storm-layer{
   position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
 }
 .storm-clouds{
-  position:absolute;left:-15%;right:-15%;top:-8%;height:58%;
+  position:absolute;left:-40%;top:-10%;width:180%;height:65%;
   background-image:
-    radial-gradient(ellipse 38% 60% at 15% 40%, rgba(205,212,224,.95), transparent 65%),
-    radial-gradient(ellipse 30% 50% at 40% 18%, rgba(184,193,208,.9), transparent 65%),
-    radial-gradient(ellipse 42% 55% at 68% 32%, rgba(194,202,216,.92), transparent 65%),
-    radial-gradient(ellipse 26% 45% at 90% 22%, rgba(172,182,198,.85), transparent 65%),
-    radial-gradient(ellipse 34% 50% at 30% 55%, rgba(162,172,190,.8), transparent 65%),
-    radial-gradient(ellipse 30% 40% at 78% 60%, rgba(178,186,202,.8), transparent 65%);
-  filter:blur(22px);
-  opacity:0;
+    radial-gradient(ellipse 20% 55% at 10% 40%, rgba(205,212,224,1), transparent 65%),
+    radial-gradient(ellipse 16% 45% at 24% 18%, rgba(184,193,208,.95), transparent 65%),
+    radial-gradient(ellipse 22% 50% at 38% 32%, rgba(194,202,216,1), transparent 65%),
+    radial-gradient(ellipse 14% 40% at 50% 22%, rgba(172,182,198,.9), transparent 65%),
+    radial-gradient(ellipse 18% 45% at 60% 55%, rgba(162,172,190,.85), transparent 65%),
+    radial-gradient(ellipse 16% 38% at 70% 60%, rgba(178,186,202,.85), transparent 65%),
+    radial-gradient(ellipse 20% 50% at 82% 28%, rgba(190,198,214,.95), transparent 65%),
+    radial-gradient(ellipse 15% 40% at 94% 45%, rgba(170,180,196,.85), transparent 65%);
+  filter:blur(24px);
+  opacity:.08;
   mix-blend-mode:screen;
+  animation:cloudDrift 220s linear infinite;
+}
+@keyframes cloudDrift{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-22%);}
 }
 .storm-flash{
   position:absolute;inset:0;
-  background:radial-gradient(ellipse 65% 48% at 50% 8%, rgba(255,255,255,.95), rgba(210,222,255,.35) 45%, transparent 74%);
+  background:
+    radial-gradient(ellipse 130% 90% at 50% 20%, rgba(255,255,255,.98), rgba(215,226,255,.55) 40%, rgba(180,200,255,.18) 65%, transparent 85%);
   opacity:0;
   mix-blend-mode:screen;
 }
 .bolt-svg{
-  position:absolute;top:-2%;height:62%;opacity:0;
-  filter:drop-shadow(0 0 6px rgba(210,225,255,.95)) drop-shadow(0 0 22px rgba(150,185,255,.7));
+  position:absolute;top:0;height:100%;opacity:0;
+  filter:drop-shadow(0 0 8px rgba(220,232,255,1)) drop-shadow(0 0 30px rgba(160,195,255,.8)) drop-shadow(0 0 60px rgba(140,180,255,.5));
 }
-.bolt-svg path{fill:none;stroke:#eef4ff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.bolt-svg path{fill:none;stroke:#f4f8ff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
+
+.storm-debris{position:absolute;inset:0;opacity:.16;mix-blend-mode:screen;}
+.debris-bit{
+  position:absolute;top:-5%;
+  background:rgba(200,190,170,.8);
+  border-radius:1px;
+  animation-name:windDrift;
+  animation-timing-function:linear;
+  animation-iteration-count:infinite;
+}
+@keyframes windDrift{
+  0%{transform:translate(-10vw,-5vh) rotate(0deg);opacity:0;}
+  8%{opacity:1;}
+  92%{opacity:1;}
+  100%{transform:translate(115vw, 60vh) rotate(340deg);opacity:0;}
+}
 
 .page-content{position:relative;z-index:1;}
 
@@ -117,8 +152,8 @@ h1,h2,h3,.display{
 }
 .eyebrow::before{content:"";width:22px;height:1px;background:var(--ember);display:inline-block;}
 
-.wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
-section{position:relative;padding:120px 0;border-top:1px solid var(--line);}
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px;}
+section{position:relative;padding:130px 0;border-top:1px solid var(--line);}
 
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
@@ -127,7 +162,7 @@ nav{
   background:linear-gradient(to bottom, rgba(11,11,12,.9), transparent);
   backdrop-filter:blur(2px);
 }
-.nav-mark{font-family:'Big Shoulders Display';font-weight:800;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
+.nav-mark{font-family:'Josefin Sans';font-weight:800;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
 .nav-mark .nav-slash{color:var(--ember);}
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{
@@ -172,6 +207,28 @@ nav{
   font-weight:700;
 }
 .hero h1 em{font-style:normal;color:var(--ember);}
+.stars-arc{
+  position:relative;height:34px;margin-top:6px;display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.stars-arc .star{
+  position:absolute;left:50%;top:50%;
+  font-size:1.1rem;line-height:1;
+  color:#ffd700;
+  text-shadow:0 0 6px rgba(255,215,0,.7), 0 0 16px rgba(255,180,0,.4);
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.05) translate(0,10px);
+  animation:starFly 1.5s cubic-bezier(.16,.84,.28,1) forwards;
+  animation-fill-mode:forwards;
+}
+@keyframes starFly{
+  0%{opacity:0;filter:blur(5px);transform:translate(-50%,-50%) scale(.05) translate(0,10px);}
+  55%{opacity:1;filter:blur(0);}
+  100%{opacity:1;filter:blur(0);transform:translate(-50%,-50%) scale(1) translate(var(--tx),var(--ty));}
+}
+@media (prefers-reduced-motion: reduce){
+  .stars-arc .star{animation:none;opacity:1;transform:translate(-50%,-50%) scale(1) translate(var(--tx),var(--ty));}
+}
 .hero .role{
   font-family:'IBM Plex Mono',monospace;font-size:clamp(.95rem,1.6vw,1.15rem);
   color:var(--text-dim);margin-top:18px;max-width:640px;letter-spacing:.02em;line-height:1.6;
@@ -195,7 +252,7 @@ nav{
 }
 .hero-meta div{padding:20px 0 0;border-right:1px solid var(--line);}
 .hero-meta div:last-child{border-right:none;}
-.hero-meta .num{font-family:'Big Shoulders Display';font-weight:800;font-size:1.9rem;color:var(--ember-bright);}
+.hero-meta .num{font-family:'Josefin Sans';font-weight:800;font-size:1.9rem;color:var(--ember-bright);}
 .hero-meta .lbl{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
 
 .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
@@ -251,20 +308,22 @@ nav{
 }
 .coming-soon-badge .dot2{width:6px;height:6px;border-radius:50%;background:var(--ember);animation:pulse 2s ease-in-out infinite;}
 
-.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);}
-.work-card{
-  background:var(--bg);padding:0;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-}
-.work-thumb{
-  position:relative;overflow:hidden;
-}
-.work-body{padding:24px 26px 28px;}
-.work-body .sc{font-family:'IBM Plex Mono';font-size:.7rem;color:var(--ember);letter-spacing:.1em;}
-.work-body h3{font-size:1.5rem;margin-top:8px;}
-.work-body p{color:var(--text-dim);font-size:.9rem;margin-top:8px;line-height:1.55;max-width:44ch;}
-.tag-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+.work-list{display:flex;flex-direction:column;gap:90px;}
+.work-row{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;}
+.work-row.reverse .work-thumb{order:2;}
+.work-row.reverse .work-body{order:1;}
+.work-thumb{position:relative;overflow:hidden;border:1px solid var(--line-strong);border-radius:3px;aspect-ratio:16/9;}
+.work-thumb iframe{width:100%;height:100%;border:0;display:block;}
+.work-body{padding:0;}
+.work-body .sc{font-family:'IBM Plex Mono';font-size:.72rem;color:var(--ember);letter-spacing:.12em;}
+.work-body h3{font-size:2rem;margin-top:10px;}
+.work-body p{color:var(--text-dim);font-size:.98rem;margin-top:14px;line-height:1.75;max-width:46ch;}
+.tag-row{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
 .tag{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-dim);border:1px solid var(--line-strong);padding:4px 9px;border-radius:2px;letter-spacing:.04em;}
+@media (max-width:860px){
+  .work-row, .work-row.reverse{grid-template-columns:1fr;}
+  .work-row.reverse .work-thumb, .work-row.reverse .work-body{order:initial;}
+}
 
 .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
 .skill-col .eyebrow{margin-bottom:18px;}
@@ -282,7 +341,7 @@ nav{
 .tl-item:last-child{padding-bottom:0;}
 .tl-item::before{content:"";position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--ember);}
 .tl-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 20px;}
-.tl-top h3{font-size:1.5rem;text-transform:none;font-family:'Big Shoulders Display';font-weight:700;}
+.tl-top h3{font-size:1.5rem;text-transform:none;font-family:'Josefin Sans';font-weight:700;}
 .tl-date{font-family:'IBM Plex Mono';font-size:.75rem;color:var(--text-faint);}
 .tl-studio{color:var(--ember-bright);font-size:.85rem;font-family:'IBM Plex Mono';margin-top:4px;}
 .tl-item p{color:var(--text-dim);margin-top:12px;line-height:1.7;max-width:62ch;font-size:.95rem;}
@@ -303,7 +362,6 @@ nav{
 .contact-list{list-style:none;border-top:1px solid var(--line);}
 .contact-list li{border-bottom:1px solid var(--line);padding:18px 0;display:flex;justify-content:space-between;align-items:center;}
 .contact-list a{color:var(--text);text-decoration:none;font-family:'IBM Plex Mono';font-size:.9rem;}
-.contact-list a:hover{color:var(--ember-bright);}
 .contact-list span{font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;}
 
 footer{
@@ -316,7 +374,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   .nav-links{display:none;}
   .nav-toggle{display:block;}
   .hero-meta{grid-template-columns:repeat(2,1fr);row-gap:26px;}
-  .work-grid{grid-template-columns:1fr;}
+  .work-list{gap:50px;}
   .skills-grid{grid-template-columns:1fr;gap:34px;}
   .about-grid,.contact-inner{grid-template-columns:1fr;gap:40px;}
   section{padding:80px 0;}
@@ -328,9 +386,24 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 </style>
 </head>
 <body>
+<!-- ============================================================
+   HOW TO REPLACE THE HEADSHOT:
+   Delete "headshot.jpg" from your GitHub repo (open it, click the
+   trash icon, commit) then Add File > Upload Files with your new
+   photo — but it MUST be named exactly "headshot.jpg" (or edit the
+   src="headshot.jpg" reference below to match your new filename).
+
+   HOW TO UPDATE/RENAME THE RESUME:
+   The button below points to "Dominic-Davis-Resume.docx". To swap
+   in a new resume: upload your new .docx to the repo, then either
+   (a) name it exactly "Dominic-Davis-Resume.docx" so it just
+   replaces the old one, or (b) give it a new name and update the
+   two href="Dominic-Davis-Resume.docx" spots below to match.
+   ============================================================ -->
 
 <div class="storm-layer">
   <div class="storm-clouds"></div>
+  <div class="storm-debris"></div>
   <div class="storm-flash"></div>
 </div>
 <div class="grain"></div>
@@ -357,11 +430,20 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       <span class="dot"></span>
       <span class="eyebrow" id="cfg-status">Status — Open to Work</span>
     </div>
-    <h1><span class="hero-name fire-text" id="cfg-name">Dominic Davis</span><span class="hero-role"><span id="cfg-h1">Character Animator</span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
+    <h1><span class="hero-name fire-text" id="cfg-name">Dominic Davis</span><span class="hero-role"><span class="fire-text" id="cfg-h1">Character Animator</span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
+    <div class="stars-arc" aria-hidden="true">
+      <span class="star" style="--tx:-190px; --ty:16px;  animation-delay:.05s;">★</span>
+      <span class="star" style="--tx:-130px; --ty:4px;   animation-delay:.32s;">★</span>
+      <span class="star" style="--tx:-64px;  --ty:-4px;  animation-delay:.18s;">★</span>
+      <span class="star" style="--tx:2px;    --ty:-9px;  animation-delay:.46s;">★</span>
+      <span class="star" style="--tx:68px;   --ty:-3px;  animation-delay:.24s;">★</span>
+      <span class="star" style="--tx:134px;  --ty:5px;   animation-delay:.40s;">★</span>
+      <span class="star" style="--tx:192px;  --ty:17px;  animation-delay:.12s;">★</span>
+    </div>
     <p class="role" id="cfg-tagline">Seven years animating character performances for broadcast series in Autodesk Maya. Now training toward creature work — where timing, weight, and behaviour matter even more.</p>
     <div class="hero-actions">
       <a href="#reel" class="btn btn-primary">▶ Watch Reel</a>
-      <a href="Dominic-Davis-Resume.pdf" download class="btn btn-ghost">↓ Download Resume</a>
+      <a href="Dominic-Davis-Resume.docx" download class="btn btn-ghost">↓ Download Resume</a>
       <a href="#contact" class="btn btn-ghost">Contact</a>
     </div>
     <div class="hero-meta">
@@ -378,6 +460,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap">
     <div class="sec-head">
       <div>
+        <span class="eyebrow">Demo Reel</span>
         <h2 class="fire-text">The Reel</h2>
       </div>
       <p class="sec-note">This reel mainly features personal shots created during my free time, along with a few studio shots to reflect my production experience.</p>
@@ -394,6 +477,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap">
     <div class="sec-head">
       <div>
+        <span class="eyebrow">360° Turnaround</span>
         <h2 class="fire-text">3D Turnaround</h2>
       </div>
       <p class="sec-note">Not live yet — currently in development.</p>
@@ -416,49 +500,52 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap">
     <div class="sec-head">
       <div>
+        <span class="eyebrow">Selected Shots</span>
         <h2 class="fire-text">Selected Work</h2>
       </div>
-      <p class="sec-note">Project-based reels from productions I've contributed to.</p>
+      <p class="sec-note">Three productions, three different rooms to perform in — an underwater comedy for Nickelodeon/Paramount+, a fast, internationally distributed adventure series, and a gag-driven chipmunk show. Each reel below sits beside the shot context: what the sequence needed, and where the performance lives inside the pipeline.</p>
     </div>
   </div>
-  <div class="work-grid">
+  <div class="wrap">
+  <div class="work-list">
 
-    <div class="work-card">
-      <div class="work-thumb" style="aspect-ratio:16/9;">
-        <iframe src="https://player.vimeo.com/video/383099624?h=a4f8acabcf&title=0&byline=0&portrait=0" style="width:100%;height:100%;border:0;display:block;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    <div class="work-row">
+      <div class="work-thumb">
+        <iframe src="https://player.vimeo.com/video/383099624?h=a4f8acabcf&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="work-body">
         <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
         <h3 class="fire-text">Kamp Koral</h3>
-        <p>Character performance animation for the Nickelodeon/Paramount+ series — full pipeline from blocking through spline to final polish.</p>
+        <p>Character performance animation for the Nickelodeon/Paramount+ underwater comedy series — full pipeline from blocking through spline to final polish, delivered inside a tight episodic broadcast schedule.</p>
         <div class="tag-row"><span class="tag">Maya</span><span class="tag">Episodic</span><span class="tag">Broadcast QC</span></div>
       </div>
     </div>
 
-    <div class="work-card">
-      <div class="work-thumb" style="aspect-ratio:16/9;">
-        <iframe src="https://player.vimeo.com/video/442333359?h=443784642e&title=0&byline=0&portrait=0" style="width:100%;height:100%;border:0;display:block;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      </div>
-      <div class="work-body">
-        <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
-        <h3 class="fire-text">ALVINNN!!! and the Chipmunks</h3>
-        <p>Character animation aligned to production style guides and director/supervisor creative direction, built on strong acting, weight, and follow-through fundamentals.</p>
-        <div class="tag-row"><span class="tag">Maya</span><span class="tag">Character Acting</span></div>
-      </div>
-    </div>
-
-    <div class="work-card">
-      <div class="work-thumb" style="aspect-ratio:16/9;">
-        <iframe src="https://player.vimeo.com/video/442344743?h=62eed2bec6&title=0&byline=0&portrait=0" style="width:100%;height:100%;border:0;display:block;" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    <div class="work-row reverse">
+      <div class="work-thumb">
+        <iframe src="https://player.vimeo.com/video/442344743?h=62eed2bec6&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="work-body">
         <span class="sc mono">TOONZ MEDIA GROUP · KERALA</span>
         <h3 class="fire-text">Mondo-Yan</h3>
-        <p>Character animation for this internationally distributed children's series, within a large-scale episodic production pipeline.</p>
+        <p>Character animation for this internationally distributed adventure series, built inside a large-scale, high-volume episodic production pipeline shared across a big animation team.</p>
         <div class="tag-row"><span class="tag">Maya</span><span class="tag">High-Volume Pipeline</span></div>
       </div>
     </div>
 
+    <div class="work-row">
+      <div class="work-thumb">
+        <iframe src="https://player.vimeo.com/video/442333359?h=443784642e&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="work-body">
+        <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
+        <h3 class="fire-text">ALVINNN!!! and the Chipmunks</h3>
+        <p>Character animation aligned to production style guides and director/supervisor creative direction, built on strong comic timing, weight, and follow-through fundamentals for a fast, gag-driven show.</p>
+        <div class="tag-row"><span class="tag">Maya</span><span class="tag">Character Acting</span></div>
+      </div>
+    </div>
+
+  </div>
   </div>
 </section>
 
@@ -467,6 +554,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap">
     <div class="sec-head">
       <div>
+        <span class="eyebrow">Spec Sheet</span>
         <h2 class="fire-text">Skills &amp; Software</h2>
       </div>
       <p class="sec-note">Bars reflect real proficiency, not aspiration — Maya is the daily driver, Blender and Unreal are active learning.</p>
@@ -508,6 +596,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap">
     <div class="sec-head">
       <div>
+        <span class="eyebrow">Production History</span>
         <h2 class="fire-text">Experience</h2>
       </div>
       <p class="sec-note">Seven years across episodic studios and independent client work.</p>
@@ -557,12 +646,13 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap">
     <div class="sec-head">
       <div>
+        <span class="eyebrow">About</span>
         <h2 class="fire-text" style="text-transform:none;">Hi!</h2>
       </div>
     </div>
     <div class="about-grid">
       <div class="about-photo">
-        <img src="headshot.jpg" alt="Dominic Davis" style="width:100%;height:100%;object-fit:cover;border-radius:3px;">
+        <img src="headshot.jpg" alt="Dominic Davis" style="width:100%;height:100%;object-fit:contain;border-radius:3px;">
       </div>
       <div class="about-body">
         <p><strong class="fire-text">Seven years in CG animation production does something to how you see motion.</strong> Working across multiple internationally broadcast series has built an eye for what makes a performance feel honest rather than mechanical.</p>
@@ -581,11 +671,12 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 <section id="contact">
   <div class="wrap contact-inner">
     <div class="contact-left">
+      <span class="eyebrow">Get In Touch</span>
       <h2 class="fire-text">Let's talk.</h2>
       <p>Open to full-time opportunities for character/creature animation roles. Fastest way to reach me is email or WhatsApp.</p>
       <div class="contact-actions">
         <a href="mailto:domnickl45f3565@gmail.com" class="btn btn-primary">Email Me</a>
-        <a href="Dominic-Davis-Resume.pdf" download class="btn btn-ghost">↓ Download Resume</a>
+        <a href="Dominic-Davis-Resume.docx" download class="btn btn-ghost">↓ Download Resume</a>
       </div>
     </div>
     <ul class="contact-list">
@@ -633,23 +724,63 @@ const CONTENT = {
 })();
 
 (function fireText(){
+  const root = document.documentElement;
+  let gx = window.innerWidth/2, gy = window.innerHeight/2;
+  let e2 = [gx,gy], e3 = [gx,gy], e4 = [gx,gy];
+  let lastX = gx, lastY = gy, burstTimer = null;
+
   document.addEventListener('mousemove', function(e){
-    document.documentElement.style.setProperty('--gx', e.clientX + 'px');
-    document.documentElement.style.setProperty('--gy', e.clientY + 'px');
+    gx = e.clientX; gy = e.clientY;
+    root.style.setProperty('--gx', gx + 'px');
+    root.style.setProperty('--gy', gy + 'px');
+    const dist = Math.hypot(gx-lastX, gy-lastY);
+    lastX = gx; lastY = gy;
+    if(dist > 45){
+      root.classList.add('burst');
+      clearTimeout(burstTimer);
+      burstTimer = setTimeout(function(){ root.classList.remove('burst'); }, 220);
+    }
   });
-  document.querySelectorAll('.fire-text').forEach(function(el){
-    el.addEventListener('mouseenter', function(){ el.classList.add('fire-active'); });
-    el.addEventListener('mouseleave', function(){ el.classList.remove('fire-active'); });
-  });
+
+  function trail(){
+    e2[0]+=(gx-e2[0])*0.32;  e2[1]+=(gy-e2[1])*0.32;
+    e3[0]+=(e2[0]-e3[0])*0.22; e3[1]+=(e2[1]-e3[1])*0.22;
+    e4[0]+=(e3[0]-e4[0])*0.15; e4[1]+=(e3[1]-e4[1])*0.15;
+    root.style.setProperty('--e2', e2[0]+'px');  root.style.setProperty('--e2y', e2[1]+'px');
+    root.style.setProperty('--e3', e3[0]+'px');  root.style.setProperty('--e3y', e3[1]+'px');
+    root.style.setProperty('--e4', e4[0]+'px');  root.style.setProperty('--e4y', e4[1]+'px');
+    requestAnimationFrame(trail);
+  }
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(trail);
 })();
 
 (function storm(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const clouds = document.querySelector('.storm-clouds');
-  const flash  = document.querySelector('.storm-flash');
-  const layer  = document.querySelector('.storm-layer');
+  const clouds  = document.querySelector('.storm-clouds');
+  const flash   = document.querySelector('.storm-flash');
+  const layer   = document.querySelector('.storm-layer');
+  const debrisC = document.querySelector('.storm-debris');
   if(!clouds || !flash || !layer) return;
+
+  const DEBRIS_COUNT = 22;
+  for(let i=0;i<DEBRIS_COUNT;i++){
+    const bit = document.createElement('div');
+    bit.className = 'debris-bit';
+    const kind = Math.random();
+    let w,h,radius;
+    if(kind < 0.5){ w = 2+Math.random()*2; h = w; radius='50%'; }
+    else if(kind < 0.8){ w = 5+Math.random()*6; h = 2+Math.random()*2; radius='40%'; }
+    else { w = 6+Math.random()*7; h = 4+Math.random()*5; radius='30% 60% 30% 60%'; }
+    bit.style.width = w+'px';
+    bit.style.height = h+'px';
+    bit.style.borderRadius = radius;
+    bit.style.top = (Math.random()*90)+'%';
+    const dur = 14 + Math.random()*18;
+    bit.style.animationDuration = dur+'s';
+    bit.style.animationDelay = (-Math.random()*dur)+'s';
+    if(debrisC) debrisC.appendChild(bit);
+  }
 
   const FLASH_PROFILES = [
     [{delay:0,duration:90,peak:1}],
@@ -674,7 +805,7 @@ const CONTENT = {
     [{delay:0,duration:65,peak:1},{delay:500,duration:65,peak:.8},{delay:900,duration:65,peak:.9},{delay:1200,duration:300,peak:.3}]
   ];
 
-  function pulse(el, profile, scale){
+  function pulseOpacity(el, profile, scale){
     profile.forEach(function(p){
       const peak = Math.min(1, p.peak * (scale || 1));
       setTimeout(function(){
@@ -688,13 +819,26 @@ const CONTENT = {
     });
   }
 
+  function pulseBrightness(el, profile, maxBoost){
+    profile.forEach(function(p){
+      setTimeout(function(){
+        el.style.transition = 'filter ' + Math.max(20, p.duration*0.3) + 'ms ease-out';
+        el.style.filter = 'brightness(' + (1 + p.peak*maxBoost) + ')';
+        setTimeout(function(){
+          el.style.transition = 'filter ' + Math.max(40, p.duration*0.9) + 'ms ease-in';
+          el.style.filter = 'brightness(1)';
+        }, p.duration*0.3);
+      }, p.delay);
+    });
+  }
+
   function randomBoltPath(){
     let x = 8 + Math.random()*84;
     let y = 0;
     let d = 'M ' + x.toFixed(1) + ' 0';
-    while(y < 58){
-      y += 5 + Math.random()*9;
-      x += (Math.random()-0.5)*15;
+    while(y < 100){
+      y += 4 + Math.random()*7;
+      x += (Math.random()-0.5)*13;
       x = Math.max(2, Math.min(98, x));
       d += ' L ' + x.toFixed(1) + ' ' + y.toFixed(1);
     }
@@ -703,19 +847,20 @@ const CONTENT = {
 
   function spawnBolt(){
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox','0 0 100 60');
+    svg.setAttribute('viewBox','0 0 100 100');
     svg.setAttribute('preserveAspectRatio','none');
     svg.classList.add('bolt-svg');
     svg.style.left = (8 + Math.random()*70) + '%';
-    svg.style.width = (14 + Math.random()*12) + '%';
+    svg.style.width = (16 + Math.random()*14) + '%';
     const path = document.createElementNS('http://www.w3.org/2000/svg','path');
     path.setAttribute('d', randomBoltPath());
     svg.appendChild(path);
     layer.appendChild(svg);
-    if(Math.random() < 0.4){
+    const branches = Math.random() < 0.55 ? 1 + Math.floor(Math.random()*2) : 0;
+    for(let b=0;b<branches;b++){
       const branch = document.createElementNS('http://www.w3.org/2000/svg','path');
       branch.setAttribute('d', randomBoltPath());
-      branch.style.opacity = '.5';
+      branch.style.opacity = (0.35 + Math.random()*0.3).toString();
       svg.appendChild(branch);
     }
     return svg;
@@ -723,37 +868,22 @@ const CONTENT = {
 
   function strike(){
     const profile = FLASH_PROFILES[Math.floor(Math.random()*FLASH_PROFILES.length)];
-    const bolt = spawnBolt();
-    pulse(clouds, profile, 1);
-    pulse(flash, profile, 0.85);
-    pulse(bolt, profile, 1);
+    const bolts = [spawnBolt()];
+    if(Math.random() < 0.3) bolts.push(spawnBolt());
+
+    pulseBrightness(clouds, profile, 9);
+    if(debrisC) pulseBrightness(debrisC, profile, 6);
+    pulseOpacity(flash, profile, 0.9);
+    bolts.forEach(function(bolt){ pulseOpacity(bolt, profile, 1); });
 
     const totalDur = profile.reduce(function(m,p){ return Math.max(m, p.delay+p.duration); }, 0) + 400;
-    setTimeout(function(){ bolt.remove(); }, totalDur);
+    setTimeout(function(){ bolts.forEach(function(b){ b.remove(); }); }, totalDur);
 
     const nextPause = 4000 + Math.random()*12000;
     setTimeout(strike, nextPause);
   }
 
   setTimeout(strike, 2500 + Math.random()*3500);
-})();
-
-(function goldHover(){
-  const el = document.getElementById('cfg-h1');
-  if(!el) return;
-  let revertTimer = null;
-  el.style.color = '#ffffff';
-  el.addEventListener('mouseenter', function(){
-    clearTimeout(revertTimer);
-    el.style.transition = 'none';
-    el.style.color = '#FFD700';
-  });
-  el.addEventListener('mouseleave', function(){
-    revertTimer = setTimeout(function(){
-      el.style.transition = 'color 3s ease';
-      el.style.color = '#ffffff';
-    }, 10000);
-  });
 })();
 
 (function turnaroundReveal(){
