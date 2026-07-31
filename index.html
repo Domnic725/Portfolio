@@ -6,7 +6,7 @@
 <title>Dominic Davis — Character &amp; Creature Animator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -44,121 +44,95 @@ body{
 }
 
 h1,h2,h3,.display{
-  font-family:'Oswald',sans-serif;
+  font-family:'Big Shoulders Display',sans-serif;
   text-transform:uppercase;
-  letter-spacing:.03em;
-  font-weight:600;
-  line-height:1.05;
+  letter-spacing:.01em;
+  font-weight:800;
+  line-height:.92;
   text-align:left;
 }
 
 /* ============================================================
-   FIRE-THROUGH-THE-PAPER
-   Every piece of text listed below is duplicated by JS into a
-   ".ft-base" (always shows its real, original color — untouched)
-   and a ".ft-fire" clone stacked exactly on top. The fire clone is
-   masked to a ~2cm circle centered on the mouse (so only the area
-   right at the cursor tip ever shows fire — never the whole word),
-   and its opacity fades in/out smoothly with CSS transitions (never
-   an instant snap). Position is tracked per-element in local
-   coordinates so it works identically no matter the element's
-   original color. Storm/snow/lightning never touch these at all.
-   ============================================================ */
+   FIRE-THROUGH-THE-PAPER (single-element particle fire)
+   Each eligible element keeps its real, normal CSS "color" at all
+   times when idle — nothing is ever touched, so there is no risk
+   of duplicated/mirrored text. Only while actually hovered does the
+   element switch to background-clip:text, painting: (1) a live
+   particle-simulation flame masked to a ~2cm circle at the cursor,
+   and (2) a solid fallback layer using that element's OWN original
+   color everywhere else — so nothing outside the flame ever goes
+   black, regardless of the element's default color. ============ */
 .fire-text, .tag, .sec-note, .contact-list a, .work-body p, .tl-item p, .hero .role{
   position:relative;
 }
-.ft-fire{
-  position:absolute; inset:0; pointer-events:none;
+.ft-active{
   color:transparent;
-  opacity:0;
-  transition:opacity .5s ease;
-  background-image:
-    radial-gradient(ellipse 9px 15px  at var(--e3,-999px) var(--e3y,-999px), rgba(255,170,70,.5) 0%, rgba(255,100,10,.28) 60%, transparent 88%),
-    radial-gradient(ellipse 7px 12px  at var(--e2,-999px) var(--e2y,-999px), rgba(255,200,110,.6) 0%, rgba(255,100,10,.3) 60%, transparent 88%),
-    radial-gradient(ellipse 15px 28px at var(--lx,-999px) var(--ly,-999px), #fffef2 0%, #fff2c2 16%, #ffd76a 32%, #ff9d2e 52%, #ff5a1f 70%, #a01800 86%, transparent 97%);
   background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 25%, rgba(0,0,0,.4) 65%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 25%, rgba(0,0,0,.4) 65%, transparent 100%);
-  animation:fireFlicker .28s steps(3) infinite;
-}
-.ft-active .ft-fire{opacity:1;}
-@keyframes fireFlicker{
-  0%,100%{filter:brightness(1) saturate(1);}
-  33%{filter:brightness(1.18) saturate(1.12);}
-  66%{filter:brightness(.9) saturate(.94);}
+  mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 30%, rgba(0,0,0,.5) 70%, transparent 100%),
+              linear-gradient(#000,#000);
+  mask-composite: add;
+  -webkit-mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 30%, rgba(0,0,0,.5) 70%, transparent 100%);
 }
 @media (prefers-reduced-motion: reduce){
-  .ft-fire{animation:none;}
+  .ft-active{background-image:none !important;}
 }
 
-/* ---------------- CHARACTER ANIMATOR — burn-to-reveal ----------------
-   Starts the same color as "Creature Animator". Hovering any letter
-   in a word burns that whole word: it flashes ember, dims to ash,
-   then reveals white underneath (same white as "Dominic Davis") with
-   a small rising ember/ash puff. Reverts to the original color 5s
-   after the mouse leaves, unless hovered again first. */
+/* ---------------- CHARACTER ANIMATOR — simple fade, no colour steps ----------------
+   Starts the same colour as "Creature Animator". Hovering any letter
+   in a word fades that whole word straight to white — no colours in
+   between. Stays white while hovered. 10s after the mouse leaves it
+   starts a slow fade back to the original colour (cancelled if
+   hovered again first). */
 .burn-pair{display:inline;}
-.burn-word{display:inline-block;position:relative;color:var(--ember);cursor:default;}
-.burn-word .letter{display:inline-block;transition:color .6s ease, filter .6s ease;}
-.burn-word.burning .letter{animation:letterBurn .9s ease forwards;animation-delay:calc(var(--i) * 35ms);}
-@keyframes letterBurn{
-  0%{color:var(--ember); filter:brightness(1);}
-  30%{color:#ff8a3d; filter:brightness(1.6) drop-shadow(0 0 4px rgba(255,140,50,.8));}
-  55%{color:#3a2a1a; filter:brightness(.55);}
-  100%{color:#ffffff; filter:brightness(1);}
+.burn-word{
+  display:inline-block;color:var(--ember);cursor:default;
+  transition:color .8s ease;
 }
-.burn-word::after{
-  content:"";position:absolute;left:50%;bottom:100%;width:4px;height:4px;
-  background:radial-gradient(circle, #ffcf8a 0%, #ff8a3d 50%, transparent 80%);
-  border-radius:50%;opacity:0;pointer-events:none;
-}
-.burn-word.burning::after{animation:ashRise 1.1s ease-out forwards;animation-delay:.3s;}
-@keyframes ashRise{
-  0%{opacity:0;transform:translate(-50%,0) scale(1);}
-  20%{opacity:.9;}
-  100%{opacity:0;transform:translate(-50%,-26px) scale(2.4);}
-}
-@media (prefers-reduced-motion: reduce){
-  .burn-word .letter, .burn-word.burning .letter{animation:none;}
-  .burn-word.burning::after{animation:none;}
-}
+.burn-word.lit{color:#ffffff;transition:color .7s ease;}
+.burn-word.reverting{color:var(--ember);transition:color 3s ease;}
 
 /* ---------------- 7 STARS — static, no animation ---------------- */
 .stars-line{
-  margin-top:10px;
-  font-size:calc(clamp(1.3rem,3vw,2.2rem) / 2);
+  margin-top:22px;
+  font-size:calc(clamp(1.3rem,3vw,2.2rem) * 0.78);
   color:#ffd700;
-  letter-spacing:.35em;
+  letter-spacing:.08em;
   line-height:1;
 }
 
-/* ---------------- SNOW + LIGHTNING BACKDROP ----------------
-   Two snow layers: one behind all content (depth), one in front of
-   the text/headings (sells a 3D "space" the site sits inside) but
-   ALWAYS behind real video/photo content, via z-index. Lightning
-   flashes brighten the snow instead of clouds (clouds removed).
-   Occasional bolts render in the front layer too, for depth. */
-.snow-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;}
-.snow-layer.back{z-index:0;}
-.snow-layer.front{z-index:3;}
-.flake{position:absolute;top:-4%;border-radius:50%;background:rgba(255,255,255,.85);animation-name:snowFall;animation-timing-function:linear;animation-iteration-count:infinite;}
-.flake.shard{border-radius:1px;background:rgba(225,235,245,.8);}
-@keyframes snowFall{
-  0%{transform:translate(0,0) rotate(0deg);}
-  100%{transform:translate(var(--drift,40px), 112vh) rotate(var(--spin,180deg));}
+/* ---------------- CLOUDS + CAMERA PARALLAX + ELECTRIC SPARKS ----------------
+   Soft realistic clouds drift slowly and stay fixed in the viewport
+   (they never scroll with the page). The whole page gently "looks"
+   toward whichever screen edge the cursor nears, like a camera
+   parented to the content. Occasional small electric sparks crackle
+   where a cloud happens to pass near a piece of text — distinct from
+   lightning, brief and local. Clouds never sit above real video or
+   photo content (see the z-index:4 on those elsewhere). */
+.cloud-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.cloud{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle, rgba(214,219,226,.4) 0%, rgba(214,219,226,.14) 55%, transparent 75%);
+  filter:blur(20px);
+  animation-name:cloudDrift;animation-timing-function:linear;animation-iteration-count:infinite;
 }
-.storm-flash{
-  position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse 130% 90% at 50% 20%, rgba(255,255,255,.98), rgba(215,226,255,.55) 40%, rgba(180,200,255,.18) 65%, transparent 85%);
-  opacity:0;mix-blend-mode:screen;
+@keyframes cloudDrift{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(var(--cdx,140px));}
 }
-.bolt-svg{position:absolute;top:0;height:100%;opacity:0;pointer-events:none;
-  filter:drop-shadow(0 0 8px rgba(220,232,255,1)) drop-shadow(0 0 30px rgba(160,195,255,.8)) drop-shadow(0 0 60px rgba(140,180,255,.5));
+.cloud-glow{
+  position:fixed;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.16) 0%, transparent 70%);
+  pointer-events:none;z-index:0;mix-blend-mode:overlay;
+  transform:translate(-50%,-50%);
+  left:var(--gx,50vw);top:var(--gy,50vh);
 }
-.bolt-svg path{fill:none;stroke:#f4f8ff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
-.bolt-svg.front{stroke-width:1.6;opacity:0;}
+.spark-svg{position:fixed;pointer-events:none;z-index:6;opacity:0;
+  filter:drop-shadow(0 0 4px rgba(150,220,255,.9)) drop-shadow(0 0 10px rgba(120,200,255,.55));
+}
+.spark-svg path{fill:none;stroke:#cdeeff;stroke-width:1.6;stroke-linecap:round;}
+@keyframes sparkFlash{0%{opacity:0;}12%{opacity:1;}30%{opacity:.25;}45%{opacity:.85;}100%{opacity:0;}}
 
-.page-content{position:relative;z-index:1;}
+.page-content{position:relative;z-index:1;will-change:transform;}
 
 .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;}
 .eyebrow{
@@ -178,7 +152,7 @@ nav{
   background:linear-gradient(to bottom, rgba(11,11,12,.9), transparent);
   backdrop-filter:blur(2px);
 }
-.nav-mark{font-family:'Oswald';font-weight:700;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
+.nav-mark{font-family:'Big Shoulders Display';font-weight:800;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
 .nav-mark .nav-slash{color:var(--ember);}
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{
@@ -195,18 +169,18 @@ nav{
   background:radial-gradient(circle at 78% 30%, rgba(201,129,74,.10), transparent 45%),
              radial-gradient(circle at 15% 80%, rgba(82,112,122,.10), transparent 40%);
 }
-.slate{display:flex;align-items:center;gap:14px;margin-bottom:34px;}
+.slate{display:flex;align-items:center;gap:14px;margin-bottom:38px;}
 .slate .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .hero h1{color:var(--text);}
 .hero h1 .hero-name{display:block;font-size:clamp(3.2rem, 9vw, 7.4rem);}
-.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:10px;font-weight:700;}
+.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:14px;font-weight:700;}
 .hero h1 em{font-style:normal;color:var(--ember);}
 .hero .role{
   font-family:'IBM Plex Mono',monospace;font-size:clamp(.95rem,1.6vw,1.15rem);
-  color:var(--text-dim);margin-top:18px;max-width:640px;letter-spacing:.02em;line-height:1.6;
+  color:var(--text-dim);margin-top:28px;max-width:640px;letter-spacing:.02em;line-height:1.7;
 }
-.hero-actions{display:flex;gap:16px;margin-top:44px;flex-wrap:wrap;}
+.hero-actions{display:flex;gap:16px;margin-top:46px;flex-wrap:wrap;}
 .btn{
   font-family:'IBM Plex Mono',monospace;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;
   padding:15px 28px;border-radius:2px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;
@@ -219,10 +193,10 @@ nav{
 .btn-ghost{color:var(--text);}
 .btn-ghost:hover{border-color:var(--ember);color:var(--ember-bright);}
 
-.hero-meta{margin-top:90px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);}
+.hero-meta{margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);}
 .hero-meta div{padding:20px 0 0;border-right:1px solid var(--line);}
 .hero-meta div:last-child{border-right:none;}
-.hero-meta .num{font-family:'Oswald';font-weight:700;font-size:1.9rem;color:var(--ember-bright);}
+.hero-meta .num{font-family:'Big Shoulders Display';font-weight:800;font-size:1.9rem;color:var(--ember-bright);}
 .hero-meta .lbl{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
 
 .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
@@ -231,11 +205,18 @@ nav{
 
 .reel-frame{
   position:relative;z-index:4;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;
-  aspect-ratio:16/9;background:linear-gradient(135deg, #1a1512 0%, #0e0d0c 55%, #131718 100%);
+  aspect-ratio:16/9;background:#000;
 }
 .reel-frame iframe{width:100%;height:100%;border:0;display:block;}
+.reel-poster{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.play-btn-big{
+  width:84px;height:84px;border-radius:50%;border:1px solid var(--line-strong);background:rgba(255,255,255,.04);
+  color:var(--ember-bright);font-size:1.7rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .2s ease, background .2s ease;
+}
+.play-btn-big:hover{transform:scale(1.08);background:rgba(255,255,255,.08);}
 .reel-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--text-faint);}
-.reel-tag{position:absolute;top:16px;left:16px;font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;border:1px solid var(--line-strong);padding:5px 10px;border-radius:2px;background:rgba(0,0,0,.4);}
+.reel-tag{position:absolute;top:16px;left:16px;z-index:2;font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;border:1px solid var(--line-strong);padding:5px 10px;border-radius:2px;background:rgba(0,0,0,.4);}
 .reel-tag.rec{color:#e08a6a;}
 .reel-tag.rec::before{content:"● ";}
 
@@ -325,29 +306,22 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 <body>
 <!-- ============================================================
    HOW TO REPLACE THE HEADSHOT:
-   Delete "headshot.jpg" from your GitHub repo (open it, click the
-   trash icon, commit) then Add File > Upload Files with your new
-   photo — but it MUST be named exactly "headshot.jpg" (or edit the
-   src="headshot.jpg" reference below to match your new filename).
+   Delete "headshot.jpg" from your GitHub repo, then upload the new
+   one named exactly "headshot.jpg" (or update src="headshot.jpg"
+   below to match a different filename).
 
    HOW TO UPDATE/RENAME THE RESUME:
-   The buttons point to "Dominic-Davis-Resume.docx". To swap in a
-   new resume: upload your new .docx to the repo, then either
-   (a) name it exactly "Dominic-Davis-Resume.docx" so it replaces
-   the old one, or (b) give it a new name and update the two
-   href="Dominic-Davis-Resume.docx" spots below to match.
-
-   SCOPE NOTE: ground/grass/rolling-debris field was left out this
-   round to keep the page fast and stable — everything else you
-   asked for is here. Say the word if you want that added next.
+   Buttons point to "Dominic-Davis-Resume.docx". Upload a new file
+   with that exact name to replace it, or give it a new name and
+   update the two href="Dominic-Davis-Resume.docx" spots below.
    ============================================================ -->
 
-<div class="snow-layer back" id="snowBack"></div>
-<div class="storm-flash" id="stormFlash"></div>
+<div class="cloud-layer" id="cloudLayer"></div>
+<div class="cloud-glow" id="cloudGlow"></div>
 <div class="grain"></div>
 <div class="vignette"></div>
 
-<div class="page-content">
+<div class="page-content" id="pageContent">
 <nav>
   <div class="nav-mark"><span class="fire-text" id="cfg-navA">DOMINIC</span><span class="nav-slash">/</span><span class="fire-text" id="cfg-navB">DAVIS</span></div>
   <ul class="nav-links">
@@ -395,9 +369,11 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       </div>
       <p class="sec-note">This reel mainly features personal shots created during my free time, along with a few studio shots to reflect my production experience.</p>
     </div>
-    <div class="reel-frame">
+    <div class="reel-frame" id="reelFrame">
       <span class="reel-tag rec">LIVE</span>
-      <iframe src="https://player.vimeo.com/video/1145610763?h=887c2bae12&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      <div class="reel-poster" id="reelPoster">
+        <button class="play-btn-big" id="reelPlayBtn" aria-label="Play reel">▶</button>
+      </div>
     </div>
   </div>
 </section>
@@ -417,8 +393,8 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="turn-frame" style="aspect-ratio:16/7;">
       <div class="reel-placeholder">
         <span class="coming-soon-badge"><span class="dot2"></span>Coming Soon — In Development</span>
-        <p class="mono" style="max-width:520px;text-align:center;color:var(--text-dim);font-size:.85rem;line-height:1.8;">
-          Right now you watch a shot play. Soon you'll be able to orbit it — a full 360° view of the shot in motion, playing in real time, so the performance can be seen from every angle it was actually animated for.
+        <p class="mono" style="max-width:480px;text-align:center;color:var(--text-dim);font-size:.85rem;line-height:1.8;">
+          In development — a full orbit of the shot, coming soon. For now, the reel speaks for itself.
         </p>
       </div>
     </div>
@@ -624,7 +600,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <span class="mono">Built to be shared. Copy the link, send it to recruiters.</span>
   </div>
 </footer>
-<div class="snow-layer front" id="snowFront"></div>
 </div><!-- /.page-content -->
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -660,82 +635,95 @@ const CONTENT = {
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const sel = '.fire-text, .tag, .sec-note, .contact-list a, .work-body p, .tl-item p, .hero .role';
   document.querySelectorAll(sel).forEach(function(el){
-    if(el.dataset.ftWrapped) return;
+    if(el.dataset.ftInit) return;
     if(el.children.length > 0) return;
-    const text = el.textContent;
-    el.textContent = '';
-    const base = document.createElement('span');
-    base.className = 'ft-base';
-    base.textContent = text;
-    const fire = document.createElement('span');
-    fire.className = 'ft-fire';
-    fire.setAttribute('aria-hidden', 'true');
-    fire.textContent = text;
-    el.appendChild(base);
-    el.appendChild(fire);
-    el.dataset.ftWrapped = '1';
+    el.dataset.ftInit = '1';
+    const origColor = getComputedStyle(el).color;
 
-    let lx = -999, ly = -999, tx = -999, ty = -999;
-    let e2 = [-999, -999], e3 = [-999, -999];
-    let lastX = -999, lastY = -999, raf = null;
+    let tx = -999, ty = -999, lx = -999, ly = -999, lastX = -999, lastY = -999;
+    let particles = [];
+    let raf = null;
 
+    function spawn(vx, vy){
+      for(let i=0;i<2;i++){
+        particles.push({
+          x: lx + (Math.random()-0.5)*4, y: ly + (Math.random()-0.5)*4,
+          vx: vx*(1+Math.random()) + (Math.random()-0.5)*0.4,
+          vy: vy*(1+Math.random()) + (Math.random()-0.5)*0.4,
+          life:1, decay:0.05+Math.random()*0.03, size:3+Math.random()*4, type:'fire'
+        });
+      }
+      if(Math.random() < 0.45){
+        particles.push({
+          x: lx, y: ly, vx: vx*0.6, vy: vy*0.6,
+          life:1, decay:0.065+Math.random()*0.03, size:1.4+Math.random()*1.4, type:'ember'
+        });
+      }
+    }
     function onMove(e){
       const r = el.getBoundingClientRect();
       tx = e.clientX - r.left; ty = e.clientY - r.top;
     }
-    function loop(t){
-      lx += (tx - lx) * 0.5; ly += (ty - ly) * 0.5;
-      e2[0] += (lx - e2[0]) * 0.3;  e2[1] += (ly - e2[1]) * 0.3;
-      e3[0] += (e2[0] - e3[0]) * 0.22; e3[1] += (e2[1] - e3[1]) * 0.22;
-      const nx = Math.sin(t / 70) * 2.5 + Math.sin(t / 190) * 1.5;
-      const ny = Math.sin(t / 85 + 1) * 2 - 1.5;
-      fire.style.setProperty('--lx', (lx + nx) + 'px');
-      fire.style.setProperty('--ly', (ly + ny) + 'px');
-      fire.style.setProperty('--e2', e2[0] + 'px'); fire.style.setProperty('--e2y', e2[1] + 'px');
-      fire.style.setProperty('--e3', e3[0] + 'px'); fire.style.setProperty('--e3y', e3[1] + 'px');
-      const dx = tx - lastX, dy = ty - lastY; lastX = tx; lastY = ty;
-      const speed = Math.min(30, Math.hypot(dx, dy));
-      const skew = Math.max(-16, Math.min(16, dx * 1.4));
-      const scale = 1 + Math.min(0.35, speed * 0.02);
-      fire.style.transform = 'skewX(' + skew + 'deg) scale(' + scale + ')';
-      raf = requestAnimationFrame(loop);
+    function frame(){
+      lx += (tx-lx)*0.5; ly += (ty-ly)*0.5;
+      const dx = tx-lastX, dy = ty-lastY; lastX=tx; lastY=ty;
+      const speed = Math.hypot(dx,dy);
+      let vx, vy;
+      if(speed < 0.15){ vx = 0; vy = -0.6; } else { vx = -dx/speed*0.9; vy = -dy/speed*0.9; }
+      spawn(vx, vy);
+
+      particles.forEach(function(p){
+        p.vx += (Math.random()-0.5)*0.05;
+        p.vy += (Math.random()-0.5)*0.05 - 0.03;
+        p.vx *= 0.98; p.vy *= 0.98;
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+      });
+      particles = particles.filter(function(p){ return p.life > 0; });
+      if(particles.length > 16) particles.splice(0, particles.length-16);
+
+      const stops = particles.map(function(p){
+        if(p.type === 'ember'){
+          return 'radial-gradient(circle ' + p.size.toFixed(1) + 'px at ' + p.x.toFixed(1) + 'px ' + p.y.toFixed(1) + 'px, rgba(255,238,150,' + p.life.toFixed(2) + ') 0%, rgba(255,175,45,' + (p.life*0.92).toFixed(2) + ') 40%, rgba(255,100,10,0) 100%)';
+        }
+        return 'radial-gradient(circle ' + p.size.toFixed(1) + 'px at ' + p.x.toFixed(1) + 'px ' + p.y.toFixed(1) + 'px, rgba(255,242,170,' + (p.life*0.95).toFixed(2) + ') 0%, rgba(255,220,72,' + p.life.toFixed(2) + ') 10%, rgba(255,170,32,' + (p.life*0.98).toFixed(2) + ') 32%, rgba(255,110,12,' + (p.life*0.92).toFixed(2) + ') 58%, rgba(195,48,0,' + (p.life*0.75).toFixed(2) + ') 82%, rgba(120,18,0,0) 100%)';
+      });
+      stops.push('linear-gradient(' + origColor + ',' + origColor + ')');
+      el.style.backgroundImage = stops.join(',');
+      el.style.setProperty('--lx', lx+'px');
+      el.style.setProperty('--ly', ly+'px');
+      raf = requestAnimationFrame(frame);
     }
     el.addEventListener('mouseenter', function(e){
       const r = el.getBoundingClientRect();
-      tx = e.clientX - r.left; ty = e.clientY - r.top;
-      lx = tx; ly = ty;
+      tx = e.clientX-r.left; ty = e.clientY-r.top; lx=tx; ly=ty; lastX=tx; lastY=ty;
+      particles = [];
       el.classList.add('ft-active');
       el.addEventListener('mousemove', onMove);
-      raf = requestAnimationFrame(loop);
+      raf = requestAnimationFrame(frame);
     });
     el.addEventListener('mouseleave', function(){
       el.classList.remove('ft-active');
       el.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(raf);
+      el.style.backgroundImage = '';
     });
   });
 })();
 
 (function burnWords(){
   document.querySelectorAll('.burn-word').forEach(function(word){
-    const text = word.textContent;
-    word.textContent = '';
-    Array.from(text).forEach(function(ch, i){
-      const s = document.createElement('span');
-      s.className = 'letter';
-      s.style.setProperty('--i', i);
-      s.textContent = ch;
-      word.appendChild(s);
-    });
-    let revertTimer = null;
+    let timer = null;
     word.addEventListener('mouseenter', function(){
-      clearTimeout(revertTimer);
-      word.classList.add('burning');
+      clearTimeout(timer);
+      word.classList.remove('reverting');
+      word.classList.add('lit');
     });
     word.addEventListener('mouseleave', function(){
-      revertTimer = setTimeout(function(){
-        word.classList.remove('burning');
-      }, 5000);
+      timer = setTimeout(function(){
+        word.classList.add('reverting');
+        word.classList.remove('lit');
+      }, 10000);
     });
   });
 })();
@@ -757,164 +745,96 @@ const CONTENT = {
   if(window.location.hash === '#turnaround'){ reveal(); }
 })();
 
-(function weather(){
+(function reelGate(){
+  const poster = document.getElementById('reelPoster');
+  const frame = document.getElementById('reelFrame');
+  if(!poster || !frame) return;
+  poster.addEventListener('click', function(){
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://player.vimeo.com/video/1145610763?h=887c2bae12&title=0&byline=0&portrait=0&autoplay=1';
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.style.width = '100%'; iframe.style.height = '100%'; iframe.style.border = '0';
+    frame.appendChild(iframe);
+    poster.remove();
+  });
+})();
+
+(function atmosphere(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const back  = document.getElementById('snowBack');
-  const front = document.getElementById('snowFront');
-  const flash = document.getElementById('stormFlash');
-  if(!back || !front || !flash) return;
+  const cloudLayer = document.getElementById('cloudLayer');
+  const cloudGlow  = document.getElementById('cloudGlow');
+  const page = document.getElementById('pageContent');
+  if(!cloudLayer || !page) return;
 
-  const flakes = [];
-  function spawnFlakes(container, count, frontLayer){
-    for(let i=0;i<count;i++){
-      const f = document.createElement('div');
-      const kind = Math.random();
-      f.className = 'flake' + (kind < 0.25 ? ' shard' : '');
-      let size;
-      if(kind < 0.25){ size = 3 + Math.random()*7; f.style.width = size+'px'; f.style.height = (size*0.35)+'px'; }
-      else if(kind < 0.7){ size = 2 + Math.random()*3; f.style.width = size+'px'; f.style.height = size+'px'; }
-      else { size = 4 + Math.random()*5; f.style.width = size+'px'; f.style.height = size+'px'; f.style.filter = 'blur(.5px)'; }
-      f.style.left = (Math.random()*100)+'%';
-      f.style.opacity = (frontLayer ? 0.35 : 0.6) + Math.random()*0.35;
-      const dur = 9 + Math.random()*16;
-      f.style.animationDuration = dur+'s';
-      f.style.animationDelay = (-Math.random()*dur)+'s';
-      const drift = (Math.random()*160 - 80).toFixed(0)+'px';
-      const spin = (Math.random()*360).toFixed(0)+'deg';
-      f.style.setProperty('--drift', drift);
-      f.style.setProperty('--spin', spin);
-      f.dataset.weight = (0.4 + Math.random()*1.2).toFixed(2);
-      container.appendChild(f);
-      flakes.push(f);
-    }
+  for(let i=0;i<12;i++){
+    const c = document.createElement('div');
+    c.className = 'cloud';
+    const size = 160 + Math.random()*260;
+    c.style.width = size+'px';
+    c.style.height = (size*0.55)+'px';
+    c.style.left = (Math.random()*100)+'%';
+    c.style.top = (Math.random()*70)+'%';
+    c.style.opacity = (0.25 + Math.random()*0.4).toFixed(2);
+    c.style.setProperty('--cdx', ((Math.random()*220+80) * (Math.random()<0.5?-1:1))+'px');
+    const dur = 60 + Math.random()*90;
+    c.style.animationDuration = dur+'s';
+    c.style.animationDirection = Math.random()<0.5 ? 'normal' : 'alternate';
+    c.style.animationDelay = (-Math.random()*dur)+'s';
+    cloudLayer.appendChild(c);
   }
-  spawnFlakes(back, 55, false);
-  spawnFlakes(front, 30, true);
 
-  setInterval(function(){
-    flakes.forEach(function(f){
-      const cur = parseFloat(f.style.getPropertyValue('--drift')) || 0;
-      const next = cur + (Math.random()*60 - 30);
-      f.style.setProperty('--drift', Math.max(-140, Math.min(140, next)) + 'px');
-    });
-  }, 6000);
-
-  let lastNudge = 0;
+  let px=0, py=0, tx2=0, ty2=0;
   document.addEventListener('mousemove', function(e){
-    const now = performance.now();
-    if(now - lastNudge < 90) return;
-    lastNudge = now;
-    const sample = flakes[Math.floor(Math.random()*flakes.length)];
-    if(!sample) return;
-    const r = sample.getBoundingClientRect();
-    const dist = Math.hypot(e.clientX - (r.left+r.width/2), e.clientY - (r.top+r.height/2));
-    if(dist < 70){
-      const weight = parseFloat(sample.dataset.weight) || 1;
-      const kick = (30 / weight) * (Math.random() > 0.5 ? 1 : -1);
-      const cur = parseFloat(sample.style.getPropertyValue('--drift')) || 0;
-      sample.style.setProperty('--drift', (cur + kick) + 'px');
-      const curSpin = parseFloat(sample.style.getPropertyValue('--spin')) || 0;
-      sample.style.setProperty('--spin', (curSpin + kick*4) + 'deg');
+    const nx = (e.clientX / window.innerWidth) * 2 - 1;
+    const ny = (e.clientY / window.innerHeight) * 2 - 1;
+    tx2 = nx * 16; ty2 = ny * 12;
+    if(cloudGlow){
+      cloudGlow.style.setProperty('--gx', e.clientX+'px');
+      cloudGlow.style.setProperty('--gy', e.clientY+'px');
     }
   });
-
-  const FLASH_PROFILES = [
-    [{delay:0,duration:90,peak:1}],
-    [{delay:0,duration:70,peak:.9},{delay:150,duration:220,peak:.45}],
-    [{delay:0,duration:50,peak:1},{delay:90,duration:40,peak:.25},{delay:170,duration:130,peak:.8}],
-    [{delay:0,duration:60,peak:.6},{delay:100,duration:60,peak:1},{delay:220,duration:300,peak:.35}],
-    [{delay:0,duration:40,peak:1},{delay:60,duration:30,peak:.2},{delay:110,duration:40,peak:.9},{delay:190,duration:200,peak:.3}],
-    [{delay:0,duration:180,peak:.55}],
-    [{delay:0,duration:35,peak:.8},{delay:55,duration:35,peak:1},{delay:110,duration:35,peak:.6},{delay:170,duration:35,peak:.85}],
-    [{delay:0,duration:100,peak:1},{delay:400,duration:80,peak:.7}],
-    [{delay:0,duration:60,peak:.4},{delay:400,duration:60,peak:1},{delay:520,duration:250,peak:.4}],
-    [{delay:0,duration:250,peak:.3}],
-    [{delay:0,duration:45,peak:1},{delay:80,duration:250,peak:.5},{delay:380,duration:45,peak:.9}],
-    [{delay:0,duration:30,peak:.7},{delay:45,duration:30,peak:1},{delay:90,duration:30,peak:.4},{delay:140,duration:30,peak:.8},{delay:200,duration:180,peak:.3}],
-    [{delay:0,duration:400,peak:.25}],
-    [{delay:0,duration:70,peak:1},{delay:130,duration:70,peak:.6},{delay:260,duration:70,peak:.9},{delay:400,duration:300,peak:.3}],
-    [{delay:0,duration:55,peak:.9}],
-    [{delay:0,duration:40,peak:1},{delay:600,duration:40,peak:1},{delay:900,duration:200,peak:.4}],
-    [{delay:0,duration:90,peak:.75},{delay:180,duration:40,peak:1},{delay:260,duration:220,peak:.35}],
-    [{delay:0,duration:120,peak:.5},{delay:260,duration:120,peak:.85}],
-    [{delay:0,duration:30,peak:1},{delay:40,duration:30,peak:.1},{delay:75,duration:30,peak:.95},{delay:115,duration:30,peak:.15},{delay:150,duration:250,peak:.4}],
-    [{delay:0,duration:65,peak:1},{delay:500,duration:65,peak:.8},{delay:900,duration:65,peak:.9},{delay:1200,duration:300,peak:.3}]
-  ];
-
-  function pulseOpacity(el, profile, scale){
-    profile.forEach(function(p){
-      const peak = Math.min(1, p.peak * (scale || 1));
-      setTimeout(function(){
-        el.style.transition = 'opacity ' + Math.max(20, p.duration*0.3) + 'ms ease-out';
-        el.style.opacity = peak;
-        setTimeout(function(){
-          el.style.transition = 'opacity ' + Math.max(30, p.duration*0.7) + 'ms ease-in';
-          el.style.opacity = 0;
-        }, p.duration*0.3);
-      }, p.delay);
-    });
+  function loop(){
+    px += (tx2-px)*0.06; py += (ty2-py)*0.06;
+    page.style.transform = 'translate(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px)';
+    requestAnimationFrame(loop);
   }
-  function pulseBrightness(el, profile, maxBoost){
-    profile.forEach(function(p){
-      setTimeout(function(){
-        el.style.transition = 'filter ' + Math.max(20, p.duration*0.3) + 'ms ease-out';
-        el.style.filter = 'brightness(' + (1 + p.peak*maxBoost) + ')';
-        setTimeout(function(){
-          el.style.transition = 'filter ' + Math.max(40, p.duration*0.9) + 'ms ease-in';
-          el.style.filter = 'brightness(1)';
-        }, p.duration*0.3);
-      }, p.delay);
-    });
-  }
-  function randomBoltPath(){
-    let x = 8 + Math.random()*84, y = 0;
-    let d = 'M ' + x.toFixed(1) + ' 0';
-    while(y < 100){
-      y += 4 + Math.random()*7;
-      x += (Math.random()-0.5)*13;
-      x = Math.max(2, Math.min(98, x));
-      d += ' L ' + x.toFixed(1) + ' ' + y.toFixed(1);
+  requestAnimationFrame(loop);
+
+  function randomSparkPath(x, y){
+    let d = 'M ' + x + ' ' + y;
+    let cx = x, cy = y;
+    for(let i=0;i<4;i++){
+      cx += (Math.random()-0.5)*18;
+      cy += (Math.random()-0.5)*18;
+      d += ' L ' + cx.toFixed(1) + ' ' + cy.toFixed(1);
     }
     return d;
   }
-  function spawnBolt(container, isFront){
-    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox','0 0 100 100');
-    svg.setAttribute('preserveAspectRatio','none');
-    svg.classList.add('bolt-svg');
-    if(isFront) svg.classList.add('front');
-    svg.style.left = (8 + Math.random()*70) + '%';
-    svg.style.width = (16 + Math.random()*14) + '%';
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', randomBoltPath());
-    svg.appendChild(path);
-    container.appendChild(svg);
-    const branches = Math.random() < 0.55 ? 1 + Math.floor(Math.random()*2) : 0;
-    for(let b=0;b<branches;b++){
-      const branch = document.createElementNS('http://www.w3.org/2000/svg','path');
-      branch.setAttribute('d', randomBoltPath());
-      branch.style.opacity = (0.35 + Math.random()*0.3).toString();
-      svg.appendChild(branch);
+  function spark(){
+    const targets = document.querySelectorAll('.fire-text, .tag, .sec-note');
+    if(targets.length){
+      const el = targets[Math.floor(Math.random()*targets.length)];
+      const r = el.getBoundingClientRect();
+      if(r.width > 0 && r.top < window.innerHeight && r.bottom > 0){
+        const x = r.left + Math.random()*r.width;
+        const y = r.top + (Math.random()<0.5 ? 0 : r.height);
+        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('width','40'); svg.setAttribute('height','40');
+        svg.classList.add('spark-svg');
+        svg.style.left = (x-20)+'px'; svg.style.top = (y-20)+'px';
+        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+        path.setAttribute('d', randomSparkPath(20,20));
+        svg.appendChild(path);
+        document.body.appendChild(svg);
+        svg.style.animation = 'sparkFlash .4s ease-out';
+        setTimeout(function(){ svg.remove(); }, 450);
+      }
     }
-    return svg;
+    setTimeout(spark, 3500 + Math.random()*5000);
   }
-  function strike(){
-    const profile = FLASH_PROFILES[Math.floor(Math.random()*FLASH_PROFILES.length)];
-    const bolts = [spawnBolt(back, false)];
-    if(Math.random() < 0.3) bolts.push(spawnBolt(front, true));
-
-    pulseBrightness(back, profile, 5);
-    pulseBrightness(front, profile, 3);
-    pulseOpacity(flash, profile, 0.9);
-    bolts.forEach(function(bolt){ pulseOpacity(bolt, profile, 1); });
-
-    const totalDur = profile.reduce(function(m,p){ return Math.max(m, p.delay+p.duration); }, 0) + 400;
-    setTimeout(function(){ bolts.forEach(function(b){ b.remove(); }); }, totalDur);
-
-    setTimeout(strike, 4000 + Math.random()*12000);
-  }
-  setTimeout(strike, 2500 + Math.random()*3500);
+  setTimeout(spark, 3000 + Math.random()*3000);
 })();
 
 (function visitorAlert(){
