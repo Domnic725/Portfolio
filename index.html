@@ -6,14 +6,11 @@
 <title>Dominic Davis — Character &amp; Creature Animator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
 :root{
   --bg: #0b0b0c;
-  --bg-soft: #101012;
-  --panel: #15151780;
-  --panel-solid: #17171a;
   --line: rgba(236,231,223,0.09);
   --line-strong: rgba(236,231,223,0.18);
   --text: #ece7df;
@@ -21,7 +18,6 @@
   --text-faint: #605c57;
   --ember: #c9814a;
   --ember-bright: #e6a26a;
-  --steel: #52707a;
   --ok: #7fa87a;
 }
 
@@ -38,17 +34,17 @@ body{
 ::selection{background:var(--ember);color:#0b0b0c;}
 
 .grain{
-  position:fixed;inset:0;pointer-events:none;z-index:200;
+  position:fixed;inset:0;pointer-events:none;z-index:199;
   opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .vignette{
-  position:fixed;inset:0;pointer-events:none;z-index:199;
+  position:fixed;inset:0;pointer-events:none;z-index:200;
   background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);
 }
 
 h1,h2,h3,.display{
-  font-family:'Josefin Sans',sans-serif;
+  font-family:'Oswald',sans-serif;
   text-transform:uppercase;
   letter-spacing:.03em;
   font-weight:600;
@@ -56,98 +52,118 @@ h1,h2,h3,.display{
   text-align:left;
 }
 
-.fire-text{ cursor:default; }
-.fire-text:hover, .tag:hover, .sec-note:hover, .contact-list a:hover, .skill-list li:hover, .work-body p:hover, .tl-item p:hover, .about-body p:hover, .hero .role:hover{
+/* ============================================================
+   FIRE-THROUGH-THE-PAPER
+   Every piece of text listed below is duplicated by JS into a
+   ".ft-base" (always shows its real, original color — untouched)
+   and a ".ft-fire" clone stacked exactly on top. The fire clone is
+   masked to a ~2cm circle centered on the mouse (so only the area
+   right at the cursor tip ever shows fire — never the whole word),
+   and its opacity fades in/out smoothly with CSS transitions (never
+   an instant snap). Position is tracked per-element in local
+   coordinates so it works identically no matter the element's
+   original color. Storm/snow/lightning never touch these at all.
+   ============================================================ */
+.fire-text, .tag, .sec-note, .contact-list a, .work-body p, .tl-item p, .hero .role{
+  position:relative;
+}
+.ft-fire{
+  position:absolute; inset:0; pointer-events:none;
   color:transparent;
+  opacity:0;
+  transition:opacity .5s ease;
   background-image:
-    radial-gradient(circle 40px  at var(--e4,var(--gx,50vw)) var(--e4y,var(--gy,50vh)), rgba(255,190,90,.5) 0%, rgba(255,120,30,.3) 55%, transparent 80%),
-    radial-gradient(circle 30px  at var(--e3,var(--gx,50vw)) var(--e3y,var(--gy,50vh)), rgba(255,210,120,.6) 0%, rgba(255,110,20,.35) 55%, transparent 80%),
-    radial-gradient(circle 55px  at var(--e2,var(--gx,50vw)) var(--e2y,var(--gy,50vh)), rgba(255,225,150,.75) 0%, rgba(255,120,20,.4) 55%, transparent 82%),
-    radial-gradient(circle 90px  at var(--gx,50vw) var(--gy,50vh), #fffef2 0%, #fff2c2 8%, #ffd76a 20%, #ff9d2e 36%, #ff5a1f 52%, #d21f0b 70%, #4a0700 86%, transparent 96%),
-    linear-gradient(var(--text), var(--text));
-  background-attachment:fixed, fixed, fixed, fixed, local;
-  background-size:100vw 100vh, 100vw 100vh, 100vw 100vh, 100vw 100vh, 100% 100%;
-  background-clip:text;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:fireFlicker .3s steps(3) infinite;
+    radial-gradient(ellipse 9px 15px  at var(--e3,-999px) var(--e3y,-999px), rgba(255,170,70,.5) 0%, rgba(255,100,10,.28) 60%, transparent 88%),
+    radial-gradient(ellipse 7px 12px  at var(--e2,-999px) var(--e2y,-999px), rgba(255,200,110,.6) 0%, rgba(255,100,10,.3) 60%, transparent 88%),
+    radial-gradient(ellipse 15px 28px at var(--lx,-999px) var(--ly,-999px), #fffef2 0%, #fff2c2 16%, #ffd76a 32%, #ff9d2e 52%, #ff5a1f 70%, #a01800 86%, transparent 97%);
+  background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 25%, rgba(0,0,0,.4) 65%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 25%, rgba(0,0,0,.4) 65%, transparent 100%);
+  animation:fireFlicker .28s steps(3) infinite;
 }
-html.burst .fire-text:hover, html.burst .tag:hover, html.burst .sec-note:hover, html.burst .contact-list a:hover, html.burst .skill-list li:hover, html.burst .work-body p:hover, html.burst .tl-item p:hover, html.burst .about-body p:hover, html.burst .hero .role:hover{
-  animation:fireFlicker .15s steps(2) infinite, fireBurst .25s ease-out;
-}
+.ft-active .ft-fire{opacity:1;}
 @keyframes fireFlicker{
   0%,100%{filter:brightness(1) saturate(1);}
-  33%{filter:brightness(1.15) saturate(1.1);}
-  66%{filter:brightness(.92) saturate(.95);}
-}
-@keyframes fireBurst{
-  0%{filter:brightness(1.7) saturate(1.3);}
-  100%{filter:brightness(1) saturate(1);}
+  33%{filter:brightness(1.18) saturate(1.12);}
+  66%{filter:brightness(.9) saturate(.94);}
 }
 @media (prefers-reduced-motion: reduce){
-  .fire-text:hover{animation:none;}
+  .ft-fire{animation:none;}
 }
-.storm-layer{
-  position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+
+/* ---------------- CHARACTER ANIMATOR — burn-to-reveal ----------------
+   Starts the same color as "Creature Animator". Hovering any letter
+   in a word burns that whole word: it flashes ember, dims to ash,
+   then reveals white underneath (same white as "Dominic Davis") with
+   a small rising ember/ash puff. Reverts to the original color 5s
+   after the mouse leaves, unless hovered again first. */
+.burn-pair{display:inline;}
+.burn-word{display:inline-block;position:relative;color:var(--ember);cursor:default;}
+.burn-word .letter{display:inline-block;transition:color .6s ease, filter .6s ease;}
+.burn-word.burning .letter{animation:letterBurn .9s ease forwards;animation-delay:calc(var(--i) * 35ms);}
+@keyframes letterBurn{
+  0%{color:var(--ember); filter:brightness(1);}
+  30%{color:#ff8a3d; filter:brightness(1.6) drop-shadow(0 0 4px rgba(255,140,50,.8));}
+  55%{color:#3a2a1a; filter:brightness(.55);}
+  100%{color:#ffffff; filter:brightness(1);}
 }
-.storm-clouds{
-  position:absolute;left:-40%;top:-10%;width:180%;height:65%;
-  background-image:
-    radial-gradient(ellipse 20% 55% at 10% 40%, rgba(205,212,224,1), transparent 65%),
-    radial-gradient(ellipse 16% 45% at 24% 18%, rgba(184,193,208,.95), transparent 65%),
-    radial-gradient(ellipse 22% 50% at 38% 32%, rgba(194,202,216,1), transparent 65%),
-    radial-gradient(ellipse 14% 40% at 50% 22%, rgba(172,182,198,.9), transparent 65%),
-    radial-gradient(ellipse 18% 45% at 60% 55%, rgba(162,172,190,.85), transparent 65%),
-    radial-gradient(ellipse 16% 38% at 70% 60%, rgba(178,186,202,.85), transparent 65%),
-    radial-gradient(ellipse 20% 50% at 82% 28%, rgba(190,198,214,.95), transparent 65%),
-    radial-gradient(ellipse 15% 40% at 94% 45%, rgba(170,180,196,.85), transparent 65%);
-  filter:blur(24px);
-  opacity:.08;
-  mix-blend-mode:screen;
-  animation:cloudDrift 220s linear infinite;
+.burn-word::after{
+  content:"";position:absolute;left:50%;bottom:100%;width:4px;height:4px;
+  background:radial-gradient(circle, #ffcf8a 0%, #ff8a3d 50%, transparent 80%);
+  border-radius:50%;opacity:0;pointer-events:none;
 }
-@keyframes cloudDrift{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-22%);}
+.burn-word.burning::after{animation:ashRise 1.1s ease-out forwards;animation-delay:.3s;}
+@keyframes ashRise{
+  0%{opacity:0;transform:translate(-50%,0) scale(1);}
+  20%{opacity:.9;}
+  100%{opacity:0;transform:translate(-50%,-26px) scale(2.4);}
+}
+@media (prefers-reduced-motion: reduce){
+  .burn-word .letter, .burn-word.burning .letter{animation:none;}
+  .burn-word.burning::after{animation:none;}
+}
+
+/* ---------------- 7 STARS — static, no animation ---------------- */
+.stars-line{
+  margin-top:10px;
+  font-size:calc(clamp(1.3rem,3vw,2.2rem) / 2);
+  color:#ffd700;
+  letter-spacing:.35em;
+  line-height:1;
+}
+
+/* ---------------- SNOW + LIGHTNING BACKDROP ----------------
+   Two snow layers: one behind all content (depth), one in front of
+   the text/headings (sells a 3D "space" the site sits inside) but
+   ALWAYS behind real video/photo content, via z-index. Lightning
+   flashes brighten the snow instead of clouds (clouds removed).
+   Occasional bolts render in the front layer too, for depth. */
+.snow-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;}
+.snow-layer.back{z-index:0;}
+.snow-layer.front{z-index:3;}
+.flake{position:absolute;top:-4%;border-radius:50%;background:rgba(255,255,255,.85);animation-name:snowFall;animation-timing-function:linear;animation-iteration-count:infinite;}
+.flake.shard{border-radius:1px;background:rgba(225,235,245,.8);}
+@keyframes snowFall{
+  0%{transform:translate(0,0) rotate(0deg);}
+  100%{transform:translate(var(--drift,40px), 112vh) rotate(var(--spin,180deg));}
 }
 .storm-flash{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 130% 90% at 50% 20%, rgba(255,255,255,.98), rgba(215,226,255,.55) 40%, rgba(180,200,255,.18) 65%, transparent 85%);
-  opacity:0;
-  mix-blend-mode:screen;
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse 130% 90% at 50% 20%, rgba(255,255,255,.98), rgba(215,226,255,.55) 40%, rgba(180,200,255,.18) 65%, transparent 85%);
+  opacity:0;mix-blend-mode:screen;
 }
-.bolt-svg{
-  position:absolute;top:0;height:100%;opacity:0;
+.bolt-svg{position:absolute;top:0;height:100%;opacity:0;pointer-events:none;
   filter:drop-shadow(0 0 8px rgba(220,232,255,1)) drop-shadow(0 0 30px rgba(160,195,255,.8)) drop-shadow(0 0 60px rgba(140,180,255,.5));
 }
 .bolt-svg path{fill:none;stroke:#f4f8ff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
-
-.storm-debris{position:absolute;inset:0;opacity:.16;mix-blend-mode:screen;}
-.debris-bit{
-  position:absolute;top:-5%;
-  background:rgba(200,190,170,.8);
-  border-radius:1px;
-  animation-name:windDrift;
-  animation-timing-function:linear;
-  animation-iteration-count:infinite;
-}
-@keyframes windDrift{
-  0%{transform:translate(-10vw,-5vh) rotate(0deg);opacity:0;}
-  8%{opacity:1;}
-  92%{opacity:1;}
-  100%{transform:translate(115vw, 60vh) rotate(340deg);opacity:0;}
-}
+.bolt-svg.front{stroke-width:1.6;opacity:0;}
 
 .page-content{position:relative;z-index:1;}
 
 .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;}
 .eyebrow{
   font-family:'IBM Plex Mono',monospace;
-  font-size:.72rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:var(--ember);
+  font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);
   display:flex;align-items:center;gap:.6em;
 }
 .eyebrow::before{content:"";width:22px;height:1px;background:var(--ember);display:inline-block;}
@@ -162,7 +178,7 @@ nav{
   background:linear-gradient(to bottom, rgba(11,11,12,.9), transparent);
   backdrop-filter:blur(2px);
 }
-.nav-mark{font-family:'Josefin Sans';font-weight:800;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
+.nav-mark{font-family:'Oswald';font-weight:700;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
 .nav-mark .nav-slash{color:var(--ember);}
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{
@@ -171,64 +187,21 @@ nav{
   display:inline-block;
   transition:color .25s ease, transform .25s ease;
 }
-.nav-links a:hover,.nav-links a:focus-visible{
-  color:var(--ember-bright);
-  transform:scale(1.25);
-}
-.timecode{
-  font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--text-faint);
-  letter-spacing:.05em;
-}
-.nav-toggle{display:none;background:none;border:1px solid var(--line-strong);color:var(--text);width:38px;height:38px;border-radius:2px;font-size:1.1rem;cursor:pointer;}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--ember-bright);transform:scale(1.25);}
 
 .hero{
   min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:140px 0 80px;border-top:none;
-  background:
-    radial-gradient(circle at 78% 30%, rgba(201,129,74,.10), transparent 45%),
-    radial-gradient(circle at 15% 80%, rgba(82,112,122,.10), transparent 40%);
+  background:radial-gradient(circle at 78% 30%, rgba(201,129,74,.10), transparent 45%),
+             radial-gradient(circle at 15% 80%, rgba(82,112,122,.10), transparent 40%);
 }
-.slate{
-  display:flex;align-items:center;gap:14px;margin-bottom:34px;
-}
+.slate{display:flex;align-items:center;gap:14px;margin-bottom:34px;}
 .slate .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.hero h1{
-  color:var(--text);
-}
-.hero h1 .hero-name{
-  display:block;
-  font-size:clamp(3.2rem, 9vw, 7.4rem);
-}
-.hero h1 .hero-role{
-  display:block;
-  font-size:clamp(1.3rem, 3vw, 2.2rem);
-  margin-top:10px;
-  font-weight:700;
-}
+.hero h1{color:var(--text);}
+.hero h1 .hero-name{display:block;font-size:clamp(3.2rem, 9vw, 7.4rem);}
+.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:10px;font-weight:700;}
 .hero h1 em{font-style:normal;color:var(--ember);}
-.stars-arc{
-  position:relative;height:34px;margin-top:6px;display:flex;align-items:center;justify-content:center;
-  pointer-events:none;
-}
-.stars-arc .star{
-  position:absolute;left:50%;top:50%;
-  font-size:1.1rem;line-height:1;
-  color:#ffd700;
-  text-shadow:0 0 6px rgba(255,215,0,.7), 0 0 16px rgba(255,180,0,.4);
-  opacity:0;
-  transform:translate(-50%,-50%) scale(.05) translate(0,10px);
-  animation:starFly 1.5s cubic-bezier(.16,.84,.28,1) forwards;
-  animation-fill-mode:forwards;
-}
-@keyframes starFly{
-  0%{opacity:0;filter:blur(5px);transform:translate(-50%,-50%) scale(.05) translate(0,10px);}
-  55%{opacity:1;filter:blur(0);}
-  100%{opacity:1;filter:blur(0);transform:translate(-50%,-50%) scale(1) translate(var(--tx),var(--ty));}
-}
-@media (prefers-reduced-motion: reduce){
-  .stars-arc .star{animation:none;opacity:1;transform:translate(-50%,-50%) scale(1) translate(var(--tx),var(--ty));}
-}
 .hero .role{
   font-family:'IBM Plex Mono',monospace;font-size:clamp(.95rem,1.6vw,1.15rem);
   color:var(--text-dim);margin-top:18px;max-width:640px;letter-spacing:.02em;line-height:1.6;
@@ -246,13 +219,10 @@ nav{
 .btn-ghost{color:var(--text);}
 .btn-ghost:hover{border-color:var(--ember);color:var(--ember-bright);}
 
-.hero-meta{
-  margin-top:90px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;
-  border-top:1px solid var(--line);
-}
+.hero-meta{margin-top:90px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);}
 .hero-meta div{padding:20px 0 0;border-right:1px solid var(--line);}
 .hero-meta div:last-child{border-right:none;}
-.hero-meta .num{font-family:'Josefin Sans';font-weight:800;font-size:1.9rem;color:var(--ember-bright);}
+.hero-meta .num{font-family:'Oswald';font-weight:700;font-size:1.9rem;color:var(--ember-bright);}
 .hero-meta .lbl{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
 
 .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
@@ -260,40 +230,17 @@ nav{
 .sec-note{font-family:'IBM Plex Mono';font-size:.8rem;color:var(--text-faint);max-width:280px;line-height:1.6;}
 
 .reel-frame{
-  position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;
-  aspect-ratio:16/9;background:
-    linear-gradient(135deg, #1a1512 0%, #0e0d0c 55%, #131718 100%);
+  position:relative;z-index:4;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;
+  aspect-ratio:16/9;background:linear-gradient(135deg, #1a1512 0%, #0e0d0c 55%, #131718 100%);
 }
 .reel-frame iframe{width:100%;height:100%;border:0;display:block;}
-.reel-placeholder{
-  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
-  color:var(--text-faint);
-}
-.play-btn{
-  width:74px;height:74px;border-radius:50%;border:1px solid var(--line-strong);
-  display:flex;align-items:center;justify-content:center;color:var(--ember-bright);font-size:1.6rem;
-}
+.reel-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:var(--text-faint);}
 .reel-tag{position:absolute;top:16px;left:16px;font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-dim);letter-spacing:.08em;border:1px solid var(--line-strong);padding:5px 10px;border-radius:2px;background:rgba(0,0,0,.4);}
 .reel-tag.rec{color:#e08a6a;}
 .reel-tag.rec::before{content:"● ";}
 
-
-.turn-frame{
-  position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;
-  aspect-ratio:16/10;
-  background:radial-gradient(circle at 50% 40%, #1a1613 0%, #0b0b0c 70%);
-}
-.turn-frame model-viewer{
-  width:100%;height:100%;
-  --poster-color: transparent;
-  --progress-bar-color: var(--ember);
-}
-.turn-hint{
-  position:absolute;bottom:16px;right:16px;z-index:2;
-  font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-dim);
-  border:1px solid var(--line-strong);padding:5px 10px;border-radius:2px;background:rgba(0,0,0,.4);
-}
 .turn-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:2px;background:var(--line);margin-top:2px;}
+.turn-frame{position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;aspect-ratio:16/10;background:radial-gradient(circle at 50% 40%, #1a1613 0%, #0b0b0c 70%);}
 .turn-side{background:var(--bg);padding:30px 32px;display:flex;flex-direction:column;justify-content:center;}
 .turn-side h3{font-size:1.6rem;margin-bottom:12px;}
 .turn-side p{color:var(--text-dim);font-size:.92rem;line-height:1.7;}
@@ -312,7 +259,7 @@ nav{
 .work-row{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;}
 .work-row.reverse .work-thumb{order:2;}
 .work-row.reverse .work-body{order:1;}
-.work-thumb{position:relative;overflow:hidden;border:1px solid var(--line-strong);border-radius:3px;aspect-ratio:16/9;}
+.work-thumb{position:relative;z-index:4;overflow:hidden;border:1px solid var(--line-strong);border-radius:3px;aspect-ratio:16/9;}
 .work-thumb iframe{width:100%;height:100%;border:0;display:block;}
 .work-body{padding:0;}
 .work-body .sc{font-family:'IBM Plex Mono';font-size:.72rem;color:var(--ember);letter-spacing:.12em;}
@@ -328,10 +275,7 @@ nav{
 .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
 .skill-col .eyebrow{margin-bottom:18px;}
 .skill-list{list-style:none;}
-.skill-list li{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:13px 0;border-bottom:1px solid var(--line);font-size:.95rem;
-}
+.skill-list li{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:.95rem;}
 .skill-list li:last-child{border-bottom:none;}
 .skill-bar{width:90px;height:3px;background:var(--line-strong);position:relative;border-radius:2px;overflow:hidden;}
 .skill-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ember);border-radius:2px;}
@@ -341,16 +285,13 @@ nav{
 .tl-item:last-child{padding-bottom:0;}
 .tl-item::before{content:"";position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--ember);}
 .tl-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 20px;}
-.tl-top h3{font-size:1.5rem;text-transform:none;font-family:'Josefin Sans';font-weight:700;}
+.tl-top h3{font-size:1.5rem;text-transform:none;}
 .tl-date{font-family:'IBM Plex Mono';font-size:.75rem;color:var(--text-faint);}
 .tl-studio{color:var(--ember-bright);font-size:.85rem;font-family:'IBM Plex Mono';margin-top:4px;}
 .tl-item p{color:var(--text-dim);margin-top:12px;line-height:1.7;max-width:62ch;font-size:.95rem;}
 
 .about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start;}
-.about-photo{
-  aspect-ratio:4/5;border-radius:3px;border:1px solid var(--line-strong);
-  overflow:hidden;background:#0e0d0c;
-}
+.about-photo{position:relative;z-index:4;aspect-ratio:4/5;border-radius:3px;border:1px solid var(--line-strong);overflow:hidden;background:#0e0d0c;}
 .about-body p{color:var(--text-dim);font-size:1.05rem;line-height:1.85;margin-bottom:18px;}
 .about-body strong{color:var(--text);font-weight:600;}
 .soft-list{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;}
@@ -364,15 +305,11 @@ nav{
 .contact-list a{color:var(--text);text-decoration:none;font-family:'IBM Plex Mono';font-size:.9rem;}
 .contact-list span{font-family:'IBM Plex Mono';font-size:.7rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;}
 
-footer{
-  border-top:1px solid var(--line);padding:34px 0;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
-}
+footer{border-top:1px solid var(--line);padding:34px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
 footer .mono{font-size:.72rem;color:var(--text-faint);}
 
 @media (max-width:860px){
   .nav-links{display:none;}
-  .nav-toggle{display:block;}
   .hero-meta{grid-template-columns:repeat(2,1fr);row-gap:26px;}
   .work-list{gap:50px;}
   .skills-grid{grid-template-columns:1fr;gap:34px;}
@@ -394,18 +331,19 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
    src="headshot.jpg" reference below to match your new filename).
 
    HOW TO UPDATE/RENAME THE RESUME:
-   The button below points to "Dominic-Davis-Resume.docx". To swap
-   in a new resume: upload your new .docx to the repo, then either
-   (a) name it exactly "Dominic-Davis-Resume.docx" so it just
-   replaces the old one, or (b) give it a new name and update the
-   two href="Dominic-Davis-Resume.docx" spots below to match.
+   The buttons point to "Dominic-Davis-Resume.docx". To swap in a
+   new resume: upload your new .docx to the repo, then either
+   (a) name it exactly "Dominic-Davis-Resume.docx" so it replaces
+   the old one, or (b) give it a new name and update the two
+   href="Dominic-Davis-Resume.docx" spots below to match.
+
+   SCOPE NOTE: ground/grass/rolling-debris field was left out this
+   round to keep the page fast and stable — everything else you
+   asked for is here. Say the word if you want that added next.
    ============================================================ -->
 
-<div class="storm-layer">
-  <div class="storm-clouds"></div>
-  <div class="storm-debris"></div>
-  <div class="storm-flash"></div>
-</div>
+<div class="snow-layer back" id="snowBack"></div>
+<div class="storm-flash" id="stormFlash"></div>
 <div class="grain"></div>
 <div class="vignette"></div>
 
@@ -430,16 +368,8 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       <span class="dot"></span>
       <span class="eyebrow" id="cfg-status">Status — Open to Work</span>
     </div>
-    <h1><span class="hero-name fire-text" id="cfg-name">Dominic Davis</span><span class="hero-role"><span class="fire-text" id="cfg-h1">Character Animator</span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
-    <div class="stars-arc" aria-hidden="true">
-      <span class="star" style="--tx:-190px; --ty:16px;  animation-delay:.05s;">★</span>
-      <span class="star" style="--tx:-130px; --ty:4px;   animation-delay:.32s;">★</span>
-      <span class="star" style="--tx:-64px;  --ty:-4px;  animation-delay:.18s;">★</span>
-      <span class="star" style="--tx:2px;    --ty:-9px;  animation-delay:.46s;">★</span>
-      <span class="star" style="--tx:68px;   --ty:-3px;  animation-delay:.24s;">★</span>
-      <span class="star" style="--tx:134px;  --ty:5px;   animation-delay:.40s;">★</span>
-      <span class="star" style="--tx:192px;  --ty:17px;  animation-delay:.12s;">★</span>
-    </div>
+    <h1><span class="hero-name fire-text" id="cfg-name">Dominic Davis</span><span class="hero-role"><span class="burn-pair"><span class="burn-word" data-word="character" id="cfg-h1a">Character</span> <span class="burn-word" data-word="animator" id="cfg-h1b">Animator</span></span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
+    <div class="stars-line" aria-hidden="true">★ ★ ★ ★ ★ ★ ★</div>
     <p class="role" id="cfg-tagline">Seven years animating character performances for broadcast series in Autodesk Maya. Now training toward creature work — where timing, weight, and behaviour matter even more.</p>
     <div class="hero-actions">
       <a href="#reel" class="btn btn-primary">▶ Watch Reel</a>
@@ -472,7 +402,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= 3D TURNAROUND (hidden until "3D" is clicked in nav — see script at bottom) ================= -->
+<!-- ================= 3D TURNAROUND (hidden until "3D" is clicked in nav) ================= -->
 <section id="turnaround">
   <div class="wrap">
     <div class="sec-head">
@@ -694,6 +624,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <span class="mono">Built to be shared. Copy the link, send it to recruiters.</span>
   </div>
 </footer>
+<div class="snow-layer front" id="snowFront"></div>
 </div><!-- /.page-content -->
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -701,7 +632,8 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 <script>
 const CONTENT = {
   name:        "Dominic Davis",
-  headline1:   "Character Animator",
+  headline1a:  "Character",
+  headline1b:  "Animator",
   headline2:   "Creature Animator",
   tagline:     "Seven years animating character performances for broadcast series in Autodesk Maya. Now training toward creature work — where timing, weight, and behaviour matter even more.",
   status:      "Status — Open to Work",
@@ -715,7 +647,8 @@ const CONTENT = {
 
 (function applyContent(){
   document.getElementById('cfg-name').textContent = CONTENT.name;
-  document.getElementById('cfg-h1').textContent = CONTENT.headline1;
+  document.getElementById('cfg-h1a').textContent = CONTENT.headline1a;
+  document.getElementById('cfg-h1b').textContent = CONTENT.headline1b;
   document.getElementById('cfg-h2').textContent = CONTENT.headline2;
   document.getElementById('cfg-tagline').textContent = CONTENT.tagline;
   document.getElementById('cfg-status').textContent = CONTENT.status;
@@ -724,63 +657,167 @@ const CONTENT = {
 })();
 
 (function fireText(){
-  const root = document.documentElement;
-  let gx = window.innerWidth/2, gy = window.innerHeight/2;
-  let e2 = [gx,gy], e3 = [gx,gy], e4 = [gx,gy];
-  let lastX = gx, lastY = gy, burstTimer = null;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const sel = '.fire-text, .tag, .sec-note, .contact-list a, .work-body p, .tl-item p, .hero .role';
+  document.querySelectorAll(sel).forEach(function(el){
+    if(el.dataset.ftWrapped) return;
+    if(el.children.length > 0) return;
+    const text = el.textContent;
+    el.textContent = '';
+    const base = document.createElement('span');
+    base.className = 'ft-base';
+    base.textContent = text;
+    const fire = document.createElement('span');
+    fire.className = 'ft-fire';
+    fire.setAttribute('aria-hidden', 'true');
+    fire.textContent = text;
+    el.appendChild(base);
+    el.appendChild(fire);
+    el.dataset.ftWrapped = '1';
 
-  document.addEventListener('mousemove', function(e){
-    gx = e.clientX; gy = e.clientY;
-    root.style.setProperty('--gx', gx + 'px');
-    root.style.setProperty('--gy', gy + 'px');
-    const dist = Math.hypot(gx-lastX, gy-lastY);
-    lastX = gx; lastY = gy;
-    if(dist > 45){
-      root.classList.add('burst');
-      clearTimeout(burstTimer);
-      burstTimer = setTimeout(function(){ root.classList.remove('burst'); }, 220);
+    let lx = -999, ly = -999, tx = -999, ty = -999;
+    let e2 = [-999, -999], e3 = [-999, -999];
+    let lastX = -999, lastY = -999, raf = null;
+
+    function onMove(e){
+      const r = el.getBoundingClientRect();
+      tx = e.clientX - r.left; ty = e.clientY - r.top;
     }
+    function loop(t){
+      lx += (tx - lx) * 0.5; ly += (ty - ly) * 0.5;
+      e2[0] += (lx - e2[0]) * 0.3;  e2[1] += (ly - e2[1]) * 0.3;
+      e3[0] += (e2[0] - e3[0]) * 0.22; e3[1] += (e2[1] - e3[1]) * 0.22;
+      const nx = Math.sin(t / 70) * 2.5 + Math.sin(t / 190) * 1.5;
+      const ny = Math.sin(t / 85 + 1) * 2 - 1.5;
+      fire.style.setProperty('--lx', (lx + nx) + 'px');
+      fire.style.setProperty('--ly', (ly + ny) + 'px');
+      fire.style.setProperty('--e2', e2[0] + 'px'); fire.style.setProperty('--e2y', e2[1] + 'px');
+      fire.style.setProperty('--e3', e3[0] + 'px'); fire.style.setProperty('--e3y', e3[1] + 'px');
+      const dx = tx - lastX, dy = ty - lastY; lastX = tx; lastY = ty;
+      const speed = Math.min(30, Math.hypot(dx, dy));
+      const skew = Math.max(-16, Math.min(16, dx * 1.4));
+      const scale = 1 + Math.min(0.35, speed * 0.02);
+      fire.style.transform = 'skewX(' + skew + 'deg) scale(' + scale + ')';
+      raf = requestAnimationFrame(loop);
+    }
+    el.addEventListener('mouseenter', function(e){
+      const r = el.getBoundingClientRect();
+      tx = e.clientX - r.left; ty = e.clientY - r.top;
+      lx = tx; ly = ty;
+      el.classList.add('ft-active');
+      el.addEventListener('mousemove', onMove);
+      raf = requestAnimationFrame(loop);
+    });
+    el.addEventListener('mouseleave', function(){
+      el.classList.remove('ft-active');
+      el.removeEventListener('mousemove', onMove);
+      cancelAnimationFrame(raf);
+    });
   });
-
-  function trail(){
-    e2[0]+=(gx-e2[0])*0.32;  e2[1]+=(gy-e2[1])*0.32;
-    e3[0]+=(e2[0]-e3[0])*0.22; e3[1]+=(e2[1]-e3[1])*0.22;
-    e4[0]+=(e3[0]-e4[0])*0.15; e4[1]+=(e3[1]-e4[1])*0.15;
-    root.style.setProperty('--e2', e2[0]+'px');  root.style.setProperty('--e2y', e2[1]+'px');
-    root.style.setProperty('--e3', e3[0]+'px');  root.style.setProperty('--e3y', e3[1]+'px');
-    root.style.setProperty('--e4', e4[0]+'px');  root.style.setProperty('--e4y', e4[1]+'px');
-    requestAnimationFrame(trail);
-  }
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(trail);
 })();
 
-(function storm(){
+(function burnWords(){
+  document.querySelectorAll('.burn-word').forEach(function(word){
+    const text = word.textContent;
+    word.textContent = '';
+    Array.from(text).forEach(function(ch, i){
+      const s = document.createElement('span');
+      s.className = 'letter';
+      s.style.setProperty('--i', i);
+      s.textContent = ch;
+      word.appendChild(s);
+    });
+    let revertTimer = null;
+    word.addEventListener('mouseenter', function(){
+      clearTimeout(revertTimer);
+      word.classList.add('burning');
+    });
+    word.addEventListener('mouseleave', function(){
+      revertTimer = setTimeout(function(){
+        word.classList.remove('burning');
+      }, 5000);
+    });
+  });
+})();
+
+(function turnaroundReveal(){
+  const section = document.getElementById('turnaround');
+  const link = document.querySelector('a[href="#turnaround"]');
+  function reveal(){
+    section.classList.add('is-revealed');
+    section.scrollIntoView({behavior:'smooth'});
+  }
+  if(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      reveal();
+      history.pushState(null,'','#turnaround');
+    });
+  }
+  if(window.location.hash === '#turnaround'){ reveal(); }
+})();
+
+(function weather(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const clouds  = document.querySelector('.storm-clouds');
-  const flash   = document.querySelector('.storm-flash');
-  const layer   = document.querySelector('.storm-layer');
-  const debrisC = document.querySelector('.storm-debris');
-  if(!clouds || !flash || !layer) return;
+  const back  = document.getElementById('snowBack');
+  const front = document.getElementById('snowFront');
+  const flash = document.getElementById('stormFlash');
+  if(!back || !front || !flash) return;
 
-  const DEBRIS_COUNT = 22;
-  for(let i=0;i<DEBRIS_COUNT;i++){
-    const bit = document.createElement('div');
-    bit.className = 'debris-bit';
-    const kind = Math.random();
-    let w,h,radius;
-    if(kind < 0.5){ w = 2+Math.random()*2; h = w; radius='50%'; }
-    else if(kind < 0.8){ w = 5+Math.random()*6; h = 2+Math.random()*2; radius='40%'; }
-    else { w = 6+Math.random()*7; h = 4+Math.random()*5; radius='30% 60% 30% 60%'; }
-    bit.style.width = w+'px';
-    bit.style.height = h+'px';
-    bit.style.borderRadius = radius;
-    bit.style.top = (Math.random()*90)+'%';
-    const dur = 14 + Math.random()*18;
-    bit.style.animationDuration = dur+'s';
-    bit.style.animationDelay = (-Math.random()*dur)+'s';
-    if(debrisC) debrisC.appendChild(bit);
+  const flakes = [];
+  function spawnFlakes(container, count, frontLayer){
+    for(let i=0;i<count;i++){
+      const f = document.createElement('div');
+      const kind = Math.random();
+      f.className = 'flake' + (kind < 0.25 ? ' shard' : '');
+      let size;
+      if(kind < 0.25){ size = 3 + Math.random()*7; f.style.width = size+'px'; f.style.height = (size*0.35)+'px'; }
+      else if(kind < 0.7){ size = 2 + Math.random()*3; f.style.width = size+'px'; f.style.height = size+'px'; }
+      else { size = 4 + Math.random()*5; f.style.width = size+'px'; f.style.height = size+'px'; f.style.filter = 'blur(.5px)'; }
+      f.style.left = (Math.random()*100)+'%';
+      f.style.opacity = (frontLayer ? 0.35 : 0.6) + Math.random()*0.35;
+      const dur = 9 + Math.random()*16;
+      f.style.animationDuration = dur+'s';
+      f.style.animationDelay = (-Math.random()*dur)+'s';
+      const drift = (Math.random()*160 - 80).toFixed(0)+'px';
+      const spin = (Math.random()*360).toFixed(0)+'deg';
+      f.style.setProperty('--drift', drift);
+      f.style.setProperty('--spin', spin);
+      f.dataset.weight = (0.4 + Math.random()*1.2).toFixed(2);
+      container.appendChild(f);
+      flakes.push(f);
+    }
   }
+  spawnFlakes(back, 55, false);
+  spawnFlakes(front, 30, true);
+
+  setInterval(function(){
+    flakes.forEach(function(f){
+      const cur = parseFloat(f.style.getPropertyValue('--drift')) || 0;
+      const next = cur + (Math.random()*60 - 30);
+      f.style.setProperty('--drift', Math.max(-140, Math.min(140, next)) + 'px');
+    });
+  }, 6000);
+
+  let lastNudge = 0;
+  document.addEventListener('mousemove', function(e){
+    const now = performance.now();
+    if(now - lastNudge < 90) return;
+    lastNudge = now;
+    const sample = flakes[Math.floor(Math.random()*flakes.length)];
+    if(!sample) return;
+    const r = sample.getBoundingClientRect();
+    const dist = Math.hypot(e.clientX - (r.left+r.width/2), e.clientY - (r.top+r.height/2));
+    if(dist < 70){
+      const weight = parseFloat(sample.dataset.weight) || 1;
+      const kick = (30 / weight) * (Math.random() > 0.5 ? 1 : -1);
+      const cur = parseFloat(sample.style.getPropertyValue('--drift')) || 0;
+      sample.style.setProperty('--drift', (cur + kick) + 'px');
+      const curSpin = parseFloat(sample.style.getPropertyValue('--spin')) || 0;
+      sample.style.setProperty('--spin', (curSpin + kick*4) + 'deg');
+    }
+  });
 
   const FLASH_PROFILES = [
     [{delay:0,duration:90,peak:1}],
@@ -818,7 +855,6 @@ const CONTENT = {
       }, p.delay);
     });
   }
-
   function pulseBrightness(el, profile, maxBoost){
     profile.forEach(function(p){
       setTimeout(function(){
@@ -831,10 +867,8 @@ const CONTENT = {
       }, p.delay);
     });
   }
-
   function randomBoltPath(){
-    let x = 8 + Math.random()*84;
-    let y = 0;
+    let x = 8 + Math.random()*84, y = 0;
     let d = 'M ' + x.toFixed(1) + ' 0';
     while(y < 100){
       y += 4 + Math.random()*7;
@@ -844,18 +878,18 @@ const CONTENT = {
     }
     return d;
   }
-
-  function spawnBolt(){
+  function spawnBolt(container, isFront){
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
     svg.setAttribute('viewBox','0 0 100 100');
     svg.setAttribute('preserveAspectRatio','none');
     svg.classList.add('bolt-svg');
+    if(isFront) svg.classList.add('front');
     svg.style.left = (8 + Math.random()*70) + '%';
     svg.style.width = (16 + Math.random()*14) + '%';
     const path = document.createElementNS('http://www.w3.org/2000/svg','path');
     path.setAttribute('d', randomBoltPath());
     svg.appendChild(path);
-    layer.appendChild(svg);
+    container.appendChild(svg);
     const branches = Math.random() < 0.55 ? 1 + Math.floor(Math.random()*2) : 0;
     for(let b=0;b<branches;b++){
       const branch = document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -865,42 +899,22 @@ const CONTENT = {
     }
     return svg;
   }
-
   function strike(){
     const profile = FLASH_PROFILES[Math.floor(Math.random()*FLASH_PROFILES.length)];
-    const bolts = [spawnBolt()];
-    if(Math.random() < 0.3) bolts.push(spawnBolt());
+    const bolts = [spawnBolt(back, false)];
+    if(Math.random() < 0.3) bolts.push(spawnBolt(front, true));
 
-    pulseBrightness(clouds, profile, 9);
-    if(debrisC) pulseBrightness(debrisC, profile, 6);
+    pulseBrightness(back, profile, 5);
+    pulseBrightness(front, profile, 3);
     pulseOpacity(flash, profile, 0.9);
     bolts.forEach(function(bolt){ pulseOpacity(bolt, profile, 1); });
 
     const totalDur = profile.reduce(function(m,p){ return Math.max(m, p.delay+p.duration); }, 0) + 400;
     setTimeout(function(){ bolts.forEach(function(b){ b.remove(); }); }, totalDur);
 
-    const nextPause = 4000 + Math.random()*12000;
-    setTimeout(strike, nextPause);
+    setTimeout(strike, 4000 + Math.random()*12000);
   }
-
   setTimeout(strike, 2500 + Math.random()*3500);
-})();
-
-(function turnaroundReveal(){
-  const section = document.getElementById('turnaround');
-  const link = document.querySelector('a[href="#turnaround"]');
-  function reveal(){
-    section.classList.add('is-revealed');
-    section.scrollIntoView({behavior:'smooth'});
-  }
-  if(link){
-    link.addEventListener('click', function(e){
-      e.preventDefault();
-      reveal();
-      history.pushState(null,'','#turnaround');
-    });
-  }
-  if(window.location.hash === '#turnaround'){ reveal(); }
 })();
 
 (function visitorAlert(){
@@ -911,7 +925,6 @@ const CONTENT = {
   }
   if(localStorage.getItem('site_owner') === 'true') return;
   if(!CONTENT.emailjsPublicKey || !CONTENT.emailjsServiceId || !CONTENT.emailjsTemplateId) return;
-
   try{
     emailjs.init(CONTENT.emailjsPublicKey);
     emailjs.send(CONTENT.emailjsServiceId, CONTENT.emailjsTemplateId, {
