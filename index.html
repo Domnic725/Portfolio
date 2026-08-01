@@ -52,37 +52,15 @@ h1,h2,h3,.display{
   text-align:left;
 }
 
-/* ============================================================
-   FIRE-THROUGH-THE-PAPER (single-element particle fire)
-   Each eligible element keeps its real, normal CSS "color" at all
-   times when idle — nothing is ever touched, so there is no risk
-   of duplicated/mirrored text. Only while actually hovered does the
-   element switch to background-clip:text, painting: (1) a live
-   particle-simulation flame masked to a ~2cm circle at the cursor,
-   and (2) a solid fallback layer using that element's OWN original
-   color everywhere else — so nothing outside the flame ever goes
-   black, regardless of the element's default color. ============ */
-.fire-text, .tag, .sec-note, .contact-list a, .work-body p, .tl-item p, .hero .role{
+.fire-text, .tag, .sec-note, .contact-list a, .contact-list span, .work-body p, .tl-item p,
+.tl-studio, .tl-date, .hero .role, .hero-meta .num, .hero-meta .lbl, .eyebrow, .reel-tag,
+.coming-soon-badge, .turn-side h3, .turn-side p, footer .mono, .about-body p, .sc{
   position:relative;
-}
-.ft-active{
-  color:transparent;
-  background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 30%, rgba(0,0,0,.5) 70%, transparent 100%),
-              linear-gradient(#000,#000);
-  mask-composite: add;
-  -webkit-mask-image: radial-gradient(circle 42px at var(--lx,-999px) var(--ly,-999px), #000 0%, #000 30%, rgba(0,0,0,.5) 70%, transparent 100%);
 }
 @media (prefers-reduced-motion: reduce){
   .ft-active{background-image:none !important;}
 }
 
-/* ---------------- CHARACTER ANIMATOR — simple fade, no colour steps ----------------
-   Starts the same colour as "Creature Animator". Hovering any letter
-   in a word fades that whole word straight to white — no colours in
-   between. Stays white while hovered. 10s after the mouse leaves it
-   starts a slow fade back to the original colour (cancelled if
-   hovered again first). */
 .burn-pair{display:inline;}
 .burn-word{
   display:inline-block;color:var(--ember);cursor:default;
@@ -91,46 +69,13 @@ h1,h2,h3,.display{
 .burn-word.lit{color:#ffffff;transition:color .7s ease;}
 .burn-word.reverting{color:var(--ember);transition:color 3s ease;}
 
-/* ---------------- 7 STARS — static, no animation ---------------- */
 .stars-line{
   margin-top:22px;
   font-size:calc(clamp(1.3rem,3vw,2.2rem) * 0.78);
   color:#ffd700;
-  letter-spacing:.08em;
+  letter-spacing:-.05em;
   line-height:1;
 }
-
-/* ---------------- CLOUDS + CAMERA PARALLAX + ELECTRIC SPARKS ----------------
-   Soft realistic clouds drift slowly and stay fixed in the viewport
-   (they never scroll with the page). The whole page gently "looks"
-   toward whichever screen edge the cursor nears, like a camera
-   parented to the content. Occasional small electric sparks crackle
-   where a cloud happens to pass near a piece of text — distinct from
-   lightning, brief and local. Clouds never sit above real video or
-   photo content (see the z-index:4 on those elsewhere). */
-.cloud-layer{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
-.cloud{
-  position:absolute;border-radius:50%;
-  background:radial-gradient(circle, rgba(214,219,226,.4) 0%, rgba(214,219,226,.14) 55%, transparent 75%);
-  filter:blur(20px);
-  animation-name:cloudDrift;animation-timing-function:linear;animation-iteration-count:infinite;
-}
-@keyframes cloudDrift{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(var(--cdx,140px));}
-}
-.cloud-glow{
-  position:fixed;width:240px;height:240px;border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,.16) 0%, transparent 70%);
-  pointer-events:none;z-index:0;mix-blend-mode:overlay;
-  transform:translate(-50%,-50%);
-  left:var(--gx,50vw);top:var(--gy,50vh);
-}
-.spark-svg{position:fixed;pointer-events:none;z-index:6;opacity:0;
-  filter:drop-shadow(0 0 4px rgba(150,220,255,.9)) drop-shadow(0 0 10px rgba(120,200,255,.55));
-}
-.spark-svg path{fill:none;stroke:#cdeeff;stroke-width:1.6;stroke-linecap:round;}
-@keyframes sparkFlash{0%{opacity:0;}12%{opacity:1;}30%{opacity:.25;}45%{opacity:.85;}100%{opacity:0;}}
 
 .page-content{position:relative;z-index:1;will-change:transform;}
 
@@ -165,10 +110,14 @@ nav{
 
 .hero{
   min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-  padding:140px 0 80px;border-top:none;
+  padding:140px 0 80px;border-top:none;overflow:hidden;
   background:radial-gradient(circle at 78% 30%, rgba(201,129,74,.10), transparent 45%),
              radial-gradient(circle at 15% 80%, rgba(82,112,122,.10), transparent 40%);
 }
+.fw-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.fw-back{z-index:0;}
+.fw-front{z-index:5;}
+.hero .wrap{position:relative;z-index:2;}
 .slate{display:flex;align-items:center;gap:14px;margin-bottom:38px;}
 .slate .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -258,7 +207,7 @@ nav{
 .skill-list{list-style:none;}
 .skill-list li{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:.95rem;}
 .skill-list li:last-child{border-bottom:none;}
-.skill-bar{width:90px;height:3px;background:var(--line-strong);position:relative;border-radius:2px;overflow:hidden;}
+.skill-bar{width:90px;height:3px;background:var(--line-strong);position:relative;border-radius:2px;overflow:hidden;flex-shrink:0;}
 .skill-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ember);border-radius:2px;}
 
 .timeline{border-left:1px solid var(--line-strong);margin-left:6px;}
@@ -316,8 +265,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
    update the two href="Dominic-Davis-Resume.docx" spots below.
    ============================================================ -->
 
-<div class="cloud-layer" id="cloudLayer"></div>
-<div class="cloud-glow" id="cloudGlow"></div>
 <div class="grain"></div>
 <div class="vignette"></div>
 
@@ -337,13 +284,14 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 
 <!-- ================= HERO ================= -->
 <section class="hero" id="top">
+  <canvas class="fw-canvas fw-back" id="fwBack"></canvas>
   <div class="wrap">
     <div class="slate">
       <span class="dot"></span>
       <span class="eyebrow" id="cfg-status">Status — Open to Work</span>
     </div>
     <h1><span class="hero-name fire-text" id="cfg-name">Dominic Davis</span><span class="hero-role"><span class="burn-pair"><span class="burn-word" data-word="character" id="cfg-h1a">Character</span> <span class="burn-word" data-word="animator" id="cfg-h1b">Animator</span></span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
-    <div class="stars-line" aria-hidden="true">★ ★ ★ ★ ★ ★ ★</div>
+    <div class="stars-line" aria-hidden="true">★★★★★★★</div>
     <p class="role" id="cfg-tagline">Seven years animating character performances for broadcast series in Autodesk Maya. Now training toward creature work — where timing, weight, and behaviour matter even more.</p>
     <div class="hero-actions">
       <a href="#reel" class="btn btn-primary">▶ Watch Reel</a>
@@ -357,6 +305,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       <div><div class="num">Maya</div><div class="lbl">+ Blender + Unreal</div></div>
     </div>
   </div>
+  <canvas class="fw-canvas fw-front" id="fwFront"></canvas>
 </section>
 
 <!-- ================= REEL ================= -->
@@ -469,28 +418,28 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       <div class="skill-col">
         <span class="eyebrow">Animation</span>
         <ul class="skill-list">
-          <li>Blocking &amp; Final Polish <span class="skill-bar"><i style="width:92%"></i></span></li>
-          <li>Body Mechanics <span class="skill-bar"><i style="width:90%"></i></span></li>
-          <li>Lip Sync <span class="skill-bar"><i style="width:80%"></i></span></li>
-          <li>Creature Animation <span class="skill-bar"><i style="width:45%"></i></span></li>
+          <li><span class="fire-text">Blocking &amp; Final Polish</span> <span class="skill-bar"><i style="width:92%"></i></span></li>
+          <li><span class="fire-text">Body Mechanics</span> <span class="skill-bar"><i style="width:90%"></i></span></li>
+          <li><span class="fire-text">Lip Sync</span> <span class="skill-bar"><i style="width:80%"></i></span></li>
+          <li><span class="fire-text">Creature Animation</span> <span class="skill-bar"><i style="width:45%"></i></span></li>
         </ul>
       </div>
       <div class="skill-col">
         <span class="eyebrow">Software</span>
         <ul class="skill-list">
-          <li>Autodesk Maya <span class="skill-bar"><i style="width:95%"></i></span></li>
-          <li>Blender <span class="skill-bar"><i style="width:50%"></i></span></li>
-          <li>Unreal Engine <span class="skill-bar"><i style="width:50%"></i></span></li>
+          <li><span class="fire-text">Autodesk Maya</span> <span class="skill-bar"><i style="width:95%"></i></span></li>
+          <li><span class="fire-text">Blender</span> <span class="skill-bar"><i style="width:50%"></i></span></li>
+          <li><span class="fire-text">Unreal Engine</span> <span class="skill-bar"><i style="width:50%"></i></span></li>
         </ul>
         <div class="tag-row" style="margin-top:14px;"><span class="tag">After Effects</span><span class="tag">Premiere</span><span class="tag">Photoshop</span></div>
       </div>
       <div class="skill-col">
         <span class="eyebrow">Production</span>
         <ul class="skill-list">
-          <li>Episodic Pipeline <span class="skill-bar"><i style="width:90%"></i></span></li>
-          <li>Shot Management <span class="skill-bar"><i style="width:85%"></i></span></li>
-          <li>Director/Supervisor Collab <span class="skill-bar"><i style="width:85%"></i></span></li>
-          <li>Broadcast QC <span class="skill-bar"><i style="width:80%"></i></span></li>
+          <li><span class="fire-text">Episodic Pipeline</span> <span class="skill-bar"><i style="width:90%"></i></span></li>
+          <li><span class="fire-text">Shot Management</span> <span class="skill-bar"><i style="width:85%"></i></span></li>
+          <li><span class="fire-text">Director/Supervisor Collab</span> <span class="skill-bar"><i style="width:85%"></i></span></li>
+          <li><span class="fire-text">Broadcast QC</span> <span class="skill-bar"><i style="width:80%"></i></span></li>
         </ul>
       </div>
     </div>
@@ -633,7 +582,7 @@ const CONTENT = {
 
 (function fireText(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const sel = '.fire-text, .tag, .sec-note, .contact-list a, .work-body p, .tl-item p, .hero .role';
+  const sel = '.fire-text, .tag, .sec-note, .contact-list a, .contact-list span, .work-body p, .tl-item p, .tl-studio, .tl-date, .hero .role, .hero-meta .num, .hero-meta .lbl, .eyebrow, .reel-tag, .coming-soon-badge, .turn-side h3, .turn-side p, footer .mono, .about-body p, .sc';
   document.querySelectorAll(sel).forEach(function(el){
     if(el.dataset.ftInit) return;
     if(el.children.length > 0) return;
@@ -650,13 +599,13 @@ const CONTENT = {
           x: lx + (Math.random()-0.5)*4, y: ly + (Math.random()-0.5)*4,
           vx: vx*(1+Math.random()) + (Math.random()-0.5)*0.4,
           vy: vy*(1+Math.random()) + (Math.random()-0.5)*0.4,
-          life:1, decay:0.05+Math.random()*0.03, size:3+Math.random()*4, type:'fire'
+          life:1, decay:0.045+Math.random()*0.025, size:9+Math.random()*12, type:'fire'
         });
       }
       if(Math.random() < 0.45){
         particles.push({
           x: lx, y: ly, vx: vx*0.6, vy: vy*0.6,
-          life:1, decay:0.065+Math.random()*0.03, size:1.4+Math.random()*1.4, type:'ember'
+          life:1, decay:0.06+Math.random()*0.025, size:4+Math.random()*4, type:'ember'
         });
       }
     }
@@ -690,23 +639,30 @@ const CONTENT = {
       });
       stops.push('linear-gradient(' + origColor + ',' + origColor + ')');
       el.style.backgroundImage = stops.join(',');
-      el.style.setProperty('--lx', lx+'px');
-      el.style.setProperty('--ly', ly+'px');
+      el.style.color = 'transparent';
+      el.style.backgroundClip = 'text';
+      el.style.webkitBackgroundClip = 'text';
+      el.style.webkitTextFillColor = 'transparent';
       raf = requestAnimationFrame(frame);
+    }
+    function reset(){
+      el.style.backgroundImage = '';
+      el.style.color = '';
+      el.style.backgroundClip = '';
+      el.style.webkitBackgroundClip = '';
+      el.style.webkitTextFillColor = '';
     }
     el.addEventListener('mouseenter', function(e){
       const r = el.getBoundingClientRect();
       tx = e.clientX-r.left; ty = e.clientY-r.top; lx=tx; ly=ty; lastX=tx; lastY=ty;
       particles = [];
-      el.classList.add('ft-active');
       el.addEventListener('mousemove', onMove);
       raf = requestAnimationFrame(frame);
     });
     el.addEventListener('mouseleave', function(){
-      el.classList.remove('ft-active');
       el.removeEventListener('mousemove', onMove);
       cancelAnimationFrame(raf);
-      el.style.backgroundImage = '';
+      reset();
     });
   });
 })();
@@ -760,81 +716,181 @@ const CONTENT = {
   });
 })();
 
-(function atmosphere(){
+(function parallax(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const cloudLayer = document.getElementById('cloudLayer');
-  const cloudGlow  = document.getElementById('cloudGlow');
   const page = document.getElementById('pageContent');
-  if(!cloudLayer || !page) return;
-
-  for(let i=0;i<12;i++){
-    const c = document.createElement('div');
-    c.className = 'cloud';
-    const size = 160 + Math.random()*260;
-    c.style.width = size+'px';
-    c.style.height = (size*0.55)+'px';
-    c.style.left = (Math.random()*100)+'%';
-    c.style.top = (Math.random()*70)+'%';
-    c.style.opacity = (0.25 + Math.random()*0.4).toFixed(2);
-    c.style.setProperty('--cdx', ((Math.random()*220+80) * (Math.random()<0.5?-1:1))+'px');
-    const dur = 60 + Math.random()*90;
-    c.style.animationDuration = dur+'s';
-    c.style.animationDirection = Math.random()<0.5 ? 'normal' : 'alternate';
-    c.style.animationDelay = (-Math.random()*dur)+'s';
-    cloudLayer.appendChild(c);
-  }
-
-  let px=0, py=0, tx2=0, ty2=0;
+  if(!page) return;
+  let px=0, py=0, tx=0, ty=0;
   document.addEventListener('mousemove', function(e){
     const nx = (e.clientX / window.innerWidth) * 2 - 1;
     const ny = (e.clientY / window.innerHeight) * 2 - 1;
-    tx2 = nx * 16; ty2 = ny * 12;
-    if(cloudGlow){
-      cloudGlow.style.setProperty('--gx', e.clientX+'px');
-      cloudGlow.style.setProperty('--gy', e.clientY+'px');
-    }
+    tx = nx * 16; ty = ny * 12;
   });
   function loop(){
-    px += (tx2-px)*0.06; py += (ty2-py)*0.06;
+    px += (tx-px)*0.06; py += (ty-py)*0.06;
     page.style.transform = 'translate(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px)';
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+})();
 
-  function randomSparkPath(x, y){
-    let d = 'M ' + x + ' ' + y;
-    let cx = x, cy = y;
-    for(let i=0;i<4;i++){
-      cx += (Math.random()-0.5)*18;
-      cy += (Math.random()-0.5)*18;
-      d += ' L ' + cx.toFixed(1) + ' ' + cy.toFixed(1);
-    }
-    return d;
+(function fireworks(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.getElementById('top');
+  const backCanvas = document.getElementById('fwBack');
+  const frontCanvas = document.getElementById('fwFront');
+  if(!hero || !backCanvas || !frontCanvas) return;
+  const backCtx = backCanvas.getContext('2d');
+  const frontCtx = frontCanvas.getContext('2d');
+
+  function resize(){
+    [backCanvas, frontCanvas].forEach(function(c){
+      c.width = hero.clientWidth;
+      c.height = hero.clientHeight;
+    });
   }
-  function spark(){
-    const targets = document.querySelectorAll('.fire-text, .tag, .sec-note');
-    if(targets.length){
-      const el = targets[Math.floor(Math.random()*targets.length)];
-      const r = el.getBoundingClientRect();
-      if(r.width > 0 && r.top < window.innerHeight && r.bottom > 0){
-        const x = r.left + Math.random()*r.width;
-        const y = r.top + (Math.random()<0.5 ? 0 : r.height);
-        const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-        svg.setAttribute('width','40'); svg.setAttribute('height','40');
-        svg.classList.add('spark-svg');
-        svg.style.left = (x-20)+'px'; svg.style.top = (y-20)+'px';
-        const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-        path.setAttribute('d', randomSparkPath(20,20));
-        svg.appendChild(path);
-        document.body.appendChild(svg);
-        svg.style.animation = 'sparkFlash .4s ease-out';
-        setTimeout(function(){ svg.remove(); }, 450);
+  resize();
+  window.addEventListener('resize', resize);
+
+  const STYLES = [
+    {name:'peony',        count:55, speed:[3,6],   gravity:.05, drag:.985, size:[1.6,2.6], colors:['#ff5a5a','#ffb347','#ffd76a']},
+    {name:'chrysanthemum',count:80, speed:[2.5,5.5],gravity:.045,drag:.985, size:[1.2,2],   colors:['#ffd76a','#fff2c2','#ff9d2e'], flicker:true},
+    {name:'willow',       count:60, speed:[2,4],   gravity:.1,  drag:.992, size:[1,1.8],    colors:['#ffe9a8','#ffcf6b']},
+    {name:'ring',         count:46, speed:[4,4.4], gravity:.03, drag:.99,  size:[1.4,2],    colors:['#7fd8ff','#bfe9ff'], ring:true},
+    {name:'doubleBurst',  count:40, speed:[3,5],   gravity:.05, drag:.985, size:[1.6,2.4],  colors:['#ff7ad9','#ffb3ec'], secondary:true},
+    {name:'crackle',      count:70, speed:[1.5,3.5],gravity:.04,drag:.96,  size:[1,1.6],    colors:['#ffffff','#ffe9a8'], flicker:true},
+    {name:'palm',         count:22, speed:[4,7],   gravity:.07, drag:.988, size:[2.2,3.2],  colors:['#9dff7a','#c9ffb0']},
+    {name:'strobe',       count:50, speed:[3,5],   gravity:.05, drag:.985, size:[1.6,2.2],  colors:['#c9a8ff','#a685ff'], flicker:true},
+    {name:'spiral',       count:60, speed:[3,5],   gravity:.05, drag:.985, size:[1.4,2],    colors:['#ff6a9e','#ffd1e3'], spiral:true},
+    {name:'glitterDust',  count:90, speed:[1,2.5], gravity:.02, drag:.94,  size:[.7,1.2],   colors:['#ffffff','#fff8dd','#ffe9a8'], flicker:true}
+  ];
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  function makeBurst(x, y, style){
+    const particles = [];
+    for(let i=0;i<style.count;i++){
+      let angle = (Math.PI*2) * (i/style.count) + rand(-.15,.15);
+      if(style.spiral) angle += i*0.15;
+      let spd = rand(style.speed[0], style.speed[1]);
+      if(style.ring) spd = style.speed[0];
+      const color = style.colors[Math.floor(Math.random()*style.colors.length)];
+      particles.push({
+        x:x, y:y,
+        vx: Math.cos(angle)*spd,
+        vy: Math.sin(angle)*spd,
+        life:1,
+        decay: rand(0.008, 0.016),
+        size: rand(style.size[0], style.size[1]),
+        color: color,
+        gravity: style.gravity,
+        drag: style.drag,
+        flicker: !!style.flicker,
+        secondary: !!style.secondary,
+        secondaryDone:false
+      });
+    }
+    return particles;
+  }
+
+  function Rocket(canvasWidth, canvasHeight, style){
+    this.x = rand(canvasWidth*0.1, canvasWidth*0.9);
+    this.y = canvasHeight;
+    this.targetY = rand(canvasHeight*0.15, canvasHeight*0.55);
+    this.vy = -rand(4.5, 6.5);
+    this.style = style;
+    this.exploded = false;
+    this.particles = [];
+    this.color = style.colors[Math.floor(Math.random()*style.colors.length)];
+    this.trail = [];
+  }
+  Rocket.prototype.update = function(){
+    if(!this.exploded){
+      this.trail.push({x:this.x,y:this.y});
+      if(this.trail.length>6) this.trail.shift();
+      this.y += this.vy;
+      this.vy *= 0.99;
+      if(this.y <= this.targetY){
+        this.exploded = true;
+        this.particles = makeBurst(this.x, this.y, this.style);
       }
+      return true;
+    } else {
+      let alive = false;
+      this.particles.forEach(function(p){
+        if(p.life<=0) return;
+        alive = true;
+        p.vx *= p.drag;
+        p.vy = p.vy*p.drag + p.gravity;
+        p.x += p.vx; p.y += p.vy;
+        p.life -= p.decay;
+        if(p.secondary && !p.secondaryDone && p.life < 0.5){
+          p.secondaryDone = true;
+        }
+      });
+      return alive;
     }
-    setTimeout(spark, 3500 + Math.random()*5000);
+  };
+  Rocket.prototype.draw = function(ctx){
+    ctx.globalCompositeOperation = 'lighter';
+    if(!this.exploded){
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      this.trail.forEach(function(pt,i){
+        if(i===0) ctx.moveTo(pt.x,pt.y); else ctx.lineTo(pt.x,pt.y);
+      });
+      ctx.stroke();
+    } else {
+      this.particles.forEach(function(p){
+        if(p.life<=0) return;
+        let alpha = p.life;
+        if(p.flicker) alpha *= (Math.random()>0.35 ? 1 : 0.25);
+        ctx.fillStyle = hexWithAlpha(p.color, alpha);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size*2.2, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  };
+  function hexWithAlpha(hex, alpha){
+    const a = Math.max(0, Math.min(1, alpha));
+    const c = hex.replace('#','');
+    const r = parseInt(c.substring(0,2),16);
+    const g = parseInt(c.substring(2,4),16);
+    const b = parseInt(c.substring(4,6),16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(2) + ')';
   }
-  setTimeout(spark, 3000 + Math.random()*3000);
+
+  let backRockets = [];
+  let frontRockets = [];
+  const MAX_PER_CANVAS = 5;
+
+  function launch(){
+    const style = STYLES[Math.floor(Math.random()*STYLES.length)];
+    if(Math.random() < 0.5 && backRockets.length < MAX_PER_CANVAS){
+      backRockets.push(new Rocket(backCanvas.width, backCanvas.height, style));
+    } else if(frontRockets.length < MAX_PER_CANVAS){
+      frontRockets.push(new Rocket(frontCanvas.width, frontCanvas.height, style));
+    }
+    setTimeout(launch, rand(350, 750));
+  }
+  setTimeout(launch, 600);
+
+  function render(){
+    backCtx.clearRect(0,0,backCanvas.width, backCanvas.height);
+    frontCtx.clearRect(0,0,frontCanvas.width, frontCanvas.height);
+
+    backRockets = backRockets.filter(function(r){ return r.update(); });
+    frontRockets = frontRockets.filter(function(r){ return r.update(); });
+
+    backRockets.forEach(function(r){ r.draw(backCtx); });
+    frontRockets.forEach(function(r){ r.draw(frontCtx); });
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
 })();
 
 (function visitorAlert(){
@@ -844,18 +900,3 @@ const CONTENT = {
     return;
   }
   if(localStorage.getItem('site_owner') === 'true') return;
-  if(!CONTENT.emailjsPublicKey || !CONTENT.emailjsServiceId || !CONTENT.emailjsTemplateId) return;
-  try{
-    emailjs.init(CONTENT.emailjsPublicKey);
-    emailjs.send(CONTENT.emailjsServiceId, CONTENT.emailjsTemplateId, {
-      page_url: window.location.href,
-      visit_time: new Date().toString(),
-      referrer: document.referrer || "direct / unknown",
-      to_email: CONTENT.notifyEmail
-    });
-  }catch(err){}
-})();
-</script>
-
-</body>
-</html>
