@@ -6,11 +6,11 @@
 <title>Dominic Davis — Character &amp; Creature Animator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
 :root{
-  --bg: #0b0b0c;
+  --bg: #000000;
   --line: rgba(236,231,223,0.09);
   --line-strong: rgba(236,231,223,0.18);
   --text: #ece7df;
@@ -24,7 +24,7 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
-  background:var(--bg);
+  background:#000000;
   color:var(--text);
   font-family:'Montserrat',sans-serif;
   overflow-x:hidden;
@@ -33,32 +33,19 @@ body{
 }
 ::selection{background:var(--ember);color:#0b0b0c;}
 
-.grain{
-  position:fixed;inset:0;pointer-events:none;z-index:199;
-  opacity:.045;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.vignette{
-  position:fixed;inset:0;pointer-events:none;z-index:200;
-  background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);
-}
-
 h1,h2,h3,.display{
-  font-family:'Big Shoulders Display',sans-serif;
+  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight:100;
   text-transform:uppercase;
   letter-spacing:.01em;
-  font-weight:800;
-  line-height:.92;
+  line-height:.98;
   text-align:left;
 }
 
-.fire-text, .tag, .sec-note, .contact-list a, .contact-list span, .work-body p, .tl-item p,
+.tag, .sec-note, .contact-list a, .contact-list span, .work-body p, .tl-item p,
 .tl-studio, .tl-date, .hero .role, .hero-meta .num, .hero-meta .lbl, .eyebrow, .reel-tag,
 .coming-soon-badge, .turn-side h3, .turn-side p, footer .mono, .about-body p, .sc{
   position:relative;
-}
-@media (prefers-reduced-motion: reduce){
-  .ft-active{background-image:none !important;}
 }
 
 .burn-pair{display:inline;}
@@ -66,14 +53,14 @@ h1,h2,h3,.display{
   display:inline-block;color:var(--ember);cursor:default;
   transition:color .8s ease;
 }
-.burn-word.lit{color:#ffffff;transition:color .7s ease;}
-.burn-word.reverting{color:var(--ember);transition:color 3s ease;}
+.burn-word.lit{color:#ffffff;transition:color .8s ease;}
+.burn-word.reverting{color:var(--ember);transition:color 2.5s ease;}
 
 .stars-line{
-  margin-top:22px;
+  margin-top:4px;
   font-size:calc(clamp(1.3rem,3vw,2.2rem) * 0.78);
   color:#ffd700;
-  letter-spacing:-.05em;
+  letter-spacing:-.32em;
   line-height:1;
 }
 
@@ -88,16 +75,16 @@ h1,h2,h3,.display{
 .eyebrow::before{content:"";width:22px;height:1px;background:var(--ember);display:inline-block;}
 
 .wrap{max-width:1180px;margin:0 auto;padding:0 40px;}
-section{position:relative;padding:130px 0;border-top:1px solid var(--line);}
+section{position:relative;padding:130px 0;}
 
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
   padding:22px 32px;
-  background:linear-gradient(to bottom, rgba(11,11,12,.9), transparent);
+  background:linear-gradient(to bottom, rgba(0,0,0,.9), transparent);
   backdrop-filter:blur(2px);
 }
-.nav-mark{font-family:'Big Shoulders Display';font-weight:800;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
+.nav-mark{font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-weight:100;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
 .nav-mark .nav-slash{color:var(--ember);}
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{
@@ -110,20 +97,16 @@ nav{
 
 .hero{
   min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-  padding:140px 0 80px;border-top:none;overflow:hidden;
-  background:radial-gradient(circle at 78% 30%, rgba(201,129,74,.10), transparent 45%),
-             radial-gradient(circle at 15% 80%, rgba(82,112,122,.10), transparent 40%);
+  padding:140px 0 80px;overflow:hidden;
+  background:#000000;
 }
-.fw-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-.fw-back{z-index:0;}
-.fw-front{z-index:5;}
 .hero .wrap{position:relative;z-index:2;}
 .slate{display:flex;align-items:center;gap:14px;margin-bottom:38px;}
 .slate .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .hero h1{color:var(--text);}
 .hero h1 .hero-name{display:block;font-size:clamp(3.2rem, 9vw, 7.4rem);}
-.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:14px;font-weight:700;}
+.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:14px;font-weight:100;}
 .hero h1 em{font-style:normal;color:var(--ember);}
 .hero .role{
   font-family:'IBM Plex Mono',monospace;font-size:clamp(.95rem,1.6vw,1.15rem);
@@ -145,7 +128,7 @@ nav{
 .hero-meta{margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);}
 .hero-meta div{padding:20px 0 0;border-right:1px solid var(--line);}
 .hero-meta div:last-child{border-right:none;}
-.hero-meta .num{font-family:'Big Shoulders Display';font-weight:800;font-size:1.9rem;color:var(--ember-bright);}
+.hero-meta .num{font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-weight:100;font-size:1.9rem;color:var(--ember-bright);}
 .hero-meta .lbl{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
 
 .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
@@ -170,7 +153,7 @@ nav{
 .reel-tag.rec::before{content:"● ";}
 
 .turn-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:2px;background:var(--line);margin-top:2px;}
-.turn-frame{position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;aspect-ratio:16/10;background:radial-gradient(circle at 50% 40%, #1a1613 0%, #0b0b0c 70%);}
+.turn-frame{position:relative;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;aspect-ratio:16/10;background:#000000;}
 .turn-side{background:var(--bg);padding:30px 32px;display:flex;flex-direction:column;justify-content:center;}
 .turn-side h3{font-size:1.6rem;margin-bottom:12px;}
 .turn-side p{color:var(--text-dim);font-size:.92rem;line-height:1.7;}
@@ -221,7 +204,7 @@ nav{
 .tl-item p{color:var(--text-dim);margin-top:12px;line-height:1.7;max-width:62ch;font-size:.95rem;}
 
 .about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start;}
-.about-photo{position:relative;z-index:4;aspect-ratio:4/5;border-radius:3px;border:1px solid var(--line-strong);overflow:hidden;background:#0e0d0c;}
+.about-photo{position:relative;z-index:4;aspect-ratio:4/5;border-radius:3px;border:1px solid var(--line-strong);overflow:hidden;background:#000000;}
 .about-body p{color:var(--text-dim);font-size:1.05rem;line-height:1.85;margin-bottom:18px;}
 .about-body strong{color:var(--text);font-weight:600;}
 .soft-list{margin-top:28px;display:flex;flex-wrap:wrap;gap:10px;}
@@ -265,12 +248,9 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
    update the two href="Dominic-Davis-Resume.docx" spots below.
    ============================================================ -->
 
-<div class="grain"></div>
-<div class="vignette"></div>
-
 <div class="page-content" id="pageContent">
 <nav>
-  <div class="nav-mark"><span class="fire-text" id="cfg-navA">DOMINIC</span><span class="nav-slash">/</span><span class="fire-text" id="cfg-navB">DAVIS</span></div>
+  <div class="nav-mark"><span id="cfg-navA">DOMINIC</span><span class="nav-slash">/</span><span id="cfg-navB">DAVIS</span></div>
   <ul class="nav-links">
     <li><a href="#reel">Reel</a></li>
     <li><a href="#turnaround">3D</a></li>
@@ -284,13 +264,12 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 
 <!-- ================= HERO ================= -->
 <section class="hero" id="top">
-  <canvas class="fw-canvas fw-back" id="fwBack"></canvas>
   <div class="wrap">
     <div class="slate">
       <span class="dot"></span>
       <span class="eyebrow" id="cfg-status">Status — Open to Work</span>
     </div>
-    <h1><span class="hero-name fire-text" id="cfg-name">Dominic Davis</span><span class="hero-role"><span class="burn-pair"><span class="burn-word" data-word="character" id="cfg-h1a">Character</span> <span class="burn-word" data-word="animator" id="cfg-h1b">Animator</span></span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
+    <h1><span class="hero-name" id="cfg-name">Dominic Davis</span><span class="hero-role"><span class="burn-pair"><span class="burn-word" data-word="character" id="cfg-h1a">Character</span> <span class="burn-word" data-word="animator" id="cfg-h1b">Animator</span></span> <em>→ <span id="cfg-h2">Creature Animator</span></em></span></h1>
     <div class="stars-line" aria-hidden="true">★★★★★★★</div>
     <p class="role" id="cfg-tagline">Seven years animating character performances for broadcast series in Autodesk Maya. Now training toward creature work — where timing, weight, and behaviour matter even more.</p>
     <div class="hero-actions">
@@ -305,7 +284,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       <div><div class="num">Maya</div><div class="lbl">+ Blender + Unreal</div></div>
     </div>
   </div>
-  <canvas class="fw-canvas fw-front" id="fwFront"></canvas>
 </section>
 
 <!-- ================= REEL ================= -->
@@ -314,7 +292,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="sec-head">
       <div>
         <span class="eyebrow">Demo Reel</span>
-        <h2 class="fire-text">The Reel</h2>
+        <h2>The Reel</h2>
       </div>
       <p class="sec-note">This reel mainly features personal shots created during my free time, along with a few studio shots to reflect my production experience.</p>
     </div>
@@ -333,7 +311,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="sec-head">
       <div>
         <span class="eyebrow">360° Turnaround</span>
-        <h2 class="fire-text">3D Turnaround</h2>
+        <h2>3D Turnaround</h2>
       </div>
       <p class="sec-note">Not live yet — currently in development.</p>
     </div>
@@ -356,7 +334,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="sec-head">
       <div>
         <span class="eyebrow">Selected Shots</span>
-        <h2 class="fire-text">Selected Work</h2>
+        <h2>Selected Work</h2>
       </div>
       <p class="sec-note">Three productions, three different rooms to perform in — an underwater comedy for Nickelodeon/Paramount+, a fast, internationally distributed adventure series, and a gag-driven chipmunk show. Each reel below sits beside the shot context: what the sequence needed, and where the performance lives inside the pipeline.</p>
     </div>
@@ -370,7 +348,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       </div>
       <div class="work-body">
         <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
-        <h3 class="fire-text">Kamp Koral</h3>
+        <h3>Kamp Koral</h3>
         <p>Character performance animation for the Nickelodeon/Paramount+ underwater comedy series — full pipeline from blocking through spline to final polish, delivered inside a tight episodic broadcast schedule.</p>
         <div class="tag-row"><span class="tag">Maya</span><span class="tag">Episodic</span><span class="tag">Broadcast QC</span></div>
       </div>
@@ -382,7 +360,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       </div>
       <div class="work-body">
         <span class="sc mono">TOONZ MEDIA GROUP · KERALA</span>
-        <h3 class="fire-text">Mondo-Yan</h3>
+        <h3>Mondo-Yan</h3>
         <p>Character animation for this internationally distributed adventure series, built inside a large-scale, high-volume episodic production pipeline shared across a big animation team.</p>
         <div class="tag-row"><span class="tag">Maya</span><span class="tag">High-Volume Pipeline</span></div>
       </div>
@@ -394,7 +372,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       </div>
       <div class="work-body">
         <span class="sc mono">MIKROS ANIMATION · BANGALORE</span>
-        <h3 class="fire-text">ALVINNN!!! and the Chipmunks</h3>
+        <h3>ALVINNN!!! and the Chipmunks</h3>
         <p>Character animation aligned to production style guides and director/supervisor creative direction, built on strong comic timing, weight, and follow-through fundamentals for a fast, gag-driven show.</p>
         <div class="tag-row"><span class="tag">Maya</span><span class="tag">Character Acting</span></div>
       </div>
@@ -410,7 +388,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="sec-head">
       <div>
         <span class="eyebrow">Spec Sheet</span>
-        <h2 class="fire-text">Skills &amp; Software</h2>
+        <h2>Skills &amp; Software</h2>
       </div>
       <p class="sec-note">Bars reflect real proficiency, not aspiration — Maya is the daily driver, Blender and Unreal are active learning.</p>
     </div>
@@ -418,28 +396,28 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
       <div class="skill-col">
         <span class="eyebrow">Animation</span>
         <ul class="skill-list">
-          <li><span class="fire-text">Blocking &amp; Final Polish</span> <span class="skill-bar"><i style="width:92%"></i></span></li>
-          <li><span class="fire-text">Body Mechanics</span> <span class="skill-bar"><i style="width:90%"></i></span></li>
-          <li><span class="fire-text">Lip Sync</span> <span class="skill-bar"><i style="width:80%"></i></span></li>
-          <li><span class="fire-text">Creature Animation</span> <span class="skill-bar"><i style="width:45%"></i></span></li>
+          <li><span>Blocking &amp; Final Polish</span> <span class="skill-bar"><i style="width:92%"></i></span></li>
+          <li><span>Body Mechanics</span> <span class="skill-bar"><i style="width:90%"></i></span></li>
+          <li><span>Lip Sync</span> <span class="skill-bar"><i style="width:80%"></i></span></li>
+          <li><span>Creature Animation</span> <span class="skill-bar"><i style="width:45%"></i></span></li>
         </ul>
       </div>
       <div class="skill-col">
         <span class="eyebrow">Software</span>
         <ul class="skill-list">
-          <li><span class="fire-text">Autodesk Maya</span> <span class="skill-bar"><i style="width:95%"></i></span></li>
-          <li><span class="fire-text">Blender</span> <span class="skill-bar"><i style="width:50%"></i></span></li>
-          <li><span class="fire-text">Unreal Engine</span> <span class="skill-bar"><i style="width:50%"></i></span></li>
+          <li><span>Autodesk Maya</span> <span class="skill-bar"><i style="width:95%"></i></span></li>
+          <li><span>Blender</span> <span class="skill-bar"><i style="width:50%"></i></span></li>
+          <li><span>Unreal Engine</span> <span class="skill-bar"><i style="width:50%"></i></span></li>
         </ul>
         <div class="tag-row" style="margin-top:14px;"><span class="tag">After Effects</span><span class="tag">Premiere</span><span class="tag">Photoshop</span></div>
       </div>
       <div class="skill-col">
         <span class="eyebrow">Production</span>
         <ul class="skill-list">
-          <li><span class="fire-text">Episodic Pipeline</span> <span class="skill-bar"><i style="width:90%"></i></span></li>
-          <li><span class="fire-text">Shot Management</span> <span class="skill-bar"><i style="width:85%"></i></span></li>
-          <li><span class="fire-text">Director/Supervisor Collab</span> <span class="skill-bar"><i style="width:85%"></i></span></li>
-          <li><span class="fire-text">Broadcast QC</span> <span class="skill-bar"><i style="width:80%"></i></span></li>
+          <li><span>Episodic Pipeline</span> <span class="skill-bar"><i style="width:90%"></i></span></li>
+          <li><span>Shot Management</span> <span class="skill-bar"><i style="width:85%"></i></span></li>
+          <li><span>Director/Supervisor Collab</span> <span class="skill-bar"><i style="width:85%"></i></span></li>
+          <li><span>Broadcast QC</span> <span class="skill-bar"><i style="width:80%"></i></span></li>
         </ul>
       </div>
     </div>
@@ -452,43 +430,43 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="sec-head">
       <div>
         <span class="eyebrow">Production History</span>
-        <h2 class="fire-text">Experience</h2>
+        <h2>Experience</h2>
       </div>
       <p class="sec-note">Seven years across episodic studios and independent client work.</p>
     </div>
     <div class="timeline">
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">3D Character Animator</h3><span class="tl-date mono">Apr 2021 — Jan 2025</span></div>
+        <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Apr 2021 — Jan 2025</span></div>
         <div class="tl-studio">Mikros Animation — Bangalore, India</div>
         <p>Animated character performances for internationally broadcast productions including Kamp Koral, ALVINNN!!! and the Chipmunks, and Polar Rescue Team — managing the full pipeline from blocking through spline to final polish within episodic deadlines.</p>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">Freelance 3D Animator</h3><span class="tl-date mono">Jul 2020 — Apr 2021</span></div>
+        <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Jul 2020 — Apr 2021</span></div>
         <div class="tl-studio">Independent — Remote</div>
         <p>Character animation for commercials, title sequences, and YouTube original series across multiple clients, owning the full cycle from brief to final delivery.</p>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">Animator</h3><span class="tl-date mono">Mar 2020 — Jul 2020</span></div>
+        <div class="tl-top"><h3>Animator</h3><span class="tl-date mono">Mar 2020 — Jul 2020</span></div>
         <div class="tl-studio">Windfall Productions Pvt Ltd — Kerala, India</div>
         <p>Contributed to animation production and visual development for the launch of a children's content channel at one of India's leading television media companies.</p>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">Freelance 3D Animator</h3><span class="tl-date mono">Nov 2019 — Mar 2020</span></div>
+        <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Nov 2019 — Mar 2020</span></div>
         <div class="tl-studio">Independent — Remote</div>
         <p>Character animation for web series and animated fitness content, with emphasis on precise body mechanics, timing, and readable motion.</p>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">3D Character Animator</h3><span class="tl-date mono">Jul 2017 — Oct 2019</span></div>
+        <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Jul 2017 — Oct 2019</span></div>
         <div class="tl-studio">Toonz Media Group — Kerala, India</div>
         <p>Animated characters across multiple internationally distributed children's series (Kim and Jim, Sindbad and the 7 Galaxies, Mondo Yan, and others) within a large-scale episodic production pipeline.</p>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">3D Animator</h3><span class="tl-date mono">Apr 2017 — Jun 2017</span></div>
+        <div class="tl-top"><h3>3D Animator</h3><span class="tl-date mono">Apr 2017 — Jun 2017</span></div>
         <div class="tl-studio">Goodness Television — Kerala, India</div>
         <p>Created animated content for magazine segments and logo advertisements, applying character animation and motion design across broadcast formats.</p>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3 class="fire-text">3D Modeller</h3><span class="tl-date mono">May 2015 — Jul 2015</span></div>
+        <div class="tl-top"><h3>3D Modeller</h3><span class="tl-date mono">May 2015 — Jul 2015</span></div>
         <div class="tl-studio">Beetles3.3 Architecture — Kerala, India</div>
         <p>Produced detailed 3D architectural and interior models, building early proficiency in spatial reasoning and proportional accuracy.</p>
       </div>
@@ -502,7 +480,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <div class="sec-head">
       <div>
         <span class="eyebrow">About</span>
-        <h2 class="fire-text" style="text-transform:none;">Hi!</h2>
+        <h2 style="text-transform:none;">Hi!</h2>
       </div>
     </div>
     <div class="about-grid">
@@ -510,7 +488,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
         <img src="headshot.jpg" alt="Dominic Davis" style="width:100%;height:100%;object-fit:contain;border-radius:3px;">
       </div>
       <div class="about-body">
-        <p><strong class="fire-text">Seven years in CG animation production does something to how you see motion.</strong> Working across multiple internationally broadcast series has built an eye for what makes a performance feel honest rather than mechanical.</p>
+        <p><strong>Seven years in CG animation production does something to how you see motion.</strong> Working across multiple internationally broadcast series has built an eye for what makes a performance feel honest rather than mechanical.</p>
         <p>Trained and working daily in Autodesk Maya — blocking, iteration, refinement, until the motion earns its place on screen. Currently deepening a study of creature anatomy, locomotion, and behaviour through a dedicated creature animation workshop and personal shot work, alongside a BA in Animation and Graphics Design.</p>
         <p>Looking for a production environment where the standard is high and the work matters.</p>
         <div class="soft-list">
@@ -527,7 +505,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   <div class="wrap contact-inner">
     <div class="contact-left">
       <span class="eyebrow">Get In Touch</span>
-      <h2 class="fire-text">Let's talk.</h2>
+      <h2>Let's talk.</h2>
       <p>Open to full-time opportunities for character/creature animation roles. Fastest way to reach me is email or WhatsApp.</p>
       <div class="contact-actions">
         <a href="mailto:domnickl45f3565@gmail.com" class="btn btn-primary">Email Me</a>
@@ -580,93 +558,6 @@ const CONTENT = {
   document.getElementById('cfg-navB').textContent = CONTENT.navB;
 })();
 
-(function fireText(){
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const sel = '.fire-text, .tag, .sec-note, .contact-list a, .contact-list span, .work-body p, .tl-item p, .tl-studio, .tl-date, .hero .role, .hero-meta .num, .hero-meta .lbl, .eyebrow, .reel-tag, .coming-soon-badge, .turn-side h3, .turn-side p, footer .mono, .about-body p, .sc';
-  document.querySelectorAll(sel).forEach(function(el){
-    if(el.dataset.ftInit) return;
-    if(el.children.length > 0) return;
-    el.dataset.ftInit = '1';
-    const origColor = getComputedStyle(el).color;
-
-    let tx = -999, ty = -999, lx = -999, ly = -999, lastX = -999, lastY = -999;
-    let particles = [];
-    let raf = null;
-
-    function spawn(vx, vy){
-      for(let i=0;i<2;i++){
-        particles.push({
-          x: lx + (Math.random()-0.5)*4, y: ly + (Math.random()-0.5)*4,
-          vx: vx*(1+Math.random()) + (Math.random()-0.5)*0.4,
-          vy: vy*(1+Math.random()) + (Math.random()-0.5)*0.4,
-          life:1, decay:0.045+Math.random()*0.025, size:9+Math.random()*12, type:'fire'
-        });
-      }
-      if(Math.random() < 0.45){
-        particles.push({
-          x: lx, y: ly, vx: vx*0.6, vy: vy*0.6,
-          life:1, decay:0.06+Math.random()*0.025, size:4+Math.random()*4, type:'ember'
-        });
-      }
-    }
-    function onMove(e){
-      const r = el.getBoundingClientRect();
-      tx = e.clientX - r.left; ty = e.clientY - r.top;
-    }
-    function frame(){
-      lx += (tx-lx)*0.5; ly += (ty-ly)*0.5;
-      const dx = tx-lastX, dy = ty-lastY; lastX=tx; lastY=ty;
-      const speed = Math.hypot(dx,dy);
-      let vx, vy;
-      if(speed < 0.15){ vx = 0; vy = -0.6; } else { vx = -dx/speed*0.9; vy = -dy/speed*0.9; }
-      spawn(vx, vy);
-
-      particles.forEach(function(p){
-        p.vx += (Math.random()-0.5)*0.05;
-        p.vy += (Math.random()-0.5)*0.05 - 0.03;
-        p.vx *= 0.98; p.vy *= 0.98;
-        p.x += p.vx; p.y += p.vy;
-        p.life -= p.decay;
-      });
-      particles = particles.filter(function(p){ return p.life > 0; });
-      if(particles.length > 16) particles.splice(0, particles.length-16);
-
-      const stops = particles.map(function(p){
-        if(p.type === 'ember'){
-          return 'radial-gradient(circle ' + p.size.toFixed(1) + 'px at ' + p.x.toFixed(1) + 'px ' + p.y.toFixed(1) + 'px, rgba(255,238,150,' + p.life.toFixed(2) + ') 0%, rgba(255,175,45,' + (p.life*0.92).toFixed(2) + ') 40%, rgba(255,100,10,0) 100%)';
-        }
-        return 'radial-gradient(circle ' + p.size.toFixed(1) + 'px at ' + p.x.toFixed(1) + 'px ' + p.y.toFixed(1) + 'px, rgba(255,242,170,' + (p.life*0.95).toFixed(2) + ') 0%, rgba(255,220,72,' + p.life.toFixed(2) + ') 10%, rgba(255,170,32,' + (p.life*0.98).toFixed(2) + ') 32%, rgba(255,110,12,' + (p.life*0.92).toFixed(2) + ') 58%, rgba(195,48,0,' + (p.life*0.75).toFixed(2) + ') 82%, rgba(120,18,0,0) 100%)';
-      });
-      stops.push('linear-gradient(' + origColor + ',' + origColor + ')');
-      el.style.backgroundImage = stops.join(',');
-      el.style.color = 'transparent';
-      el.style.backgroundClip = 'text';
-      el.style.webkitBackgroundClip = 'text';
-      el.style.webkitTextFillColor = 'transparent';
-      raf = requestAnimationFrame(frame);
-    }
-    function reset(){
-      el.style.backgroundImage = '';
-      el.style.color = '';
-      el.style.backgroundClip = '';
-      el.style.webkitBackgroundClip = '';
-      el.style.webkitTextFillColor = '';
-    }
-    el.addEventListener('mouseenter', function(e){
-      const r = el.getBoundingClientRect();
-      tx = e.clientX-r.left; ty = e.clientY-r.top; lx=tx; ly=ty; lastX=tx; lastY=ty;
-      particles = [];
-      el.addEventListener('mousemove', onMove);
-      raf = requestAnimationFrame(frame);
-    });
-    el.addEventListener('mouseleave', function(){
-      el.removeEventListener('mousemove', onMove);
-      cancelAnimationFrame(raf);
-      reset();
-    });
-  });
-})();
-
 (function burnWords(){
   document.querySelectorAll('.burn-word').forEach(function(word){
     let timer = null;
@@ -679,7 +570,7 @@ const CONTENT = {
       timer = setTimeout(function(){
         word.classList.add('reverting');
         word.classList.remove('lit');
-      }, 10000);
+      }, 3000);
     });
   });
 })();
@@ -734,165 +625,6 @@ const CONTENT = {
   requestAnimationFrame(loop);
 })();
 
-(function fireworks(){
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const hero = document.getElementById('top');
-  const backCanvas = document.getElementById('fwBack');
-  const frontCanvas = document.getElementById('fwFront');
-  if(!hero || !backCanvas || !frontCanvas) return;
-  const backCtx = backCanvas.getContext('2d');
-  const frontCtx = frontCanvas.getContext('2d');
-
-  function resize(){
-    [backCanvas, frontCanvas].forEach(function(c){
-      c.width = hero.clientWidth;
-      c.height = hero.clientHeight;
-    });
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const STYLES = [
-    {name:'peony',        count:55, speed:[3,6],   gravity:.05, drag:.985, size:[1.6,2.6], colors:['#ff5a5a','#ffb347','#ffd76a']},
-    {name:'chrysanthemum',count:80, speed:[2.5,5.5],gravity:.045,drag:.985, size:[1.2,2],   colors:['#ffd76a','#fff2c2','#ff9d2e'], flicker:true},
-    {name:'willow',       count:60, speed:[2,4],   gravity:.1,  drag:.992, size:[1,1.8],    colors:['#ffe9a8','#ffcf6b']},
-    {name:'ring',         count:46, speed:[4,4.4], gravity:.03, drag:.99,  size:[1.4,2],    colors:['#7fd8ff','#bfe9ff'], ring:true},
-    {name:'doubleBurst',  count:40, speed:[3,5],   gravity:.05, drag:.985, size:[1.6,2.4],  colors:['#ff7ad9','#ffb3ec'], secondary:true},
-    {name:'crackle',      count:70, speed:[1.5,3.5],gravity:.04,drag:.96,  size:[1,1.6],    colors:['#ffffff','#ffe9a8'], flicker:true},
-    {name:'palm',         count:22, speed:[4,7],   gravity:.07, drag:.988, size:[2.2,3.2],  colors:['#9dff7a','#c9ffb0']},
-    {name:'strobe',       count:50, speed:[3,5],   gravity:.05, drag:.985, size:[1.6,2.2],  colors:['#c9a8ff','#a685ff'], flicker:true},
-    {name:'spiral',       count:60, speed:[3,5],   gravity:.05, drag:.985, size:[1.4,2],    colors:['#ff6a9e','#ffd1e3'], spiral:true},
-    {name:'glitterDust',  count:90, speed:[1,2.5], gravity:.02, drag:.94,  size:[.7,1.2],   colors:['#ffffff','#fff8dd','#ffe9a8'], flicker:true}
-  ];
-
-  function rand(a,b){ return a + Math.random()*(b-a); }
-
-  function makeBurst(x, y, style){
-    const particles = [];
-    for(let i=0;i<style.count;i++){
-      let angle = (Math.PI*2) * (i/style.count) + rand(-.15,.15);
-      if(style.spiral) angle += i*0.15;
-      let spd = rand(style.speed[0], style.speed[1]);
-      if(style.ring) spd = style.speed[0];
-      const color = style.colors[Math.floor(Math.random()*style.colors.length)];
-      particles.push({
-        x:x, y:y,
-        vx: Math.cos(angle)*spd,
-        vy: Math.sin(angle)*spd,
-        life:1,
-        decay: rand(0.008, 0.016),
-        size: rand(style.size[0], style.size[1]),
-        color: color,
-        gravity: style.gravity,
-        drag: style.drag,
-        flicker: !!style.flicker,
-        secondary: !!style.secondary,
-        secondaryDone:false
-      });
-    }
-    return particles;
-  }
-
-  function Rocket(canvasWidth, canvasHeight, style){
-    this.x = rand(canvasWidth*0.1, canvasWidth*0.9);
-    this.y = canvasHeight;
-    this.targetY = rand(canvasHeight*0.15, canvasHeight*0.55);
-    this.vy = -rand(4.5, 6.5);
-    this.style = style;
-    this.exploded = false;
-    this.particles = [];
-    this.color = style.colors[Math.floor(Math.random()*style.colors.length)];
-    this.trail = [];
-  }
-  Rocket.prototype.update = function(){
-    if(!this.exploded){
-      this.trail.push({x:this.x,y:this.y});
-      if(this.trail.length>6) this.trail.shift();
-      this.y += this.vy;
-      this.vy *= 0.99;
-      if(this.y <= this.targetY){
-        this.exploded = true;
-        this.particles = makeBurst(this.x, this.y, this.style);
-      }
-      return true;
-    } else {
-      let alive = false;
-      this.particles.forEach(function(p){
-        if(p.life<=0) return;
-        alive = true;
-        p.vx *= p.drag;
-        p.vy = p.vy*p.drag + p.gravity;
-        p.x += p.vx; p.y += p.vy;
-        p.life -= p.decay;
-        if(p.secondary && !p.secondaryDone && p.life < 0.5){
-          p.secondaryDone = true;
-        }
-      });
-      return alive;
-    }
-  };
-  Rocket.prototype.draw = function(ctx){
-    ctx.globalCompositeOperation = 'lighter';
-    if(!this.exploded){
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      this.trail.forEach(function(pt,i){
-        if(i===0) ctx.moveTo(pt.x,pt.y); else ctx.lineTo(pt.x,pt.y);
-      });
-      ctx.stroke();
-    } else {
-      this.particles.forEach(function(p){
-        if(p.life<=0) return;
-        let alpha = p.life;
-        if(p.flicker) alpha *= (Math.random()>0.35 ? 1 : 0.25);
-        ctx.fillStyle = hexWithAlpha(p.color, alpha);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size*2.2, 0, Math.PI*2);
-        ctx.fill();
-      });
-    }
-    ctx.globalCompositeOperation = 'source-over';
-  };
-  function hexWithAlpha(hex, alpha){
-    const a = Math.max(0, Math.min(1, alpha));
-    const c = hex.replace('#','');
-    const r = parseInt(c.substring(0,2),16);
-    const g = parseInt(c.substring(2,4),16);
-    const b = parseInt(c.substring(4,6),16);
-    return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(2) + ')';
-  }
-
-  let backRockets = [];
-  let frontRockets = [];
-  const MAX_PER_CANVAS = 5;
-
-  function launch(){
-    const style = STYLES[Math.floor(Math.random()*STYLES.length)];
-    if(Math.random() < 0.5 && backRockets.length < MAX_PER_CANVAS){
-      backRockets.push(new Rocket(backCanvas.width, backCanvas.height, style));
-    } else if(frontRockets.length < MAX_PER_CANVAS){
-      frontRockets.push(new Rocket(frontCanvas.width, frontCanvas.height, style));
-    }
-    setTimeout(launch, rand(350, 750));
-  }
-  setTimeout(launch, 600);
-
-  function render(){
-    backCtx.clearRect(0,0,backCanvas.width, backCanvas.height);
-    frontCtx.clearRect(0,0,frontCanvas.width, frontCanvas.height);
-
-    backRockets = backRockets.filter(function(r){ return r.update(); });
-    frontRockets = frontRockets.filter(function(r){ return r.update(); });
-
-    backRockets.forEach(function(r){ r.draw(backCtx); });
-    frontRockets.forEach(function(r){ r.draw(frontCtx); });
-
-    requestAnimationFrame(render);
-  }
-  requestAnimationFrame(render);
-})();
-
 (function visitorAlert(){
   const params = new URLSearchParams(window.location.search);
   if(params.get('owner') === '1'){
@@ -900,3 +632,18 @@ const CONTENT = {
     return;
   }
   if(localStorage.getItem('site_owner') === 'true') return;
+  if(!CONTENT.emailjsPublicKey || !CONTENT.emailjsServiceId || !CONTENT.emailjsTemplateId) return;
+  try{
+    emailjs.init(CONTENT.emailjsPublicKey);
+    emailjs.send(CONTENT.emailjsServiceId, CONTENT.emailjsTemplateId, {
+      page_url: window.location.href,
+      visit_time: new Date().toString(),
+      referrer: document.referrer || "direct / unknown",
+      to_email: CONTENT.notifyEmail
+    });
+  }catch(err){}
+})();
+</script>
+
+</body>
+</html>
