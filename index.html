@@ -6,19 +6,21 @@
 <title>Dominic Davis — Character &amp; Creature Animator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 
 :root{
   --bg: #000000;
   --line: rgba(236,231,223,0.09);
   --line-strong: rgba(236,231,223,0.18);
-  --text: #ece7df;
+  --text: #ffffff;
   --text-dim: #96918a;
   --text-faint: #605c57;
   --ember: #c9814a;
   --ember-bright: #e6a26a;
   --ok: #7fa87a;
+  --up-green: #3ea25a;
+  --up-green-bright: #4bbd6c;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -34,11 +36,11 @@ body{
 ::selection{background:var(--ember);color:#0b0b0c;}
 
 h1,h2,h3,.display{
-  font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight:100;
+  font-family:'Big Shoulders Display', sans-serif;
+  font-weight:900;
   text-transform:uppercase;
   letter-spacing:.01em;
-  line-height:.98;
+  line-height:.92;
   text-align:left;
 }
 
@@ -57,10 +59,10 @@ h1,h2,h3,.display{
 .burn-word.reverting{color:var(--ember);transition:color 2.5s ease;}
 
 .stars-line{
-  margin-top:4px;
-  font-size:calc(clamp(1.3rem,3vw,2.2rem) * 0.78);
+  margin-top:10px;
+  font-size:calc(clamp(1.3rem,3vw,2.2rem) * 0.9);
   color:#ffd700;
-  letter-spacing:-.32em;
+  letter-spacing:.08em;
   line-height:1;
 }
 
@@ -84,7 +86,7 @@ nav{
   background:linear-gradient(to bottom, rgba(0,0,0,.9), transparent);
   backdrop-filter:blur(2px);
 }
-.nav-mark{font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-weight:100;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}
+.nav-mark{font-family:'Big Shoulders Display', sans-serif;font-weight:900;font-size:1.2rem;letter-spacing:.04em;text-transform:uppercase;}
 .nav-mark .nav-slash{color:var(--ember);}
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{
@@ -98,7 +100,7 @@ nav{
 .hero{
   min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:140px 0 80px;overflow:hidden;
-  background:#000000;
+  background:transparent;
 }
 .hero .wrap{position:relative;z-index:2;}
 .slate{display:flex;align-items:center;gap:14px;margin-bottom:38px;}
@@ -106,7 +108,7 @@ nav{
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .hero h1{color:var(--text);}
 .hero h1 .hero-name{display:block;font-size:clamp(3.2rem, 9vw, 7.4rem);}
-.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:14px;font-weight:100;}
+.hero h1 .hero-role{display:block;font-size:clamp(1.3rem, 3vw, 2.2rem);margin-top:14px;}
 .hero h1 em{font-style:normal;color:var(--ember);}
 .hero .role{
   font-family:'IBM Plex Mono',monospace;font-size:clamp(.95rem,1.6vw,1.15rem);
@@ -128,7 +130,7 @@ nav{
 .hero-meta{margin-top:96px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);}
 .hero-meta div{padding:20px 0 0;border-right:1px solid var(--line);}
 .hero-meta div:last-child{border-right:none;}
-.hero-meta .num{font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-weight:100;font-size:1.9rem;color:var(--ember-bright);}
+.hero-meta .num{font-family:'Big Shoulders Display', sans-serif;font-weight:900;font-size:1.9rem;color:var(--ember-bright);}
 .hero-meta .lbl{font-family:'IBM Plex Mono';font-size:.68rem;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
 
 .sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px;}
@@ -193,10 +195,14 @@ nav{
 .skill-bar{width:90px;height:3px;background:var(--line-strong);position:relative;border-radius:2px;overflow:hidden;flex-shrink:0;}
 .skill-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ember);border-radius:2px;}
 
-.timeline{border-left:1px solid var(--line-strong);margin-left:6px;}
-.tl-item{position:relative;padding:0 0 52px 34px;}
+.timeline{display:flex;flex-direction:column;}
+.tl-item{display:flex;gap:26px;position:relative;padding-bottom:52px;}
 .tl-item:last-child{padding-bottom:0;}
-.tl-item::before{content:"";position:absolute;left:-5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--ember);}
+.tl-marker{position:relative;width:11px;flex-shrink:0;}
+.tl-marker::before{content:"";position:absolute;top:4px;left:0;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--ember);z-index:2;}
+.tl-marker::after{content:"";position:absolute;top:15px;bottom:-52px;left:5px;width:1px;background:var(--line-strong);}
+.tl-item:last-child .tl-marker::after{display:none;}
+.tl-content{flex:1;min-width:0;}
 .tl-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 20px;}
 .tl-top h3{font-size:1.5rem;text-transform:none;}
 .tl-date{font-family:'IBM Plex Mono';font-size:.75rem;color:var(--text-faint);}
@@ -221,6 +227,35 @@ nav{
 footer{border-top:1px solid var(--line);padding:34px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
 footer .mono{font-size:.72rem;color:var(--text-faint);}
 
+.scroll-top-btn{
+  position:fixed;right:28px;bottom:28px;z-index:300;
+  width:58px;height:58px;border-radius:50%;
+  background:var(--up-green);color:#fff;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.06em;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transform:translateY(14px);
+  transition:opacity .3s ease, transform .3s ease, background .2s ease;
+}
+.scroll-top-btn.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+.scroll-top-btn:hover{background:var(--up-green-bright);}
+
+#godRays{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+#godRays .ray{
+  position:absolute;
+  top:-18%;
+  height:175vh;
+  background:linear-gradient(to bottom,
+    rgba(205,232,255,.20) 0%,
+    rgba(205,232,255,.09) 28%,
+    rgba(205,232,255,.03) 55%,
+    rgba(205,232,255,0) 82%);
+  transform-origin:top center;
+  filter:blur(11px);
+  mix-blend-mode:screen;
+  will-change:transform,opacity;
+}
+
 @media (max-width:860px){
   .nav-links{display:none;}
   .hero-meta{grid-template-columns:repeat(2,1fr);row-gap:26px;}
@@ -236,18 +271,7 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 </style>
 </head>
 <body>
-<!-- ============================================================
-   HOW TO REPLACE THE HEADSHOT:
-   Delete "headshot.jpg" from your GitHub repo, then upload the new
-   one named exactly "headshot.jpg" (or update src="headshot.jpg"
-   below to match a different filename).
-
-   HOW TO UPDATE/RENAME THE RESUME:
-   Buttons point to "Dominic-Davis-Resume.docx". Upload a new file
-   with that exact name to replace it, or give it a new name and
-   update the two href="Dominic-Davis-Resume.docx" spots below.
-   ============================================================ -->
-
+<div id="godRays" aria-hidden="true"></div>
 <div class="page-content" id="pageContent">
 <nav>
   <div class="nav-mark"><span id="cfg-navA">DOMINIC</span><span class="nav-slash">/</span><span id="cfg-navB">DAVIS</span></div>
@@ -262,7 +286,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </ul>
 </nav>
 
-<!-- ================= HERO ================= -->
 <section class="hero" id="top">
   <div class="wrap">
     <div class="slate">
@@ -286,7 +309,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= REEL ================= -->
 <section id="reel">
   <div class="wrap">
     <div class="sec-head">
@@ -305,7 +327,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= 3D TURNAROUND (hidden until "3D" is clicked in nav) ================= -->
 <section id="turnaround">
   <div class="wrap">
     <div class="sec-head">
@@ -328,7 +349,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= WORK ================= -->
 <section id="work">
   <div class="wrap">
     <div class="sec-head">
@@ -382,7 +402,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= SKILLS ================= -->
 <section id="skills">
   <div class="wrap">
     <div class="sec-head">
@@ -424,7 +443,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= EXPERIENCE ================= -->
 <section id="experience">
   <div class="wrap">
     <div class="sec-head">
@@ -436,45 +454,65 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     </div>
     <div class="timeline">
       <div class="tl-item">
-        <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Apr 2021 — Jan 2025</span></div>
-        <div class="tl-studio">Mikros Animation — Bangalore, India</div>
-        <p>Animated character performances for internationally broadcast productions including Kamp Koral, ALVINNN!!! and the Chipmunks, and Polar Rescue Team — managing the full pipeline from blocking through spline to final polish within episodic deadlines.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Apr 2021 — Jan 2025</span></div>
+          <div class="tl-studio">Mikros Animation — Bangalore, India</div>
+          <p>Animated character performances for internationally broadcast productions including Kamp Koral, ALVINNN!!! and the Chipmunks, and Polar Rescue Team — managing the full pipeline from blocking through spline to final polish within episodic deadlines.</p>
+        </div>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Jul 2020 — Apr 2021</span></div>
-        <div class="tl-studio">Independent — Remote</div>
-        <p>Character animation for commercials, title sequences, and YouTube original series across multiple clients, owning the full cycle from brief to final delivery.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Jul 2020 — Apr 2021</span></div>
+          <div class="tl-studio">Independent — Remote</div>
+          <p>Character animation for commercials, title sequences, and YouTube original series across multiple clients, owning the full cycle from brief to final delivery.</p>
+        </div>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3>Animator</h3><span class="tl-date mono">Mar 2020 — Jul 2020</span></div>
-        <div class="tl-studio">Windfall Productions Pvt Ltd — Kerala, India</div>
-        <p>Contributed to animation production and visual development for the launch of a children's content channel at one of India's leading television media companies.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>Animator</h3><span class="tl-date mono">Mar 2020 — Jul 2020</span></div>
+          <div class="tl-studio">Windfall Productions Pvt Ltd — Kerala, India</div>
+          <p>Contributed to animation production and visual development for the launch of a children's content channel at one of India's leading television media companies.</p>
+        </div>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Nov 2019 — Mar 2020</span></div>
-        <div class="tl-studio">Independent — Remote</div>
-        <p>Character animation for web series and animated fitness content, with emphasis on precise body mechanics, timing, and readable motion.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>Freelance 3D Animator</h3><span class="tl-date mono">Nov 2019 — Mar 2020</span></div>
+          <div class="tl-studio">Independent — Remote</div>
+          <p>Character animation for web series and animated fitness content, with emphasis on precise body mechanics, timing, and readable motion.</p>
+        </div>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Jul 2017 — Oct 2019</span></div>
-        <div class="tl-studio">Toonz Media Group — Kerala, India</div>
-        <p>Animated characters across multiple internationally distributed children's series (Kim and Jim, Sindbad and the 7 Galaxies, Mondo Yan, and others) within a large-scale episodic production pipeline.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>3D Character Animator</h3><span class="tl-date mono">Jul 2017 — Oct 2019</span></div>
+          <div class="tl-studio">Toonz Media Group — Kerala, India</div>
+          <p>Animated characters across multiple internationally distributed children's series (Kim and Jim, Sindbad and the 7 Galaxies, Mondo Yan, and others) within a large-scale episodic production pipeline.</p>
+        </div>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3>3D Animator</h3><span class="tl-date mono">Apr 2017 — Jun 2017</span></div>
-        <div class="tl-studio">Goodness Television — Kerala, India</div>
-        <p>Created animated content for magazine segments and logo advertisements, applying character animation and motion design across broadcast formats.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>3D Animator</h3><span class="tl-date mono">Apr 2017 — Jun 2017</span></div>
+          <div class="tl-studio">Goodness Television — Kerala, India</div>
+          <p>Created animated content for magazine segments and logo advertisements, applying character animation and motion design across broadcast formats.</p>
+        </div>
       </div>
       <div class="tl-item">
-        <div class="tl-top"><h3>3D Modeller</h3><span class="tl-date mono">May 2015 — Jul 2015</span></div>
-        <div class="tl-studio">Beetles3.3 Architecture — Kerala, India</div>
-        <p>Produced detailed 3D architectural and interior models, building early proficiency in spatial reasoning and proportional accuracy.</p>
+        <div class="tl-marker"></div>
+        <div class="tl-content">
+          <div class="tl-top"><h3>3D Modeller</h3><span class="tl-date mono">May 2015 — Jul 2015</span></div>
+          <div class="tl-studio">Beetles3.3 Architecture — Kerala, India</div>
+          <p>Produced detailed 3D architectural and interior models, building early proficiency in spatial reasoning and proportional accuracy.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= ABOUT ================= -->
 <section id="about">
   <div class="wrap">
     <div class="sec-head">
@@ -500,7 +538,6 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
   </div>
 </section>
 
-<!-- ================= CONTACT ================= -->
 <section id="contact">
   <div class="wrap contact-inner">
     <div class="contact-left">
@@ -527,7 +564,9 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
     <span class="mono">Built to be shared. Copy the link, send it to recruiters.</span>
   </div>
 </footer>
-</div><!-- /.page-content -->
+</div>
+
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">UP</button>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
@@ -620,6 +659,245 @@ const CONTENT = {
   function loop(){
     px += (tx-px)*0.06; py += (ty-py)*0.06;
     page.style.transform = 'translate(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px)';
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+(function scrollTopButton(){
+  const btn = document.getElementById('scrollTopBtn');
+  if(!btn) return;
+  function toggle(){
+    if(window.scrollY > window.innerHeight * 0.6){ btn.classList.add('visible'); }
+    else { btn.classList.remove('visible'); }
+  }
+  window.addEventListener('scroll', toggle, {passive:true});
+  toggle();
+  btn.addEventListener('click', function(){
+    window.scrollTo({top:0, left:0, behavior:'auto'});
+  });
+})();
+
+(function underwaterBubbles(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const field = document.createElement('div');
+  field.id = 'bubbleField';
+  field.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden;';
+  document.body.appendChild(field);
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+  function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
+  function mapRange(v,a1,b1,a2,b2){ return a2 + (v-a1)/(b1-a1)*(b2-a2); }
+
+  let activeCount = 0;
+  const MAX_BUBBLES = 48;
+  const bubbles = [];
+
+  function makeBubbleEl(x, y, size){
+    const hue = rand(184, 202);
+    const el = document.createElement('div');
+    el.style.cssText =
+      'position:absolute;left:' + x + 'px;top:' + y + 'px;' +
+      'width:' + size + 'px;height:' + size + 'px;border-radius:50%;' +
+      'background:radial-gradient(circle at 30% 26%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.3) 12%, hsla(' + hue + ',75%,72%,.16) 42%, hsla(' + hue + ',85%,55%,.09) 72%, hsla(' + hue + ',90%,40%,.03) 100%);' +
+      'border:1px solid rgba(255,255,255,.32);' +
+      'box-shadow: inset -2px -3px 4px rgba(0,0,0,.18), inset 2px 2px 3px rgba(255,255,255,.45), 0 0 7px rgba(170,225,255,.14);' +
+      'mix-blend-mode:screen;' +
+      'opacity:0;' +
+      'will-change:transform,opacity;';
+    return el;
+  }
+
+  function spawnBubble(x, y, size, driftDir, isChild){
+    if(activeCount >= MAX_BUBBLES) return;
+    activeCount++;
+    isChild = !!isChild;
+
+    const el = makeBubbleEl(x, y, size);
+    field.appendChild(el);
+
+    const growDuration  = clamp(mapRange(size, 4, 40, 1000, 3000), 1000, 3000) * (isChild ? 0.55 : 1);
+    const holdDuration  = rand(400, 1800) * (isChild ? 0.5 : 1);
+    const shiverDuration = rand(150, 260);
+    const riseDistance  = rand(160, 340) + size * 2.2;
+    const wobbleAmp     = rand(5, 15) * driftDir;
+    const wobbleFreq    = rand(0.9, 1.8);
+    const wobblePhase   = rand(0, Math.PI * 2);
+
+    bubbles.push({
+      el, x, y, size, isChild,
+      spawnTime: performance.now(),
+      growDuration, holdDuration, shiverDuration,
+      riseDistance, wobbleAmp, wobbleFreq, wobblePhase,
+      lastWobbleX: 0, lastRiseY: 0
+    });
+  }
+
+  function burst(b){
+    if(b.isChild) return;
+    const cx = b.x + b.lastWobbleX;
+    const cy = b.y + b.lastRiseY;
+    const numChildren = clamp(Math.round((b.size - 8) / 6), 0, 7);
+    for(let i=0; i<numChildren; i++){
+      const childSize = Math.max(3, b.size * rand(0.15, 0.42));
+      const ang = rand(0, Math.PI*2);
+      const dist = rand(2, 10);
+      spawnBubble(cx + Math.cos(ang)*dist, cy + Math.sin(ang)*dist, childSize, Math.random() < 0.5 ? -1 : 1, true);
+    }
+  }
+
+  const MAX_DEFORM = 0.07;      // halved from the previous 0.14
+  const DEFORM_FACTOR = 0.028;
+
+  function tick(now){
+    for(let i = bubbles.length - 1; i >= 0; i--){
+      const b = bubbles[i];
+      const elapsed = now - b.spawnTime;
+      const total = b.growDuration + b.holdDuration + b.shiverDuration;
+
+      if(elapsed >= total){
+        burst(b);
+        b.el.remove();
+        bubbles.splice(i, 1);
+        activeCount--;
+        continue;
+      }
+
+      const riseFrac = elapsed / total;
+      const riseY = -b.riseDistance * riseFrac;
+      const wobbleX = Math.sin(elapsed/1000 * b.wobbleFreq * Math.PI*2 + b.wobblePhase) * b.wobbleAmp * (1 - riseFrac*0.3);
+
+      let growth;
+      if(elapsed < b.growDuration){
+        const gt = elapsed / b.growDuration;
+        growth = 1 - Math.pow(1-gt, 3); // ease-out: volume builds from zero, settles by growDuration
+      } else {
+        growth = 1;
+      }
+
+      let jitterX = 0, jitterY = 0;
+      const shiverStart = b.growDuration + b.holdDuration;
+      if(elapsed >= shiverStart){
+        const st = clamp((elapsed - shiverStart) / b.shiverDuration, 0, 1);
+        const mag = 1.4 * Math.sin(st * Math.PI); // barely-noticeable shiver right before it pops
+        jitterX = (Math.random()-0.5) * mag;
+        jitterY = (Math.random()-0.5) * mag;
+      }
+
+      // directional squash/stretch derived from the bubble's own instantaneous motion,
+      // elongating along its travel direction and compressing across it while conserving area
+      const vx = wobbleX - b.lastWobbleX;
+      const vy = riseY - b.lastRiseY;
+      b.lastWobbleX = wobbleX; b.lastRiseY = riseY;
+      const speed = Math.hypot(vx, vy);
+      const angle = Math.atan2(vy, vx) * 180 / Math.PI;
+      const deform = Math.min(MAX_DEFORM, speed * DEFORM_FACTOR);
+      const scaleAlong = 1 + deform;
+      const scaleAcross = 1 / (1 + deform); // scaleAlong * scaleAcross ≈ 1 -> volume held constant
+
+      b.el.style.transform =
+        'translate(calc(-50% + ' + (wobbleX+jitterX).toFixed(2) + 'px), calc(-50% + ' + (riseY+jitterY).toFixed(2) + 'px)) ' +
+        'rotate(' + angle.toFixed(1) + 'deg) scale(' + (scaleAlong*growth).toFixed(3) + ',' + (scaleAcross*growth).toFixed(3) + ') rotate(' + (-angle).toFixed(1) + 'deg)';
+      b.el.style.opacity = Math.min(1, growth * 1.05).toFixed(2);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  let lastX = null, lastY = null, lastT = null;
+  let spawnCooldown = 0;
+
+  document.addEventListener('mousemove', function(e){
+    const now = performance.now();
+    if(lastX === null){ lastX = e.clientX; lastY = e.clientY; lastT = now; return; }
+    const dt = now - lastT;
+    if(dt < 16) return;
+
+    const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+    const speed = dist / dt;
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
+
+    if(now < spawnCooldown) return;
+    spawnCooldown = now + rand(65, 130);
+
+    const driftDir = Math.random() < 0.5 ? -1 : 1;
+
+    if(speed > 1.1){
+      const smallCount = Math.floor(rand(2, 4));
+      for(let i=0; i<smallCount; i++){
+        spawnBubble(e.clientX + rand(-14,14), e.clientY + rand(-10,10), rand(4,9), Math.random()<0.5 ? -1 : 1);
+      }
+      spawnBubble(e.clientX + rand(-8,8), e.clientY, rand(14,22), driftDir);
+    } else if(speed > 0.3){
+      const count = Math.floor(rand(1, 3));
+      for(let i=0; i<count; i++){
+        spawnBubble(e.clientX + rand(-10,10), e.clientY + rand(-8,8), rand(10,18), Math.random()<0.5 ? -1 : 1);
+      }
+    } else {
+      const bigCount = Math.floor(rand(1, 3));
+      for(let i=0; i<bigCount; i++){
+        spawnBubble(e.clientX + rand(-16,16), e.clientY + rand(-12,12), rand(24,40), driftDir);
+      }
+      if(Math.random() < 0.4){
+        spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(6,10), driftDir*-1);
+      }
+    }
+  });
+})();
+
+(function godRays(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const container = document.getElementById('godRays');
+  if(!container) return;
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  const RAY_COUNT = 7;
+  const rays = [];
+  for(let i=0; i<RAY_COUNT; i++){
+    const el = document.createElement('div');
+    el.className = 'ray';
+    const baseXPct = 15 + (i/(RAY_COUNT-1))*70 + rand(-5,5);
+    const width = 70 + Math.random()*100;
+    el.style.width = width + 'px';
+    el.style.left = baseXPct + '%';
+    container.appendChild(el);
+    rays.push({
+      el, baseXPct,
+      freq: rand(0.15, 0.4),
+      phase: rand(0, Math.PI*2),
+      baseOpacity: rand(0.45, 0.8)
+    });
+  }
+
+  let lightX = window.innerWidth / 2;
+  let lightY = window.innerHeight * 0.4;
+  let targetX = lightX, targetY = lightY;
+
+  document.addEventListener('mousemove', function(e){
+    targetX = e.clientX;
+    targetY = e.clientY;
+  });
+  window.addEventListener('resize', function(){
+    if(targetX === lightX) targetX = window.innerWidth/2;
+  });
+
+  function loop(now){
+    // slow, laggy easing toward the pointer -- rays drift like light bending through water
+    lightX += (targetX - lightX) * 0.018;
+    lightY += (targetY - lightY) * 0.018;
+
+    rays.forEach(function(r){
+      const rayBaseX = (r.baseXPct/100) * window.innerWidth;
+      const dx = lightX - rayBaseX;
+      const dy = Math.max(lightY, 160);
+      const angleDeg = Math.atan2(dx, dy) * 180/Math.PI;
+      const clampedAngle = Math.max(-34, Math.min(34, angleDeg));
+      const shimmer = Math.sin(now*0.0008 + r.phase) * 0.5 + 0.5;
+      r.el.style.transform = 'rotate(' + clampedAngle.toFixed(2) + 'deg)';
+      r.el.style.opacity = (r.baseOpacity * (0.55 + 0.45*shimmer)).toFixed(2);
+    });
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
