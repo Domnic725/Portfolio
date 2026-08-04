@@ -19,8 +19,6 @@
   --ember: #c9814a;
   --ember-bright: #e6a26a;
   --ok: #7fa87a;
-  --up-green: #3ea25a;
-  --up-green-bright: #4bbd6c;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -100,7 +98,7 @@ nav{
 .hero{
   min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:140px 0 80px;overflow:hidden;
-  background:transparent;
+  background:#000000;
 }
 .hero .wrap{position:relative;z-index:2;}
 .slate{display:flex;align-items:center;gap:14px;margin-bottom:38px;}
@@ -227,33 +225,55 @@ nav{
 footer{border-top:1px solid var(--line);padding:34px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
 footer .mono{font-size:.72rem;color:var(--text-faint);}
 
+.bubble{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle at var(--hlx,30%) var(--hly,26%),
+    rgba(255,255,255,var(--hlA,.82)) 0%,
+    rgba(255,255,255,.22) 13%,
+    rgba(255,255,255,.07) 42%,
+    rgba(255,255,255,.02) 70%,
+    rgba(255,255,255,0) 100%);
+  border:1px solid rgba(255,255,255,.34);
+  box-shadow: inset -2px -3px 4px rgba(0,0,0,.16), inset 2px 2px 3px rgba(255,255,255,.4), 0 0 6px rgba(255,255,255,.08);
+  mix-blend-mode:screen;
+  backdrop-filter:url(#bubbleRefract);
+  -webkit-backdrop-filter:url(#bubbleRefract);
+  pointer-events:auto;
+  cursor:pointer;
+  will-change:transform,opacity;
+}
+
 .scroll-top-btn{
   position:fixed;right:28px;bottom:28px;z-index:300;
-  width:58px;height:58px;border-radius:50%;
-  background:var(--up-green);color:#fff;border:none;cursor:pointer;
-  font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.06em;font-weight:600;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 16px rgba(0,0,0,.5);
+  width:60px;height:60px;border:none;background:transparent;padding:0;cursor:pointer;
   opacity:0;pointer-events:none;transform:translateY(14px);
-  transition:opacity .3s ease, transform .3s ease, background .2s ease;
+  transition:opacity .35s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
 }
 .scroll-top-btn.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
-.scroll-top-btn:hover{background:var(--up-green-bright);}
-
-#godRays{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
-#godRays .ray{
-  position:absolute;
-  top:-18%;
-  height:175vh;
-  background:linear-gradient(to bottom,
-    rgba(205,232,255,.20) 0%,
-    rgba(205,232,255,.09) 28%,
-    rgba(205,232,255,.03) 55%,
-    rgba(205,232,255,0) 82%);
-  transform-origin:top center;
-  filter:blur(11px);
-  mix-blend-mode:screen;
-  will-change:transform,opacity;
+.stb-bubble{
+  width:100%;height:100%;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.35) 0%, rgba(90,200,130,.32) 13%, rgba(30,120,65,.32) 44%, rgba(12,80,42,.22) 72%, rgba(6,55,28,0) 100%);
+  border:1px solid rgba(90,190,130,.4);
+  box-shadow: inset -3px -4px 6px rgba(0,0,0,.22), inset 3px 3px 4px rgba(255,255,255,.25), 0 4px 16px rgba(0,0,0,.5);
+  backdrop-filter:url(#bubbleRefract);
+  -webkit-backdrop-filter:url(#bubbleRefract);
+  color:#fff;font-family:'IBM Plex Mono',monospace;font-size:1.35rem;letter-spacing:.06em;font-weight:800;
+  transition:background .2s ease, box-shadow .2s ease, transform .2s ease, opacity .2s ease;
+}
+.scroll-top-btn:hover .stb-bubble{
+  animation:stbHoverShiver .16s ease-in-out infinite;
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.55) 0%, rgba(150,255,180,.5) 13%, rgba(70,230,120,.4) 44%, rgba(40,200,95,.22) 72%, rgba(25,160,75,0) 100%);
+  box-shadow: inset -3px -4px 6px rgba(0,0,0,.16), inset 3px 3px 4px rgba(255,255,255,.4), 0 0 22px rgba(90,255,140,.65), 0 4px 16px rgba(0,0,0,.5);
+}
+.scroll-top-btn.popping .stb-bubble{
+  opacity:0;
+}
+@keyframes stbHoverShiver{
+  0%,100%{ margin-left:0; margin-top:0; }
+  25%{ margin-left:.6px; margin-top:-.5px; }
+  50%{ margin-left:-.5px; margin-top:.55px; }
+  75%{ margin-left:.45px; margin-top:.4px; }
 }
 
 @media (max-width:860px){
@@ -271,7 +291,15 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 </style>
 </head>
 <body>
-<div id="godRays" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true">
+  <filter id="bubbleRefract" x="-40%" y="-40%" width="180%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="38" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <clipPath id="bubbleFieldClip" clipPathUnits="userSpaceOnUse">
+    <path id="bubbleFieldClipPath" fill-rule="evenodd" d=""/>
+  </clipPath>
+</svg>
 <div class="page-content" id="pageContent">
 <nav>
   <div class="nav-mark"><span id="cfg-navA">DOMINIC</span><span class="nav-slash">/</span><span id="cfg-navB">DAVIS</span></div>
@@ -566,7 +594,9 @@ footer .mono{font-size:.72rem;color:var(--text-faint);}
 </footer>
 </div>
 
-<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">UP</button>
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">
+  <span class="stb-bubble"><span class="stb-label">UP</span></span>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
@@ -667,15 +697,48 @@ const CONTENT = {
 (function scrollTopButton(){
   const btn = document.getElementById('scrollTopBtn');
   if(!btn) return;
+  let suppressUntilScroll = false;
+
   function toggle(){
-    if(window.scrollY > window.innerHeight * 0.6){ btn.classList.add('visible'); }
+    if(suppressUntilScroll){
+      if(window.scrollY <= window.innerHeight * 0.6){
+        suppressUntilScroll = false;
+        btn.classList.remove('visible');
+      }
+      return;
+    }
+    if(window.scrollY > window.innerHeight * 0.6){ btn.classList.add('visible'); btn.classList.remove('popping'); }
     else { btn.classList.remove('visible'); }
   }
   window.addEventListener('scroll', toggle, {passive:true});
   toggle();
   btn.addEventListener('click', function(){
+    suppressUntilScroll = true;
+    btn.classList.add('popping');
+    btn.classList.remove('visible');
     window.scrollTo({top:0, left:0, behavior:'auto'});
   });
+})();
+
+(function bubbleFieldClip(){
+  // cuts the video players and the headshot out of the bubble field so bubbles are
+  // never visible on top of them (they still exist and move underneath, just clipped)
+  const pathEl = document.getElementById('bubbleFieldClipPath');
+  if(!pathEl) return;
+  function update(){
+    const w = window.innerWidth, h = window.innerHeight;
+    let d = 'M0,0 H' + w + ' V' + h + ' H0 Z ';
+    document.querySelectorAll('.reel-frame, .work-thumb, .about-photo').forEach(function(el){
+      const r = el.getBoundingClientRect();
+      if(r.width <= 0 || r.height <= 0) return;
+      d += 'M' + r.left + ',' + r.top + ' H' + r.right + ' V' + r.bottom + ' H' + r.left + ' Z ';
+    });
+    pathEl.setAttribute('d', d);
+  }
+  update();
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('resize', update);
+  setInterval(update, 500); // safety net for late-loading iframes/images shifting layout
 })();
 
 (function underwaterBubbles(){
@@ -683,7 +746,7 @@ const CONTENT = {
 
   const field = document.createElement('div');
   field.id = 'bubbleField';
-  field.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden;';
+  field.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden;clip-path:url(#bubbleFieldClip);-webkit-clip-path:url(#bubbleFieldClip);';
   document.body.appendChild(field);
 
   function rand(a,b){ return a + Math.random()*(b-a); }
@@ -691,122 +754,276 @@ const CONTENT = {
   function mapRange(v,a1,b1,a2,b2){ return a2 + (v-a1)/(b1-a1)*(b2-a2); }
 
   let activeCount = 0;
-  const MAX_BUBBLES = 48;
+  const MAX_BUBBLES = 30;
   const bubbles = [];
 
-  function makeBubbleEl(x, y, size){
-    const hue = rand(184, 202);
-    const el = document.createElement('div');
-    el.style.cssText =
-      'position:absolute;left:' + x + 'px;top:' + y + 'px;' +
-      'width:' + size + 'px;height:' + size + 'px;border-radius:50%;' +
-      'background:radial-gradient(circle at 30% 26%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.3) 12%, hsla(' + hue + ',75%,72%,.16) 42%, hsla(' + hue + ',85%,55%,.09) 72%, hsla(' + hue + ',90%,40%,.03) 100%);' +
-      'border:1px solid rgba(255,255,255,.32);' +
-      'box-shadow: inset -2px -3px 4px rgba(0,0,0,.18), inset 2px 2px 3px rgba(255,255,255,.45), 0 0 7px rgba(170,225,255,.14);' +
-      'mix-blend-mode:screen;' +
-      'opacity:0;' +
-      'will-change:transform,opacity;';
-    return el;
-  }
-
-  function spawnBubble(x, y, size, driftDir, isChild){
-    if(activeCount >= MAX_BUBBLES) return;
+  function spawnBubble(x, y, finalSize){
+    if(activeCount >= MAX_BUBBLES) return null;
     activeCount++;
-    isChild = !!isChild;
 
-    const el = makeBubbleEl(x, y, size);
+    // bubbles don't start at zero -- they start at a random fraction of their eventual
+    // size and grow from there. bigger bubbles take longer to fill out.
+    const startSize = finalSize * rand(0.35, 0.7);
+
+    const el = document.createElement('div');
+    el.className = 'bubble';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.width = startSize + 'px';
+    el.style.height = startSize + 'px';
+    el.style.opacity = '0';
     field.appendChild(el);
 
-    const growDuration  = clamp(mapRange(size, 4, 40, 1000, 3000), 1000, 3000) * (isChild ? 0.55 : 1);
-    const holdDuration  = rand(400, 1800) * (isChild ? 0.5 : 1);
+    const growDuration   = clamp(mapRange(finalSize, 4, 40, 700, 2600), 700, 2600);
+    const holdDuration   = rand(400, 1800);
     const shiverDuration = rand(150, 260);
-    const riseDistance  = rand(160, 340) + size * 2.2;
-    const wobbleAmp     = rand(5, 15) * driftDir;
-    const wobbleFreq    = rand(0.9, 1.8);
-    const wobblePhase   = rand(0, Math.PI * 2);
 
-    bubbles.push({
-      el, x, y, size, isChild,
+    // buoyancy: bigger bubbles carry more lift and rise faster than small ones
+    const riseSpeed = mapRange(finalSize, 4, 40, 55, 165); // px/sec
+
+    // shape instability: bigger bubbles wobble/zig-zag more, small ones stay steadier
+    const wobbleAmp   = mapRange(finalSize, 4, 40, 1.5, 11) * (Math.random()<0.5?-1:1);
+    const wobbleFreq  = rand(0.45, 0.9);
+    const wobblePhase = rand(0, Math.PI*2);
+    // a second, slower sine layered on top gives the path a drifting zig-zag/spiral feel
+    // rather than one clean sine wave, more pronounced for bigger bubbles
+    const wob2Amp   = mapRange(finalSize, 4, 40, 0.3, 5) * (Math.random()<0.5?-1:1);
+    const wob2Freq  = rand(0.18, 0.4);
+    const wob2Phase = rand(0, Math.PI*2);
+
+    const b = {
+      el, x, y, finalSize, startSize,
       spawnTime: performance.now(),
       growDuration, holdDuration, shiverDuration,
-      riseDistance, wobbleAmp, wobbleFreq, wobblePhase,
-      lastWobbleX: 0, lastRiseY: 0
+      riseSpeed, wobbleAmp, wobbleFreq, wobblePhase, wob2Amp, wob2Freq, wob2Phase,
+      renderX: 0, renderY: 0,
+      // one-off "push" from a nearby pop -- a smooth rise-and-fade offset, never accumulated
+      pushStart: -Infinity, pushDirX: 0, pushDirY: 0, pushMag: 0,
+      // one-off "stretch toward the mouse" event -- also smooth, self-contained, never chased
+      stretchStart: -Infinity, stretchAngle: 0, stretchPeak: 0, stretchTotal: 1,
+      hovering: false, dead: false, forcePop: false
+    };
+
+    el.addEventListener('mouseenter', function(){ b.hovering = true; });
+    el.addEventListener('mouseleave', function(){ b.hovering = false; });
+    el.addEventListener('pointerdown', function(ev){
+      ev.stopPropagation();
+      b.forcePop = true;
     });
+
+    bubbles.push(b);
+    return b;
   }
 
-  function burst(b){
-    if(b.isChild) return;
-    const cx = b.x + b.lastWobbleX;
-    const cy = b.y + b.lastRiseY;
-    const numChildren = clamp(Math.round((b.size - 8) / 6), 0, 7);
-    for(let i=0; i<numChildren; i++){
-      const childSize = Math.max(3, b.size * rand(0.15, 0.42));
-      const ang = rand(0, Math.PI*2);
-      const dist = rand(2, 10);
-      spawnBubble(cx + Math.cos(ang)*dist, cy + Math.sin(ang)*dist, childSize, Math.random() < 0.5 ? -1 : 1, true);
+  const PUSH_DURATION = 1100; // slow and gentle, never a sudden glitch
+
+  function triggerPush(fromX, fromY, poppedSize){
+    for(let i=0; i<bubbles.length; i++){
+      const b = bubbles[i];
+      if(b.dead) continue;
+      const bx = b.x + b.renderX, by = b.y + b.renderY;
+      const ddx = bx - fromX, ddy = by - fromY;
+      const dist = Math.hypot(ddx, ddy) || 0.001;
+      const radius = 30 + poppedSize*3.2;
+      if(dist >= radius) continue;
+
+      // a popped bubble can only nudge bubbles that aren't much bigger than itself --
+      // a small pop won't budge a big bubble sitting right next to it
+      const sizeRatio = poppedSize / b.finalSize;
+      if(sizeRatio < 0.5) continue;
+
+      const strength = mapRange(poppedSize, 4, 40, 5, 24) * (1 - dist/radius) * clamp(sizeRatio - 0.5, 0, 1.5);
+      if(strength <= 0.2) continue;
+
+      b.pushStart = performance.now();
+      b.pushDirX = ddx / dist;
+      b.pushDirY = ddy / dist;
+      b.pushMag = strength;
     }
   }
 
-  const MAX_DEFORM = 0.07;      // halved from the previous 0.14
-  const DEFORM_FACTOR = 0.028;
+  // ---- the stretch-toward-the-mouse event ----
+  // triggered on real mouse movement, aimed once (from each bubble toward wherever the
+  // mouse currently is), then plays out on its own timeline whether or not the mouse
+  // keeps moving. bigger bubbles stretch farther and can pop outright if it's too much.
+  const STRETCH_SPEED_FACTOR = 0.5;
+  function trySizeStretchFactor(size){ return mapRange(size, 4, 40, 0.15, 1.3); }
+  function tryToleranceFor(size){ return mapRange(size, 4, 40, 0.5, 1.05); }
 
-  function tick(now){
-    for(let i = bubbles.length - 1; i >= 0; i--){
+  function triggerStretch(mouseX, mouseY, speed){
+    const now = performance.now();
+    for(let i=0; i<bubbles.length; i++){
       const b = bubbles[i];
-      const elapsed = now - b.spawnTime;
-      const total = b.growDuration + b.holdDuration + b.shiverDuration;
+      if(b.dead) continue;
+      if(now - b.stretchStart < b.stretchTotal) continue; // already mid-stretch, don't interrupt it
 
-      if(elapsed >= total){
-        burst(b);
-        b.el.remove();
-        bubbles.splice(i, 1);
-        activeCount--;
+      const bx = b.x + b.renderX, by = b.y + b.renderY;
+      const dx = mouseX - bx, dy = mouseY - by;
+      const dist = Math.hypot(dx, dy);
+      if(dist < 1) continue;
+
+      const peak = speed * STRETCH_SPEED_FACTOR * trySizeStretchFactor(b.finalSize);
+      const tolerance = tryToleranceFor(b.finalSize);
+
+      if(peak > tolerance){
+        b.forcePop = true;
         continue;
       }
+      if(peak < 0.02) continue; // too small to bother animating
 
+      b.stretchStart = now;
+      b.stretchAngle = Math.atan2(dy, dx);
+      b.stretchPeak = peak;
+      // settle time scales gently with size -- small bubbles recover almost immediately,
+      // big ones take a touch longer, but never long enough to feel slow
+      b.stretchTotal = mapRange(b.finalSize, 4, 40, 260, 620);
+    }
+  }
+
+  function tick(now){
+    const pops = [];
+
+    for(let i=0; i<bubbles.length; i++){
+      const b = bubbles[i];
+      if(b.dead) continue;
+      const elapsed = now - b.spawnTime;
+      const total = b.growDuration + b.holdDuration + b.shiverDuration;
+      if(!(elapsed >= total || b.forcePop)) continue;
+
+      b.dead = true;
+      pops.push({ x: b.x+b.renderX, y: b.y+b.renderY, size: b.finalSize });
+      b.el.remove();
+      activeCount--;
+    }
+    for(let p=0; p<pops.length; p++){
+      triggerPush(pops[p].x, pops[p].y, pops[p].size);
+    }
+
+    const survivors = [];
+    for(let i=0; i<bubbles.length; i++){
+      const b = bubbles[i];
+      if(b.dead) continue;
+
+      const elapsed = now - b.spawnTime;
+      const total = b.growDuration + b.holdDuration + b.shiverDuration;
       const riseFrac = elapsed / total;
-      const riseY = -b.riseDistance * riseFrac;
-      const wobbleX = Math.sin(elapsed/1000 * b.wobbleFreq * Math.PI*2 + b.wobblePhase) * b.wobbleAmp * (1 - riseFrac*0.3);
+
+      // steady buoyant rise, speed fixed per-bubble by its size
+      const riseY = -(b.riseSpeed * elapsed/1000);
+
+      // separation: bubbles gently nudge apart from anything they're overlapping,
+      // so piling up is rare and self-corrects as they drift
+      let sepX = 0, sepY = 0;
+      for(let j=0; j<bubbles.length; j++){
+        if(j===i) continue;
+        const o = bubbles[j];
+        if(o.dead) continue;
+        const ox = (o.x+o.renderX) - (b.x+b.renderX);
+        const oy = (o.y+o.renderY) - (b.y+b.renderY);
+        const d = Math.hypot(ox,oy) || 0.001;
+        const minGap = (b.finalSize + o.finalSize) * 0.42;
+        if(d < minGap){
+          const push = (1 - d/minGap) * 0.35;
+          sepX -= (ox/d) * push;
+          sepY -= (oy/d) * push;
+        }
+      }
+
+      // stretch-toward-mouse event (self-contained, never overlaps with ambient wobble)
+      const stretchAge = now - b.stretchStart;
+      const stretching = stretchAge >= 0 && stretchAge < b.stretchTotal;
+
+      let wobbleX = 0;
+      if(!stretching){
+        wobbleX =
+          Math.sin(elapsed/1000 * b.wobbleFreq * Math.PI*2 + b.wobblePhase) * b.wobbleAmp * (1 - riseFrac*0.25) +
+          Math.sin(elapsed/1000 * b.wob2Freq * Math.PI*2 + b.wob2Phase) * b.wob2Amp;
+      }
+
+      const pushAge = now - b.pushStart;
+      let pushX = 0, pushY = 0;
+      if(pushAge >= 0 && pushAge < PUSH_DURATION){
+        const pt = pushAge / PUSH_DURATION;
+        const ease = Math.sin(pt * Math.PI); // smooth rise then fade back to nothing
+        pushX = b.pushDirX * b.pushMag * ease;
+        pushY = b.pushDirY * b.pushMag * ease;
+      }
+
+      b.renderX += ((wobbleX + pushX + sepX) - b.renderX) * 0.12;
+      b.renderY = riseY + pushY + sepY;
 
       let growth;
       if(elapsed < b.growDuration){
         const gt = elapsed / b.growDuration;
-        growth = 1 - Math.pow(1-gt, 3); // ease-out: volume builds from zero, settles by growDuration
+        growth = 1 - Math.pow(1-gt, 3);
       } else {
         growth = 1;
       }
+      const currentSize = b.startSize + (b.finalSize - b.startSize) * growth;
+      b.el.style.width = currentSize.toFixed(2) + 'px';
+      b.el.style.height = currentSize.toFixed(2) + 'px';
 
       let jitterX = 0, jitterY = 0;
       const shiverStart = b.growDuration + b.holdDuration;
-      if(elapsed >= shiverStart){
+      if(elapsed >= shiverStart && b.finalSize >= 6){
         const st = clamp((elapsed - shiverStart) / b.shiverDuration, 0, 1);
-        const mag = 1.4 * Math.sin(st * Math.PI); // barely-noticeable shiver right before it pops
-        jitterX = (Math.random()-0.5) * mag;
-        jitterY = (Math.random()-0.5) * mag;
+        const shiverMag = mapRange(clamp(b.finalSize, 6, 40), 6, 40, 0.15, 2.4);
+        const mag = shiverMag * Math.sin(st * Math.PI);
+        jitterX += (Math.random()-0.5) * mag;
+        jitterY += (Math.random()-0.5) * mag;
+      }
+      if(b.hovering){
+        const hoverMag = mapRange(clamp(b.finalSize, 4, 40), 4, 40, 0.25, 3.2);
+        jitterX += (Math.random()-0.5) * hoverMag;
+        jitterY += (Math.random()-0.5) * hoverMag;
       }
 
-      // directional squash/stretch derived from the bubble's own instantaneous motion,
-      // elongating along its travel direction and compressing across it while conserving area
-      const vx = wobbleX - b.lastWobbleX;
-      const vy = riseY - b.lastRiseY;
-      b.lastWobbleX = wobbleX; b.lastRiseY = riseY;
-      const speed = Math.hypot(vx, vy);
-      const angle = Math.atan2(vy, vx) * 180 / Math.PI;
-      const deform = Math.min(MAX_DEFORM, speed * DEFORM_FACTOR);
+      // deform: only ever from an active stretch event or an active push -- never ambient
+      let deform = 0, deformAngleDeg = 0;
+      if(stretching){
+        const st2 = stretchAge / b.stretchTotal;
+        const riseFrac2 = 0.18;
+        let curve;
+        if(st2 < riseFrac2){
+          curve = st2/riseFrac2;
+        } else {
+          const t2 = (st2-riseFrac2)/(1-riseFrac2);
+          const oscFreq = mapRange(b.finalSize, 4, 40, 1.6, 2.6);
+          curve = Math.exp(-t2*4.2) * Math.cos(t2*Math.PI*oscFreq);
+        }
+        deform = clamp(b.stretchPeak * curve, -0.3, b.stretchPeak);
+        deformAngleDeg = b.stretchAngle * 180/Math.PI;
+      } else if(pushAge >= 0 && pushAge < PUSH_DURATION){
+        const pt = pushAge / PUSH_DURATION;
+        deform = Math.min(0.12, Math.sin(pt*Math.PI) * b.pushMag * 0.01);
+        deformAngleDeg = Math.atan2(b.pushDirY, b.pushDirX) * 180/Math.PI;
+      }
       const scaleAlong = 1 + deform;
-      const scaleAcross = 1 / (1 + deform); // scaleAlong * scaleAcross ≈ 1 -> volume held constant
+      const scaleAcross = 1 / (1 + deform);
+
+      const hlY = 26 - riseFrac*13;
+      const hlA = 0.66 + riseFrac*0.28;
+      b.el.style.setProperty('--hly', hlY.toFixed(1) + '%');
+      b.el.style.setProperty('--hlA', hlA.toFixed(2));
 
       b.el.style.transform =
-        'translate(calc(-50% + ' + (wobbleX+jitterX).toFixed(2) + 'px), calc(-50% + ' + (riseY+jitterY).toFixed(2) + 'px)) ' +
-        'rotate(' + angle.toFixed(1) + 'deg) scale(' + (scaleAlong*growth).toFixed(3) + ',' + (scaleAcross*growth).toFixed(3) + ') rotate(' + (-angle).toFixed(1) + 'deg)';
-      b.el.style.opacity = Math.min(1, growth * 1.05).toFixed(2);
+        'translate(calc(-50% + ' + (b.renderX+jitterX).toFixed(2) + 'px), calc(-50% + ' + (b.renderY+jitterY).toFixed(2) + 'px)) ' +
+        'rotate(' + deformAngleDeg.toFixed(1) + 'deg) scale(' + scaleAlong.toFixed(3) + ',' + scaleAcross.toFixed(3) + ') rotate(' + (-deformAngleDeg).toFixed(1) + 'deg)';
+      b.el.style.opacity = clamp(0.55 + growth*0.45, 0, 1).toFixed(2);
+
+      survivors.push(b);
     }
+
+    bubbles.length = 0;
+    for(let i=0; i<survivors.length; i++) bubbles.push(survivors[i]);
+
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 
   let lastX = null, lastY = null, lastT = null;
   let spawnCooldown = 0;
+  let stretchCooldown = 0;
 
   document.addEventListener('mousemove', function(e){
     const now = performance.now();
@@ -818,91 +1035,38 @@ const CONTENT = {
     const speed = dist / dt;
     lastX = e.clientX; lastY = e.clientY; lastT = now;
 
+    // every live bubble gets a shot at reacting with a stretch toward the pointer,
+    // throttled so it reads as a distinct event rather than continuous chasing
+    if(speed > 0.18 && now > stretchCooldown){
+      stretchCooldown = now + 90;
+      triggerStretch(e.clientX, e.clientY, speed);
+    }
+
     if(now < spawnCooldown) return;
     spawnCooldown = now + rand(65, 130);
 
-    const driftDir = Math.random() < 0.5 ? -1 : 1;
-
+    // fast mouse movement mostly spawns big (fast-rising) bubbles, with only a
+    // few small/medium ones; slow movement mostly spawns small (slow) bubbles,
+    // with rare medium ones
     if(speed > 1.1){
-      const smallCount = Math.floor(rand(2, 4));
-      for(let i=0; i<smallCount; i++){
-        spawnBubble(e.clientX + rand(-14,14), e.clientY + rand(-10,10), rand(4,9), Math.random()<0.5 ? -1 : 1);
+      for(let i=0; i<Math.floor(rand(1,3)); i++){
+        spawnBubble(e.clientX + rand(-14,14), e.clientY + rand(-10,10), rand(26,40));
       }
-      spawnBubble(e.clientX + rand(-8,8), e.clientY, rand(14,22), driftDir);
+      if(Math.random() < 0.5) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(12,22));
+      if(Math.random() < 0.25) spawnBubble(e.clientX + rand(-8,8), e.clientY, rand(4,9));
     } else if(speed > 0.3){
-      const count = Math.floor(rand(1, 3));
-      for(let i=0; i<count; i++){
-        spawnBubble(e.clientX + rand(-10,10), e.clientY + rand(-8,8), rand(10,18), Math.random()<0.5 ? -1 : 1);
+      for(let i=0; i<Math.floor(rand(1,3)); i++){
+        spawnBubble(e.clientX + rand(-12,12), e.clientY + rand(-9,9), rand(6,14));
       }
+      if(Math.random() < 0.3) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(16,26));
     } else {
-      const bigCount = Math.floor(rand(1, 3));
-      for(let i=0; i<bigCount; i++){
-        spawnBubble(e.clientX + rand(-16,16), e.clientY + rand(-12,12), rand(24,40), driftDir);
+      for(let i=0; i<Math.floor(rand(1,3)); i++){
+        spawnBubble(e.clientX + rand(-10,10), e.clientY + rand(-8,8), rand(4,9));
       }
-      if(Math.random() < 0.4){
-        spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(6,10), driftDir*-1);
-      }
+      if(Math.random() < 0.18) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(14,24));
     }
   });
 })();
-
-(function godRays(){
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const container = document.getElementById('godRays');
-  if(!container) return;
-
-  function rand(a,b){ return a + Math.random()*(b-a); }
-
-  const RAY_COUNT = 7;
-  const rays = [];
-  for(let i=0; i<RAY_COUNT; i++){
-    const el = document.createElement('div');
-    el.className = 'ray';
-    const baseXPct = 15 + (i/(RAY_COUNT-1))*70 + rand(-5,5);
-    const width = 70 + Math.random()*100;
-    el.style.width = width + 'px';
-    el.style.left = baseXPct + '%';
-    container.appendChild(el);
-    rays.push({
-      el, baseXPct,
-      freq: rand(0.15, 0.4),
-      phase: rand(0, Math.PI*2),
-      baseOpacity: rand(0.45, 0.8)
-    });
-  }
-
-  let lightX = window.innerWidth / 2;
-  let lightY = window.innerHeight * 0.4;
-  let targetX = lightX, targetY = lightY;
-
-  document.addEventListener('mousemove', function(e){
-    targetX = e.clientX;
-    targetY = e.clientY;
-  });
-  window.addEventListener('resize', function(){
-    if(targetX === lightX) targetX = window.innerWidth/2;
-  });
-
-  function loop(now){
-    // slow, laggy easing toward the pointer -- rays drift like light bending through water
-    lightX += (targetX - lightX) * 0.018;
-    lightY += (targetY - lightY) * 0.018;
-
-    rays.forEach(function(r){
-      const rayBaseX = (r.baseXPct/100) * window.innerWidth;
-      const dx = lightX - rayBaseX;
-      const dy = Math.max(lightY, 160);
-      const angleDeg = Math.atan2(dx, dy) * 180/Math.PI;
-      const clampedAngle = Math.max(-34, Math.min(34, angleDeg));
-      const shimmer = Math.sin(now*0.0008 + r.phase) * 0.5 + 0.5;
-      r.el.style.transform = 'rotate(' + clampedAngle.toFixed(2) + 'deg)';
-      r.el.style.opacity = (r.baseOpacity * (0.55 + 0.45*shimmer)).toFixed(2);
-    });
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-})();
-
 (function visitorAlert(){
   const params = new URLSearchParams(window.location.search);
   if(params.get('owner') === '1'){
