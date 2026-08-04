@@ -756,13 +756,22 @@ const CONTENT = {
   let activeCount = 0;
   const MAX_BUBBLES = 30;
   const bubbles = [];
+  const SMALL_SIZE_LIMIT = 12; // separation nudging only ever applies to bubbles at/under this size
 
-  function spawnBubble(x, y, finalSize){
+  function trySizeStretchFactor(size){ return mapRange(size, 4, 40, 0.15, 1.3); }
+  function tryToleranceFor(size){ return mapRange(size, 4, 40, 0.5, 1.05); }
+
+  // stretch happens exactly once per bubble, baked in at the moment it forms -- using
+  // whatever the mouse was doing right then -- and never triggered again after that
+  function spawnBubble(x, y, finalSize, dragAngle, dragSpeed){
     if(activeCount >= MAX_BUBBLES) return null;
+
+    const stretchPeak = dragSpeed * 0.5 * trySizeStretchFactor(finalSize);
+    const tolerance = tryToleranceFor(finalSize);
+    if(stretchPeak > tolerance) return null; // too much stress to even form under this fast a flick
+
     activeCount++;
 
-    // bubbles don't start at zero -- they start at a random fraction of their eventual
-    // size and grow from there. bigger bubbles take longer to fill out.
     const startSize = finalSize * rand(0.35, 0.7);
 
     const el = document.createElement('div');
@@ -778,29 +787,27 @@ const CONTENT = {
     const holdDuration   = rand(400, 1800);
     const shiverDuration = rand(150, 260);
 
-    // buoyancy: bigger bubbles carry more lift and rise faster than small ones
-    const riseSpeed = mapRange(finalSize, 4, 40, 55, 165); // px/sec
+    const riseSpeed = mapRange(finalSize, 4, 40, 55, 165); // px/sec, bigger = faster buoyant rise
 
-    // shape instability: bigger bubbles wobble/zig-zag more, small ones stay steadier
     const wobbleAmp   = mapRange(finalSize, 4, 40, 1.5, 11) * (Math.random()<0.5?-1:1);
     const wobbleFreq  = rand(0.45, 0.9);
     const wobblePhase = rand(0, Math.PI*2);
-    // a second, slower sine layered on top gives the path a drifting zig-zag/spiral feel
-    // rather than one clean sine wave, more pronounced for bigger bubbles
     const wob2Amp   = mapRange(finalSize, 4, 40, 0.3, 5) * (Math.random()<0.5?-1:1);
     const wob2Freq  = rand(0.18, 0.4);
     const wob2Phase = rand(0, Math.PI*2);
 
+    const now = performance.now();
     const b = {
       el, x, y, finalSize, startSize,
-      spawnTime: performance.now(),
+      spawnTime: now,
       growDuration, holdDuration, shiverDuration,
       riseSpeed, wobbleAmp, wobbleFreq, wobblePhase, wob2Amp, wob2Freq, wob2Phase,
       renderX: 0, renderY: 0,
-      // one-off "push" from a nearby pop -- a smooth rise-and-fade offset, never accumulated
       pushStart: -Infinity, pushDirX: 0, pushDirY: 0, pushMag: 0,
-      // one-off "stretch toward the mouse" event -- also smooth, self-contained, never chased
-      stretchStart: -Infinity, stretchAngle: 0, stretchPeak: 0, stretchTotal: 1,
+      stretchStart: (stretchPeak >= 0.02) ? now : -Infinity,
+      stretchAngle: dragAngle,
+      stretchPeak: stretchPeak,
+      stretchTotal: mapRange(finalSize, 4, 40, 260, 620),
       hovering: false, dead: false, forcePop: false
     };
 
@@ -815,7 +822,7 @@ const CONTENT = {
     return b;
   }
 
-  const PUSH_DURATION = 1100; // slow and gentle, never a sudden glitch
+  const PUSH_DURATION = 1100;
 
   function triggerPush(fromX, fromY, poppedSize){
     for(let i=0; i<bubbles.length; i++){
@@ -827,8 +834,6 @@ const CONTENT = {
       const radius = 30 + poppedSize*3.2;
       if(dist >= radius) continue;
 
-      // a popped bubble can only nudge bubbles that aren't much bigger than itself --
-      // a small pop won't budge a big bubble sitting right next to it
       const sizeRatio = poppedSize / b.finalSize;
       if(sizeRatio < 0.5) continue;
 
@@ -839,44 +844,6 @@ const CONTENT = {
       b.pushDirX = ddx / dist;
       b.pushDirY = ddy / dist;
       b.pushMag = strength;
-    }
-  }
-
-  // ---- the stretch-toward-the-mouse event ----
-  // triggered on real mouse movement, aimed once (from each bubble toward wherever the
-  // mouse currently is), then plays out on its own timeline whether or not the mouse
-  // keeps moving. bigger bubbles stretch farther and can pop outright if it's too much.
-  const STRETCH_SPEED_FACTOR = 0.5;
-  function trySizeStretchFactor(size){ return mapRange(size, 4, 40, 0.15, 1.3); }
-  function tryToleranceFor(size){ return mapRange(size, 4, 40, 0.5, 1.05); }
-
-  function triggerStretch(mouseX, mouseY, speed){
-    const now = performance.now();
-    for(let i=0; i<bubbles.length; i++){
-      const b = bubbles[i];
-      if(b.dead) continue;
-      if(now - b.stretchStart < b.stretchTotal) continue; // already mid-stretch, don't interrupt it
-
-      const bx = b.x + b.renderX, by = b.y + b.renderY;
-      const dx = mouseX - bx, dy = mouseY - by;
-      const dist = Math.hypot(dx, dy);
-      if(dist < 1) continue;
-
-      const peak = speed * STRETCH_SPEED_FACTOR * trySizeStretchFactor(b.finalSize);
-      const tolerance = tryToleranceFor(b.finalSize);
-
-      if(peak > tolerance){
-        b.forcePop = true;
-        continue;
-      }
-      if(peak < 0.02) continue; // too small to bother animating
-
-      b.stretchStart = now;
-      b.stretchAngle = Math.atan2(dy, dx);
-      b.stretchPeak = peak;
-      // settle time scales gently with size -- small bubbles recover almost immediately,
-      // big ones take a touch longer, but never long enough to feel slow
-      b.stretchTotal = mapRange(b.finalSize, 4, 40, 260, 620);
     }
   }
 
@@ -908,28 +875,28 @@ const CONTENT = {
       const total = b.growDuration + b.holdDuration + b.shiverDuration;
       const riseFrac = elapsed / total;
 
-      // steady buoyant rise, speed fixed per-bubble by its size
       const riseY = -(b.riseSpeed * elapsed/1000);
 
-      // separation: bubbles gently nudge apart from anything they're overlapping,
-      // so piling up is rare and self-corrects as they drift
+      // separation only ever applies to small bubbles -- medium/big bubbles never nudge
+      // apart and never get nudged, so this can't contribute to any oversized motion for them
       let sepX = 0, sepY = 0;
-      for(let j=0; j<bubbles.length; j++){
-        if(j===i) continue;
-        const o = bubbles[j];
-        if(o.dead) continue;
-        const ox = (o.x+o.renderX) - (b.x+b.renderX);
-        const oy = (o.y+o.renderY) - (b.y+b.renderY);
-        const d = Math.hypot(ox,oy) || 0.001;
-        const minGap = (b.finalSize + o.finalSize) * 0.42;
-        if(d < minGap){
-          const push = (1 - d/minGap) * 0.35;
-          sepX -= (ox/d) * push;
-          sepY -= (oy/d) * push;
+      if(b.finalSize <= SMALL_SIZE_LIMIT){
+        for(let j=0; j<bubbles.length; j++){
+          if(j===i) continue;
+          const o = bubbles[j];
+          if(o.dead) continue;
+          const ox = (o.x+o.renderX) - (b.x+b.renderX);
+          const oy = (o.y+o.renderY) - (b.y+b.renderY);
+          const d = Math.hypot(ox,oy) || 0.001;
+          const minGap = (b.finalSize + o.finalSize) * 0.42;
+          if(d < minGap){
+            const push = (1 - d/minGap) * 0.35;
+            sepX -= (ox/d) * push;
+            sepY -= (oy/d) * push;
+          }
         }
       }
 
-      // stretch-toward-mouse event (self-contained, never overlaps with ambient wobble)
       const stretchAge = now - b.stretchStart;
       const stretching = stretchAge >= 0 && stretchAge < b.stretchTotal;
 
@@ -944,7 +911,7 @@ const CONTENT = {
       let pushX = 0, pushY = 0;
       if(pushAge >= 0 && pushAge < PUSH_DURATION){
         const pt = pushAge / PUSH_DURATION;
-        const ease = Math.sin(pt * Math.PI); // smooth rise then fade back to nothing
+        const ease = Math.sin(pt * Math.PI);
         pushX = b.pushDirX * b.pushMag * ease;
         pushY = b.pushDirY * b.pushMag * ease;
       }
@@ -978,7 +945,7 @@ const CONTENT = {
         jitterY += (Math.random()-0.5) * hoverMag;
       }
 
-      // deform: only ever from an active stretch event or an active push -- never ambient
+      // deform: only ever from the one-time birth stretch or an active push -- nothing ambient
       let deform = 0, deformAngleDeg = 0;
       if(stretching){
         const st2 = stretchAge / b.stretchTotal;
@@ -1023,7 +990,6 @@ const CONTENT = {
 
   let lastX = null, lastY = null, lastT = null;
   let spawnCooldown = 0;
-  let stretchCooldown = 0;
 
   document.addEventListener('mousemove', function(e){
     const now = performance.now();
@@ -1031,39 +997,31 @@ const CONTENT = {
     const dt = now - lastT;
     if(dt < 16) return;
 
-    const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    const dist = Math.hypot(dx, dy);
     const speed = dist / dt;
     lastX = e.clientX; lastY = e.clientY; lastT = now;
-
-    // every live bubble gets a shot at reacting with a stretch toward the pointer,
-    // throttled so it reads as a distinct event rather than continuous chasing
-    if(speed > 0.18 && now > stretchCooldown){
-      stretchCooldown = now + 90;
-      triggerStretch(e.clientX, e.clientY, speed);
-    }
+    const angle = Math.atan2(dy, dx);
 
     if(now < spawnCooldown) return;
     spawnCooldown = now + rand(65, 130);
 
-    // fast mouse movement mostly spawns big (fast-rising) bubbles, with only a
-    // few small/medium ones; slow movement mostly spawns small (slow) bubbles,
-    // with rare medium ones
     if(speed > 1.1){
       for(let i=0; i<Math.floor(rand(1,3)); i++){
-        spawnBubble(e.clientX + rand(-14,14), e.clientY + rand(-10,10), rand(26,40));
+        spawnBubble(e.clientX + rand(-14,14), e.clientY + rand(-10,10), rand(26,40), angle, speed);
       }
-      if(Math.random() < 0.5) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(12,22));
-      if(Math.random() < 0.25) spawnBubble(e.clientX + rand(-8,8), e.clientY, rand(4,9));
+      if(Math.random() < 0.5) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(12,22), angle, speed);
+      if(Math.random() < 0.25) spawnBubble(e.clientX + rand(-8,8), e.clientY, rand(4,9), angle, speed);
     } else if(speed > 0.3){
       for(let i=0; i<Math.floor(rand(1,3)); i++){
-        spawnBubble(e.clientX + rand(-12,12), e.clientY + rand(-9,9), rand(6,14));
+        spawnBubble(e.clientX + rand(-12,12), e.clientY + rand(-9,9), rand(6,14), angle, speed);
       }
-      if(Math.random() < 0.3) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(16,26));
+      if(Math.random() < 0.3) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(16,26), angle, speed);
     } else {
       for(let i=0; i<Math.floor(rand(1,3)); i++){
-        spawnBubble(e.clientX + rand(-10,10), e.clientY + rand(-8,8), rand(4,9));
+        spawnBubble(e.clientX + rand(-10,10), e.clientY + rand(-8,8), rand(4,9), angle, speed);
       }
-      if(Math.random() < 0.18) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(14,24));
+      if(Math.random() < 0.18) spawnBubble(e.clientX + rand(-10,10), e.clientY, rand(14,24), angle, speed);
     }
   });
 })();
