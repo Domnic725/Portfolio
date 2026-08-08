@@ -303,26 +303,30 @@ body.fire-global-active button{ cursor:pointer; }
   transition:opacity .35s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
 }
 .scroll-top-btn.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
-.stb-inner{
-  position:absolute; inset:0;
-}
-.stb-label{
-  position:absolute; inset:0; z-index:2;
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.92);font-family:'IBM Plex Mono',monospace;font-size:1.75rem;letter-spacing:.06em;font-weight:800;
-  pointer-events:none;
-}
 .stb-bubble{
-  position:absolute; inset:0; z-index:1;
   width:100%;height:100%;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
   background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.35) 0%, rgba(90,200,130,.32) 13%, rgba(30,120,65,.32) 44%, rgba(12,80,42,.22) 72%, rgba(6,55,28,0) 100%);
   border:1px solid rgba(90,190,130,.4);
   box-shadow: inset -3px -4px 6px rgba(0,0,0,.22), inset 3px 3px 4px rgba(255,255,255,.25), 0 4px 16px rgba(0,0,0,.5);
   backdrop-filter:url(#bubbleRefract);
   -webkit-backdrop-filter:url(#bubbleRefract);
+  color:#fff;font-family:'IBM Plex Mono',monospace;font-size:1.75rem;letter-spacing:.06em;font-weight:800;
+  transition:background .2s ease, box-shadow .2s ease, transform .2s ease, opacity .2s ease;
 }
-.scroll-top-btn.popping .stb-inner{
+.scroll-top-btn:hover .stb-bubble{
+  animation:stbHoverShiver .16s ease-in-out infinite;
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.55) 0%, rgba(150,255,180,.5) 13%, rgba(70,230,120,.4) 44%, rgba(40,200,95,.22) 72%, rgba(25,160,75,0) 100%);
+  box-shadow: inset -3px -4px 6px rgba(0,0,0,.16), inset 3px 3px 4px rgba(255,255,255,.4), 0 0 22px rgba(90,255,140,.65), 0 4px 16px rgba(0,0,0,.5);
+}
+.scroll-top-btn.popping .stb-bubble{
   opacity:0;
+}
+@keyframes stbHoverShiver{
+  0%,100%{ margin-left:0; margin-top:0; }
+  25%{ margin-left:.6px; margin-top:-.5px; }
+  50%{ margin-left:-.5px; margin-top:.55px; }
+  75%{ margin-left:.45px; margin-top:.4px; }
 }
 
 @media (max-width:860px){
@@ -656,10 +660,7 @@ body.fire-global-active button{ cursor:pointer; }
 </div>
 
 <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">
-  <span class="stb-inner">
-    <span class="stb-label">UP</span>
-    <span class="stb-bubble"></span>
-  </span>
+  <span class="stb-bubble"><span class="stb-label">UP</span></span>
 </button>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -970,68 +971,6 @@ const siteFX = (function(){
 
     applyMotion(bubbleBtn, waterState, now, 'bob');
     applyMotion(fireBtn, fireState, now, 'wind');
-
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-})();
-
-(function idleFloatUpButton(){
-  const btn = document.getElementById('scrollTopBtn');
-  const label = btn ? btn.querySelector('.stb-label') : null;
-  const bubbleEl = btn ? btn.querySelector('.stb-bubble') : null;
-  if(!btn || !label || !bubbleEl) return;
-
-  let hovering = false;
-  btn.addEventListener('mouseenter', function(){ hovering = true; });
-  btn.addEventListener('mouseleave', function(){
-    hovering = false;
-    bubbleEl.style.background = '';
-    bubbleEl.style.boxShadow = '';
-  });
-
-  const SHIVER_PERIOD_MS = 160; // back to the original, slower speed
-
-  function buoyancyTransform(t, seed, ampX, ampY, freqScale){
-    const wY = 0.00040*freqScale, wY2 = 0.00095*freqScale;
-    const wX = 0.00035*freqScale, wX2 = 0.00080*freqScale;
-    const y = Math.sin(t*wY + seed)*ampY + Math.sin(t*wY2 + seed*1.7)*ampY*0.35;
-    const x = Math.sin(t*wX + seed*0.6)*ampX + Math.cos(t*wX2 + seed*1.2)*ampX*0.3;
-    return { x, y };
-  }
-
-  function loop(now){
-    if(!btn.classList.contains('visible') || btn.classList.contains('popping')){
-      requestAnimationFrame(loop);
-      return;
-    }
-
-    let tx, ty;
-    if(hovering){
-      const phase = (now % SHIVER_PERIOD_MS) / SHIVER_PERIOD_MS; // 0..1, one full cycle per SHIVER_PERIOD_MS
-      tx = Math.sin(phase*Math.PI*2) * 0.6;
-      ty = Math.sin(phase*Math.PI*2 + Math.PI/2) * 0.55;
-
-      // Glow breathes between full hover brightness and back down toward the resting
-      // glow, at the exact same speed as the shiver.
-      const glowMix = (Math.sin(phase*Math.PI*2) + 1) / 2; // 0..1
-      const blur1 = (10 + glowMix*12).toFixed(1);
-      const op1 = (0.30 + glowMix*0.35).toFixed(2);
-      const bgOp = (0.32 + glowMix*0.18).toFixed(2);
-      bubbleEl.style.background = `radial-gradient(circle at 32% 26%, rgba(255,255,255,.5) 0%, rgba(90,200,130,${bgOp}) 13%, rgba(30,120,65,.32) 44%, rgba(12,80,42,.22) 72%, rgba(6,55,28,0) 100%)`;
-      bubbleEl.style.boxShadow = `inset -3px -4px 6px rgba(0,0,0,.16), inset 3px 3px 4px rgba(255,255,255,.4), 0 0 ${blur1}px rgba(90,255,140,${op1}), 0 4px 16px rgba(0,0,0,.5)`;
-    } else {
-      const m = buoyancyTransform(now, 4.2, 2.6, 2.9, 0.62);
-      tx = m.x; ty = m.y;
-      bubbleEl.style.background = '';
-      bubbleEl.style.boxShadow = '';
-    }
-
-    // Same string, set on both elements in this same tick -- guarantees they move
-    // by the exact same amount in the exact same paint, no relative lag possible.
-    const t = `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px)`;
-    label.style.transform = t;
-    bubbleEl.style.transform = t;
 
     requestAnimationFrame(loop);
   }
