@@ -101,8 +101,6 @@ nav{
   background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.55) 0%, rgba(255,255,255,.22) 13%, rgba(255,255,255,.08) 44%, rgba(255,255,255,.03) 72%, rgba(255,255,255,0) 100%);
   border:1px solid rgba(255,255,255,.34);
   box-shadow: inset -2px -3px 4px rgba(0,0,0,.16), inset 2px 2px 3px rgba(255,255,255,.4), 0 0 6px rgba(255,255,255,.08);
-  backdrop-filter:url(#bubbleRefract);
-  -webkit-backdrop-filter:url(#bubbleRefract);
 }
 .fx-bubble-shape--glow{
   box-shadow: inset -2px -3px 4px rgba(0,0,0,.16), inset 2px 2px 3px rgba(255,255,255,.4), 0 0 10px rgba(255,205,90,.65), 0 0 4px rgba(255,170,40,.5);
@@ -697,7 +695,7 @@ const siteFX = (function(){
 
   function getMediaExclusionRects(){
     const rects = [];
-    document.querySelectorAll('.reel-frame, .work-thumb, .about-photo').forEach(function(el){
+    document.querySelectorAll('.reel-frame, .work-thumb, .about-photo, nav').forEach(function(el){
       const r = el.getBoundingClientRect();
       if(r.width > 0 && r.height > 0){
         rects.push({ left:r.left, top:r.top, right:r.right, bottom:r.bottom, width:r.width, height:r.height });
@@ -1031,14 +1029,25 @@ const siteFX = (function(){
   const page = document.getElementById('pageContent');
   if(!page) return;
   let px=0, py=0, tx=0, ty=0;
+  let rawNx=0, rawNy=0;
+
+  function updateTarget(){
+    const sign = siteFX.fireActive() ? -1 : 1; // fire: inverted pan. bubbles: original direction.
+    tx = sign * rawNx * 16;
+    ty = sign * rawNy * 12;
+  }
+
   document.addEventListener('mousemove', function(e){
-    const nx = (e.clientX / window.innerWidth) * 2 - 1;
-    const ny = (e.clientY / window.innerHeight) * 2 - 1;
-    tx = nx * 16; ty = ny * 12;
+    rawNx = (e.clientX / window.innerWidth) * 2 - 1;
+    rawNy = (e.clientY / window.innerHeight) * 2 - 1;
+    updateTarget();
   });
-  function loop(){
+
+  function loop(now){
+    updateTarget(); // re-evaluate every frame too, so a bubble/fire swap takes effect immediately
     px += (tx-px)*0.06; py += (ty-py)*0.06;
-    page.style.transform = 'translate(' + px.toFixed(2) + 'px,' + py.toFixed(2) + 'px)';
+    const shakeY = siteFX.fireActive() ? Math.sin(now*0.02)*0.275 : 0;
+    page.style.transform = 'translate(' + px.toFixed(2) + 'px,' + (py+shakeY).toFixed(2) + 'px)';
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
